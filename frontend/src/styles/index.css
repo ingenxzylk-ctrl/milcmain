@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+:root {
+  --milc: #7A35A3;             /* Deep Rich Lavender / Royal Purple */
+  --milc-dark: #4A1766;        /* Midnight Plum */
+  --milc-light: #C883EB;       /* Primary Lavender (#C883EB) */
+  --milc-soft: #F4E8FC;        /* Soft Lavender Mist for pills & active surfaces */
+  --milc-accent-red: #E34234;  /* Tomato Red (#E34234) for primary CTAs & buttons */
+  --milc-accent-red-hover: #C72F22;
+  --milc-accent-pop: #D4FF3F;  /* Chartreuse (#D4FF3F) for vibrant badges & highlights */
+  --milc-accent-pop-text: #1E2700;
+  --milc-bg: #FBF7FE;          /* Soft Tinted Lavender Canvas */
+  --milc-card: #ffffff;        /* Pure Card White */
+  --milc-border: #EADBFA;      /* Elegant Lavender Divider & Card Borders */
+}
+
+body {
+  margin: 0;
+  background-color: #FBF7FE;
+  color: #2D143E;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.font-serif {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+/* Ambient glow background auras */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(25px, -35px) scale(1.08);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-30px, 25px) scale(1.06);
+  }
+  66% {
+    transform: translate(20px, -25px) scale(0.96);
+  }
+}
+
+@keyframes laserScan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: 96%;
+    opacity: 0;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 18s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 22s ease-in-out infinite;
+}
+
+.animate-laser {
+  animation: laserScan 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(216, 226, 236, 0.9);
+}
+
+.glass-pill {
+  background: rgba(228, 235, 242, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(19, 43, 69, 0.12);
+}
+
+/* Custom refined scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F2F5F8;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+backend/data/reports.json
+backend/data/tmp/
+frontend/dist/
+.vite/
