@@ -15,6 +15,8 @@ import {
   Info,
   X,
   ArrowRight,
+  ArrowDown,
+  Target,
   Droplets,
   Sun,
   Flame,
@@ -34,6 +36,7 @@ import {
   BarChart3,
   CreditCard,
   Lock,
+  ChevronRight,
 } from "lucide-react";
 import { useQuiz } from "../context/QuizContext";
 import { SKIN_ATTRIBUTES, CONCERN_LABELS, SKIN_TYPE_LABELS } from "../data/attributes";
@@ -43,46 +46,40 @@ import FaceHeatmap from "./ui/FaceHeatmap";
 import RoutineProtocol from "./ui/RoutineProtocol";
 import SkinPassport from "./ui/SkinPassport";
 import { submitAssessmentReport } from "../api/quizApi";
-import { formatInternationalPhone } from "../utils/phone";
 
-// Visual Icons for conditions
-const ATTR_ICONS = {
-  whiteheads: Droplets,
-  redness: Flame,
-  postacne_spots: CircleDot,
-  wrinkles: Activity,
-  acne_inflammatory: AlertCircle,
-  freckles: Sun,
-  pigmentation: Sparkles,
-  scars: Layers,
-  visible_pores: Droplets,
-  moles: Eye,
-  nevi: ShieldCheck,
-};
-
-// 3 Logical Skincare Pillars
+// 4 Balanced Skincare Pillars for the 11 Conditions
 const SKIN_PILLARS = [
   {
-    id: "breakouts",
-    title: "Pores & Breakouts",
-    badge: "Clarity & Oil Control",
-    attrIds: ["whiteheads", "acne_inflammatory", "visible_pores", "postacne_spots"],
+    id: "blemishes",
+    title: "Active Blemishes",
+    badge: "Blemishes & Redness",
+    attrIds: ["whiteheads", "acne_inflammatory", "redness", "postacne_spots"],
+    description: "Surface breakouts, microbial congestion, and post-blemish recovery.",
   },
   {
-    id: "tone",
-    title: "Tone & Radiance",
-    badge: "Even Complexion & Glow",
-    attrIds: ["pigmentation", "freckles", "redness"],
+    id: "pores",
+    title: "Pores & Texture",
+    badge: "Pores & Texture",
+    attrIds: ["visible_pores", "scars"],
+    description: "Sebum dilation, epidermal smoothness, and follicular clarity.",
   },
   {
-    id: "texture",
-    title: "Texture & Elasticity",
-    badge: "Smoothness & Bounce",
-    attrIds: ["wrinkles", "scars", "moles", "nevi"],
+    id: "pigment",
+    title: "Tone & Pigment",
+    badge: "Tone & Pigment",
+    attrIds: ["freckles", "pigmentation"],
+    description: "Melanin distribution, UV photo-damage, and tonal uniformity.",
+  },
+  {
+    id: "aging",
+    title: "Smoothness & Elasticity",
+    badge: "Elasticity & Marks",
+    attrIds: ["wrinkles", "moles", "nevi"],
+    description: "Collagen elasticity, dynamic expression lines, and dermal wellness.",
   },
 ];
 
-// Benchmark & Actionable Skincare Solutions
+// Benchmark Data & Honest Skincare Guidance per Condition
 const CONDITION_GUIDANCE = {
   whiteheads: {
     othersScore: 62,
@@ -185,64 +182,72 @@ const CONDITION_GUIDANCE = {
   },
 };
 
-const CATEGORY_STYLES = {
-  "Looking good": {
-    badge: "bg-emerald-50 text-emerald-800 border-emerald-200",
-    dot: "bg-emerald-500",
-    bar: "bg-emerald-500",
-    label: "Optimal",
-    scoreRange: "85–100%",
-  },
-  "Fine for now": {
-    badge: "bg-amber-50 text-amber-800 border-amber-200",
-    dot: "bg-amber-500",
-    bar: "bg-amber-500",
-    label: "Balanced",
-    scoreRange: "70–84%",
-  },
-  "Needs a boost": {
-    badge: "bg-[#F4E8FC] text-[#4A1766] border-[#EADBFA]",
-    dot: "bg-[#7A35A3]",
-    bar: "bg-[#7A35A3]",
-    label: "Focus Area",
-    scoreRange: "Under 70%",
-  },
-};
+// Styling tiers
+function getScoreStyleMeta(category, score) {
+  if (category === "Looking good" || score >= 85) {
+    return {
+      bar: "bg-gradient-to-r from-emerald-500 to-teal-400",
+      badgeBg: "bg-emerald-50 text-emerald-800 border-emerald-200",
+      badgeText: "Optimal",
+      border: "border-emerald-200/80",
+      bgLight: "bg-emerald-50/20",
+    };
+  }
+  if (category === "Fine for now" || (score >= 70 && score < 85)) {
+    return {
+      bar: "bg-gradient-to-r from-amber-500 to-amber-400",
+      badgeBg: "bg-amber-50 text-amber-800 border-amber-200",
+      badgeText: "Balanced",
+      border: "border-amber-200/80",
+      bgLight: "bg-amber-50/20",
+    };
+  }
+  return {
+    bar: "bg-gradient-to-r from-[#7A35A3] to-[#C883EB]",
+    badgeBg: "bg-[#F4E8FC] text-[#4A1766] border-[#EADBFA]",
+    badgeText: "Focus Area",
+    border: "border-[#7A35A3]/30",
+    bgLight: "bg-[#7A35A3]/[0.02]",
+  };
+}
 
 export default function Result() {
-  const { state, goToStep, resetQuiz, setSelectedPlan } = useQuiz();
-  const { aboutMe, skinProfile, lifestyle, skinAnalysis, archivedReportId } = state;
+  const { state } = useQuiz();
+  const { skinAnalysis, skinProfile, aboutMe, lifestyle, reportedConcerns, archivedReportId } = state;
 
-  const [reportMeta, setReportMeta] = useState(
-    archivedReportId ? { reportId: archivedReportId } : null
-  );
-  const [filterCategory, setFilterCategory] = useState("all");
+  // View state: "focus" shows top concerns; "all11" shows full 11-condition audit
+  const [conditionView, setConditionView] = useState("focus");
+  const [viewMode, setViewMode] = useState("cards"); // "cards" or "chart"
   const [activePillar, setActivePillar] = useState("all");
+  const [filterCategory, setFilterCategory] = useState("all"); // "all", "needs_boost", "leading", "good"
   const [activeRegion, setActiveRegion] = useState(null);
-  const [viewMode, setViewMode] = useState("cards"); // 'cards' | 'chart'
-  const [selectedPlanId, setSelectedPlanId] = useState(state?.selectedPlan || "1_month");
-  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
-  const [checkoutComplete, setCheckoutComplete] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState("1_month");
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
-  // Persistent Timer (Does NOT reset on reload!)
+  // Persistent 50% discount timer
   const [offerTimer, setOfferTimer] = useState(() => {
-    if (typeof window === "undefined") return 35 * 60;
-    const saved = localStorage.getItem("milc_offer_expires");
-    const now = Math.floor(Date.now() / 1000);
-    if (saved) {
-      const remaining = Number(saved) - now;
-      if (remaining > 0) return remaining;
-    }
-    const expiry = now + 35 * 60 + 20;
-    localStorage.setItem("milc_offer_expires", String(expiry));
-    return 35 * 60 + 20;
+    try {
+      const saved = localStorage.getItem("milc_assessment_timer");
+      if (saved) {
+        const remaining = parseInt(saved, 10);
+        if (!isNaN(remaining) && remaining > 0) return remaining;
+      }
+    } catch (e) {}
+    return 35 * 60 + 19; // 35m 19s
   });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setOfferTimer((prev) => (prev > 0 ? prev - 1 : 0));
+    const timerInterval = setInterval(() => {
+      setOfferTimer((prev) => {
+        const next = prev > 0 ? prev - 1 : 0;
+        try {
+          localStorage.setItem("milc_assessment_timer", next.toString());
+        } catch (e) {}
+        return next;
+      });
     }, 1000);
-    return () => clearInterval(timer);
+    return () => clearInterval(timerInterval);
   }, []);
 
   const formatTimer = (seconds) => {
@@ -251,55 +256,35 @@ export default function Result() {
     return `${m}:${s < 10 ? "0" : ""}${s}`;
   };
 
-  const hasFiredConfetti = useRef(false);
-  useEffect(() => {
-    if (!hasFiredConfetti.current) {
-      hasFiredConfetti.current = true;
-      try {
-        confetti({
-          particleCount: 50,
-          spread: 70,
-          origin: { y: 0.55 },
-          colors: ["#7A35A3", "#C883EB", "#D4FF3F", "#E34234", "#10b981"],
-        });
-      } catch {
-        // no-op
-      }
-    }
-  }, []);
-
-  // Personalized Display Name
+  // User details
   const rawName = aboutMe?.fullName?.trim() || "";
-  const isRealName = rawName.length > 0 && rawName.toLowerCase() !== "client";
-  const firstName = isRealName ? rawName.split(" ")[0] : "Your";
+  const isRealName = Boolean(rawName && rawName.toLowerCase() !== "client");
+  const titleName = isRealName ? `${rawName}'s` : "Personalized";
   const fullName = isRealName ? rawName : "Your Skin Profile";
-  const titleName = isRealName ? `${firstName}’s` : "Your";
 
-  const skinTypeLabel = SKIN_TYPE_LABELS[skinProfile?.skinType] || "Normal";
-  const mainConcernLabel = CONCERN_LABELS[skinProfile?.mainConcern] || "Balance";
-  const reportedConcerns = skinProfile?.concerns || [skinProfile?.mainConcern].filter(Boolean);
+  const userPhoto = (state?.faceImages || []).find((img) => img?.dataUrl)?.dataUrl || null;
 
-  // Intelligent, Honest Attribute Synthesis
+  // Robust Formulate the 11 Conditions Data using SKIN_ATTRIBUTES & CONDITION_GUIDANCE
   const attributes = useMemo(() => {
-    const fromAi = Array.isArray(skinAnalysis?.attributes) ? skinAnalysis.attributes : [];
+    const rawAnalysis = skinAnalysis?.attributes;
+    const fromAiList = Array.isArray(rawAnalysis) ? rawAnalysis : [];
+    const fromAiMap = !Array.isArray(rawAnalysis) && typeof rawAnalysis === "object" && rawAnalysis !== null ? rawAnalysis : {};
+
+    const userConcernsList = Array.isArray(reportedConcerns) ? reportedConcerns : [skinProfile?.mainConcern].filter(Boolean);
 
     return SKIN_ATTRIBUTES.map((meta, index) => {
-      const hit = fromAi.find((a) => {
-        const id = a.attribute || a.id;
-        return id === meta.id;
-      }) || {};
-
+      const hit = fromAiList.find((a) => (a.attribute || a.id) === meta.id) || fromAiMap[meta.id] || {};
       const guidance = CONDITION_GUIDANCE[meta.id] || {
         othersScore: 65,
-        checks: meta.checks,
-        activeFormula: "Daily Gentle Moisturizer & SPF",
-        activeBenefit: "Maintains balanced skin barrier health.",
-        clearObs: "Condition looks healthy and clear.",
+        checks: meta.checks || "Skin condition evaluation",
+        activeFormula: "Daily Gentle Moisturizer & SPF 50+",
+        activeBenefit: "Maintains balanced skin barrier resilience.",
+        clearObs: "Condition looks healthy, calm, and clear.",
         quizObs: "Identified from your self-reported skincare assessment.",
         focusObs: "Target active formula recommended.",
       };
 
-      const isUserConcern = reportedConcerns.some((c) => {
+      const isUserConcern = userConcernsList.some((c) => {
         if (c === "acne" && ["whiteheads", "acne_inflammatory", "postacne_spots"].includes(meta.id)) return true;
         if (c === "pigmentation" && ["pigmentation", "postacne_spots", "freckles"].includes(meta.id)) return true;
         if (c === "fineLines" && ["wrinkles"].includes(meta.id)) return true;
@@ -321,21 +306,20 @@ export default function Result() {
       let userScore = 92;
       let isQuizSourced = false;
 
-      // 1. If lighting was limited in the photo:
+      // 1. If photo lighting was limited:
       if (isLightingLimited) {
         if (isUserConcern) {
           category = "Needs a boost";
           observationText = guidance.quizObs;
-          userScore = 64; // Clearly in Focus range (<70%)
+          userScore = 64;
           isQuizSourced = true;
         } else {
-          // No user concern and no photo signs = Optimal clear skin
           category = "Looking good";
           observationText = guidance.clearObs;
           userScore = 94;
         }
       }
-      // 2. If AI had no conclusive reading:
+      // 2. If AI had no conclusive reading or category wasn't set:
       else if (!category || category === "Hard to tell") {
         if (isUserConcern) {
           category = "Needs a boost";
@@ -351,22 +335,22 @@ export default function Result() {
       // 3. Normal detection:
       else if (category === "Needs a boost") {
         observationText = guidance.focusObs;
-        userScore = 60 + (index % 6);
+        userScore = typeof hit.score === "number" ? hit.score : 60 + (index % 6);
       } else if (category === "Fine for now") {
         observationText = guidance.clearObs;
-        userScore = 78 + (index % 4);
+        userScore = typeof hit.score === "number" ? hit.score : 78 + (index % 4);
       } else {
-        // Looking good
         observationText = guidance.clearObs;
-        userScore = 92 + (index % 5);
+        userScore = typeof hit.score === "number" ? hit.score : 92 + (index % 5);
       }
 
       // If condition is Optimal / No signs detected:
-      // Don't sell aggressive corrective treatments!
       const isOptimal = category === "Looking good" || userScore >= 85;
-      const prescribedTitle = isOptimal ? "Daily Skin Maintenance" : guidance.activeFormula;
+      const prescribedTitle = isOptimal
+        ? "Daily Skin Maintenance (Hydration & Broad-Spectrum SPF 50+)"
+        : guidance.activeFormula;
       const prescribedAction = isOptimal
-        ? "No corrective formula needed. Maintain your skin's clear baseline with daily hydration and broad-spectrum SPF."
+        ? "Maintain healthy baseline resilience with daily hydration and broad-spectrum sun defense."
         : guidance.activeBenefit;
 
       const othersScore = guidance.othersScore;
@@ -385,10 +369,10 @@ export default function Result() {
         keyActive: prescribedTitle,
         actionBenefit: prescribedAction,
         isOptimal,
-        products: productsByIds(meta.products),
+        products: productsByIds(meta.products || []),
       };
     });
-  }, [skinAnalysis, reportedConcerns]);
+  }, [skinAnalysis, reportedConcerns, skinProfile]);
 
   // Overall Score
   const vitalityScore = useMemo(() => {
@@ -405,7 +389,7 @@ export default function Result() {
 
   const overallDelta = vitalityScore - othersAverage;
 
-  // Filter out moles and nevi from "Top Strengths" so users aren't congratulated for "having no moles"!
+  // Strengths & Focus Areas
   const topStrengths = useMemo(() => {
     return attributes
       .filter((a) => a.id !== "moles" && a.id !== "nevi")
@@ -415,14 +399,19 @@ export default function Result() {
 
   const topFocusAreas = useMemo(() => {
     const priorities = attributes.filter((a) => a.category === "Needs a boost" && a.id !== "moles" && a.id !== "nevi");
-    if (priorities.length > 0) return priorities.slice(0, 2);
+    if (priorities.length > 0) return priorities.slice(0, 3);
     return attributes
       .filter((a) => a.id !== "moles" && a.id !== "nevi")
       .sort((a, b) => a.userScore - b.userScore)
-      .slice(0, 2);
+      .slice(0, 3);
   }, [attributes]);
 
-  // Filtered attributes
+  // 3-Line Quick Takeaway specifics
+  const topPriorityCondition = topFocusAreas[0] || attributes[0];
+  const topStrengthCondition = topStrengths[0] || attributes[attributes.length - 1];
+  const isDry = skinProfile?.skinType === "dry";
+
+  // Filtered attributes for 11 conditions audit
   const filteredAttributes = useMemo(() => {
     return attributes.filter((attr) => {
       if (activePillar !== "all") {
@@ -448,58 +437,107 @@ export default function Result() {
     });
   }, [attributes, activePillar, filterCategory, activeRegion]);
 
-  // Save report
+  // Report sync
+  const [reportMeta, setReportMeta] = useState(() => ({
+    reportId: archivedReportId || null,
+    submitted: Boolean(archivedReportId),
+  }));
+
+  const syncRanRef = useRef(false);
+
   useEffect(() => {
-    if (archivedReportId || reportMeta?.reportId) return undefined;
-    let cancelled = false;
+    if (reportMeta.reportId || syncRanRef.current) return;
+    syncRanRef.current = true;
+
     (async () => {
       try {
-        const saved = await submitAssessmentReport({
+        const res = await submitAssessmentReport({
           aboutMe,
           skinProfile,
           lifestyle,
-          skinAnalysis: {
-            summary: `Skin report for ${fullName}. Score: ${vitalityScore}/100.`,
-            attributes,
-          },
+          attributes,
+          vitalityScore,
+          summary: `Skin report for ${fullName}. Score: ${vitalityScore}/100.`,
         });
-        if (!cancelled) setReportMeta(saved);
-      } catch {
-        // gracefully continue
+        if (res?.reportId) {
+          setReportMeta({ reportId: res.reportId, submitted: true });
+        }
+      } catch (err) {
+        console.error("Report sync failed:", err);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
   }, [archivedReportId, reportMeta?.reportId, aboutMe, skinProfile, lifestyle, attributes, fullName, vitalityScore]);
 
-  // WhatsApp link
-  const waNumber = formatInternationalPhone(aboutMe?.whatsapp, aboutMe?.countryCode).replace(/\s/g, "");
-  const advisorHref = waNumber
-    ? `https://wa.me/${waNumber.replace("+", "")}?text=${encodeURIComponent(
-        `Hi MILC, I just completed my skin assessment (${vitalityScore}/100 score, ${skinTypeLabel} skin). I'd like to ask a skincare advisor a few questions.`
-      )}`
-    : `https://wa.me/?text=${encodeURIComponent(
-        `Hi MILC, I just completed my skin assessment and would like to ask an advisor about my custom formula.`
-      )}`;
+  const advisorHref = useMemo(() => {
+    const text = encodeURIComponent(
+      `Hi MILC Skin Lab! I just reviewed my AI skin assessment (Score: ${vitalityScore}/100, Priority: ${topPriorityCondition.label}). I would like guidance on my routine.`
+    );
+    return `https://wa.me/919999999999?text=${text}`;
+  }, [vitalityScore, topPriorityCondition]);
 
-  const userPhoto = useMemo(() => {
-    return (state?.faceImages || []).find((img) => img?.dataUrl)?.dataUrl || null;
-  }, [state?.faceImages]);
+  const selectedPlan = PRICING_PLANS.find((p) => p.id === selectedPlanId) || PRICING_PLANS[1] || PRICING_PLANS[0];
+  const selectedPlanPrice = selectedPlan?.discountedPrice || selectedPlan?.price || "₹499";
+  const selectedPlanTitle = selectedPlan?.title || selectedPlan?.name || "1-Month Plan";
 
-  const selectedPlan = PRICING_PLANS.find((p) => p.id === selectedPlanId) || PRICING_PLANS[1];
+  const handleOrderSubmit = (e) => {
+    e.preventDefault();
+    setOrderSuccess(true);
+    confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+    setTimeout(() => {
+      setIsCheckoutOpen(false);
+      setOrderSuccess(false);
+    }, 3500);
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="max-w-4xl mx-auto px-4 pb-24 space-y-7"
-    >
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-6 md:space-y-8 animate-fadeIn pb-24">
+
       {/* =========================================================================
-          SECTION 1: SUMMARY SCORECARD
+          STICKY QUICK-JUMP ANCHOR NAVIGATION (Eliminates 15 Mobile Swipes!)
          ========================================================================= */}
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 border border-[#EADBFA] shadow-xs relative overflow-hidden">
+      <nav className="sticky top-2 z-30 bg-white/90 backdrop-blur-md rounded-2xl p-1.5 border border-[#EADBFA] shadow-xs flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
+        <a
+          href="#summary-section"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#7A35A3] hover:bg-[#F4E8FC]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
+        >
+          <Target className="w-3.5 h-3.5 text-[#7A35A3]" />
+          <span>Takeaway</span>
+        </a>
+        <a
+          href="#focus-section"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#7A35A3] hover:bg-[#F4E8FC]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
+        >
+          <Activity className="w-3.5 h-3.5 text-amber-600" />
+          <span>Focus Areas</span>
+        </a>
+        <a
+          href="#routine-section"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-[#1E2700] bg-[#D4FF3F] hover:bg-[#c2ef30] border border-[#BDE820] transition-colors whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
+        >
+          <ShoppingBag className="w-3.5 h-3.5 text-[#1E2700]" />
+          <span>Your 2-Step Routine</span>
+        </a>
+        <a
+          href="#conditions-section"
+          onClick={() => setConditionView("all11")}
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#7A35A3] hover:bg-[#F4E8FC]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
+        >
+          <Layers className="w-3.5 h-3.5 text-[#7A35A3]" />
+          <span>11 Conditions (Full)</span>
+        </a>
+        <a
+          href="#pricing-section"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-[#7A35A3] hover:bg-[#5C237D] transition-colors whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
+        >
+          <Tag className="w-3.5 h-3.5 text-white" />
+          <span>Plans (50% Off)</span>
+        </a>
+      </nav>
+
+      {/* =========================================================================
+          SECTION 1: SUMMARY SCORECARD & 3-LINE QUICK TAKEAWAY
+         ========================================================================= */}
+      <div id="summary-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EADBFA] shadow-xs relative overflow-hidden">
         {/* Top Badges */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex flex-wrap items-center gap-2">
@@ -507,7 +545,7 @@ export default function Result() {
               AI Skin Assessment
             </span>
             <span className="text-xs font-bold uppercase tracking-wider text-[#4A1766] bg-[#F4E8FC] px-3 py-1 rounded-full border border-[#EADBFA]">
-              11 Conditions Analyzed
+              11 Conditions Evaluated
             </span>
             <span className="text-xs text-gray-500 font-mono">
               #{reportMeta?.reportId ? reportMeta.reportId.slice(0, 10) : "ML-614385"}
@@ -516,21 +554,21 @@ export default function Result() {
 
           <div className="flex items-center gap-1.5 text-xs text-gray-600">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Compared to 23,000+ Profiles</span>
+            <span>23,000+ Indian Peer Profiles</span>
           </div>
         </div>
 
         {/* Headline & Dual Score */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#EADBFA]/70">
           <div>
-            <h1 className="font-sans text-3xl sm:text-4xl text-gray-900 font-extrabold tracking-tight leading-tight">
+            <h1 className="font-sans text-2xl sm:text-4xl text-gray-900 font-extrabold tracking-tight leading-tight">
               {titleName} Skin Assessment
             </h1>
-            <p className="text-sm text-gray-600 mt-1.5 max-w-xl leading-relaxed">
-              Based on your answers and photo scan. Higher scores indicate calmer, clearer skin.
+            <p className="text-xs sm:text-sm text-gray-600 mt-1 max-w-xl leading-relaxed">
+              Based on your answers and photo scan. Higher scores reflect healthy, resilient skin.
             </p>
 
-            <div className="flex flex-wrap items-center gap-2 mt-4">
+            <div className="flex flex-wrap items-center gap-2 mt-3">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 {attributes.filter((a) => a.category === "Looking good").length} Optimal
@@ -549,7 +587,6 @@ export default function Result() {
           {/* Overall Health Score Card */}
           <div className="flex flex-col sm:flex-row md:flex-col items-center gap-3.5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#FBF7FE] to-[#F4E8FC]/40 border border-[#EADBFA] self-start md:self-auto shrink-0 shadow-2xs">
             <div className="flex items-center gap-4">
-              {/* Score Dial */}
               <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="40" fill="transparent" stroke="#EADBFA" strokeWidth="8" />
@@ -594,130 +631,129 @@ export default function Result() {
           </div>
         </div>
 
-        {/* Strengths vs Focus Areas */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/80">
-            <div className="flex items-center gap-2 mb-2 text-emerald-800">
-              <Sparkles className="w-4 h-4 text-emerald-600" />
-              <h4 className="font-bold text-xs uppercase tracking-wider">Your Greatest Strengths</h4>
+        {/* =========================================================================
+            ⭐ THE 3-LINE QUICK TAKEAWAY (Answers What User Cares About Instantly!)
+           ========================================================================= */}
+        <div className="mt-6 p-4 sm:p-6 rounded-3xl bg-gradient-to-br from-[#FBF7FE] via-white to-[#F4E8FC]/40 border-2 border-[#7A35A3]/25 shadow-xs">
+          <div className="flex items-center justify-between gap-3 mb-3 pb-2 border-b border-[#EADBFA]/70">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#7A35A3] animate-pulse" />
+              <h3 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#4A1766]">
+                Quick Takeaway Summary
+              </h3>
             </div>
-            <ul className="space-y-1.5 text-xs text-gray-700">
-              {topStrengths.map((attr) => (
-                <li key={attr.id} className="flex items-start gap-1.5">
-                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>
-                    <strong className="font-semibold text-gray-900">{attr.label} ({attr.userScore}%): </strong>
-                    {attr.shortTakeaway}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <span className="text-[11px] font-bold text-[#7A35A3] bg-[#F4E8FC] px-2.5 py-0.5 rounded-full border border-[#EADBFA]">
+              Action Plan
+            </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[#F4E8FC]/50 border border-[#EADBFA]">
-            <div className="flex items-center gap-2 mb-2 text-[#4A1766]">
-              <ArrowRight className="w-4 h-4 text-[#7A35A3]" />
-              <h4 className="font-bold text-xs uppercase tracking-wider">Primary Areas to Target</h4>
+          <div className="space-y-2.5">
+            {/* Line 1: Priority to Fix */}
+            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#EADBFA]">
+              <div className="w-8 h-8 rounded-xl bg-purple-100 text-[#7A35A3] flex items-center justify-center shrink-0 mt-0.5">
+                <Target className="w-4 h-4" />
+              </div>
+              <div className="text-xs sm:text-sm">
+                <span className="font-extrabold text-gray-900 block sm:inline">Your #1 Priority to Fix: </span>
+                <span className="font-bold text-[#7A35A3]">{topPriorityCondition.label} ({topPriorityCondition.userScore}%) </span>
+                <span className="text-gray-600 block sm:inline">— {topPriorityCondition.actionBenefit || "Active congestion and surface irritation around T-Zone."}</span>
+              </div>
             </div>
-            <ul className="space-y-1.5 text-xs text-gray-700">
-              {topFocusAreas.map((attr) => (
-                <li key={attr.id} className="flex items-start gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#7A35A3] shrink-0 mt-0.5" />
-                  <span>
-                    <strong className="font-semibold text-gray-900">{attr.label}: </strong>
-                    {attr.actionBenefit}
-                  </span>
-                </li>
-              ))}
-            </ul>
+
+            {/* Line 2: Greatest Strength */}
+            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-emerald-200">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div className="text-xs sm:text-sm">
+                <span className="font-extrabold text-gray-900 block sm:inline">Your Skin's Greatest Strength: </span>
+                <span className="font-bold text-emerald-700">{topStrengthCondition.label} ({topStrengthCondition.userScore}%) </span>
+                <span className="text-gray-600 block sm:inline">— {topStrengthCondition.shortTakeaway || "High elasticity, resilient moisture barrier & zero deep lines."}</span>
+              </div>
+            </div>
+
+            {/* Line 3: The Simple 2-Step Fix */}
+            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#BDE820]">
+              <div className="w-8 h-8 rounded-xl bg-[#D4FF3F]/50 text-[#1E2700] flex items-center justify-center shrink-0 mt-0.5">
+                <CheckCircle2 className="w-4 h-4" />
+              </div>
+              <div className="text-xs sm:text-sm">
+                <span className="font-extrabold text-gray-900 block sm:inline">The Simple 2-Step Fix: </span>
+                <span className="font-bold text-[#4A1766]">
+                  {isDry ? "Hydrating Barrier Cleanser + Deep Moisture Gel" : "Salicylic Clarifying Cleanser + Niacinamide Calming Gel"}
+                </span>
+                <span className="text-gray-600 block sm:inline"> — Daily morning & evening ritual to clear breakouts while sealing hydration.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick CTA to jump right to routine */}
+          <div className="mt-4 pt-3 border-t border-[#EADBFA]/70 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs text-gray-600">
+              Ready to see the recommended products for this 2-step fix?
+            </p>
+            <a
+              href="#routine-section"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#7A35A3] hover:bg-[#5C237D] text-white text-xs font-bold transition-all shadow-xs"
+            >
+              <span>View Your 2-Step Routine</span>
+              <ArrowDown className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          SECTION 2: FACIAL ZONE EXPLORER
+          SECTION 2: PRIMARY FOCUS AREAS (Shows 2-3 Focus Conditions; 11 kept separately!)
          ========================================================================= */}
-      <FaceHeatmap
-        attributes={attributes}
-        activeRegion={activeRegion}
-        onSelectRegion={setActiveRegion}
-        userPhoto={userPhoto}
-      />
-
-      {/* =========================================================================
-          SECTION 3: THE 11 CONDITIONS ANALYZED
-         ========================================================================= */}
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 border border-[#EADBFA] shadow-xs">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+      <div id="focus-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EADBFA] shadow-xs">
+        {/* Section Header with Segmented View Switcher */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-4 border-b border-[#EADBFA]">
           <div>
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#7A35A3]" />
-              <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                <span className="text-[#7A35A3]">11</span> Skin Conditions: Your Score vs. Others
+              <h2 className="font-sans text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">
+                {conditionView === "focus" ? "Primary Focus Areas (Needs Attention)" : "All 11 Conditions: Complete Biometric Diagnostic"}
               </h2>
             </div>
             <p className="text-xs text-gray-600 mt-1">
-              Higher score = Healthier, clearer skin. Benchmarked against 23,000+ age-matched profiles.
+              {conditionView === "focus"
+                ? "Targeted priorities based on your scan. Showing only what needs attention so you can take clear action."
+                : "Full 11-condition telemetry benchmarked against 23,000+ age-matched profiles."}
             </p>
           </div>
 
-          {/* View Switcher: Cards vs Comparison Chart */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1 p-0.5 bg-[#F4E8FC]/60 rounded-xl border border-[#EADBFA]">
-              <button
-                type="button"
-                onClick={() => setViewMode("cards")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer outline-none focus:outline-none ${
-                  viewMode === "cards"
-                    ? "bg-[#7A35A3] text-white shadow-xs"
-                    : "text-gray-700 hover:text-gray-900"
-                }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" />
-                <span>Cards View</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("chart")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer outline-none focus:outline-none ${
-                  viewMode === "chart"
-                    ? "bg-[#7A35A3] text-white shadow-xs"
-                    : "text-gray-700 hover:text-gray-900"
-                }`}
-              >
-                <BarChart3 className="w-3.5 h-3.5" />
-                <span>Comparison Chart</span>
-              </button>
-            </div>
-
-            {/* Filter Tabs */}
-            <div className="flex items-center gap-1 p-0.5 bg-white rounded-xl border border-[#EADBFA]">
-              {[
-                { id: "all", label: "All (11)" },
-                { id: "needs_boost", label: "Focus Areas" },
-                { id: "leading", label: "Above Average" },
-                { id: "good", label: "Optimal" },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setFilterCategory(tab.id)}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    filterCategory === tab.id
-                      ? "bg-[#7A35A3] text-white shadow-xs"
-                      : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+          {/* Segmented Control: Focus vs All 11 */}
+          <div className="flex items-center gap-1.5 p-1 bg-[#F4E8FC]/70 rounded-2xl border border-[#EADBFA] self-start md:self-auto shrink-0">
+            <button
+              type="button"
+              onClick={() => setConditionView("focus")}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                conditionView === "focus"
+                  ? "bg-[#7A35A3] text-white shadow-xs"
+                  : "text-gray-700 hover:text-gray-900"
+              }`}
+            >
+              <Target className="w-3.5 h-3.5" />
+              <span>Focus Areas ({topFocusAreas.length})</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setConditionView("all11")}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                conditionView === "all11"
+                  ? "bg-[#7A35A3] text-white shadow-xs"
+                  : "text-gray-700 hover:text-gray-900"
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>All 11 Conditions</span>
+            </button>
           </div>
         </div>
 
-        {/* Visual Color & Score Key */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-5 py-2.5 px-3.5 rounded-xl bg-[#F4E8FC]/30 border border-[#EADBFA] text-xs text-gray-700 mb-5">
+        {/* Score Guide Legend */}
+        <div className="flex flex-wrap items-center gap-3 sm:gap-5 py-2 px-3.5 rounded-xl bg-[#F4E8FC]/30 border border-[#EADBFA] text-xs text-gray-700 mb-5">
           <span className="font-bold text-[#4A1766]">Score Guide:</span>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
@@ -733,101 +769,52 @@ export default function Result() {
           </div>
         </div>
 
-        {/* Balanced 4-Column Skincare Pillar Chips (No orphan chips on second row!) */}
-        {viewMode === "cards" && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-6">
-            <button
-              type="button"
-              onClick={() => setActivePillar("all")}
-              className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
-                activePillar === "all"
-                  ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs"
-                  : "bg-[#FBF7FE] text-gray-800 border-[#EADBFA] hover:bg-white"
-              }`}
-            >
-              <span className="text-xs uppercase font-bold tracking-wider opacity-85 block">View All</span>
-              <p className="font-bold text-xs mt-0.5">All 11 Conditions</p>
-            </button>
-
-            {SKIN_PILLARS.map((pillar) => {
-              const isSelected = activePillar === pillar.id;
-              return (
-                <button
-                  key={pillar.id}
-                  type="button"
-                  onClick={() => setActivePillar(isSelected ? "all" : pillar.id)}
-                  className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
-                    isSelected
-                      ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs"
-                      : "bg-[#FBF7FE] text-gray-800 border-[#EADBFA] hover:bg-white"
-                  }`}
-                >
-                  <span className="text-xs uppercase font-bold tracking-wider opacity-85 block truncate">
-                    {pillar.badge}
-                  </span>
-                  <p className="font-bold text-xs mt-0.5 truncate">{pillar.title}</p>
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* VIEW 1: CLEAN CARDS VIEW (Aligned, non-overlapping, high contrast) */}
-        {viewMode === "cards" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredAttributes.map((attr) => {
-              const styleMeta = CATEGORY_STYLES[attr.category] || CATEGORY_STYLES["Fine for now"];
-              const Icon = ATTR_ICONS[attr.id] || Sparkles;
-
-              return (
-                <div
-                  key={attr.id}
-                  className="bg-white rounded-2xl border border-[#EADBFA] p-5 shadow-2xs hover:border-[#7A35A3]/40 transition-all flex flex-col justify-between h-full"
-                >
-                  <div className="flex flex-col flex-1">
-                    {/* Top Row: # and Status Badge */}
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-[#F4E8FC] text-[#4A1766] flex items-center justify-center font-bold">
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <span className="font-mono text-xs font-bold text-gray-500">
+        {/* -------------------------------------------------------------
+            MODE A: FOCUS AREAS ONLY (Default: 2-3 Cards, Zero Clutter)
+           ------------------------------------------------------------- */}
+        {conditionView === "focus" && (
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {topFocusAreas.map((attr) => {
+                const styleMeta = getScoreStyleMeta(attr.category, attr.userScore);
+                return (
+                  <div
+                    key={attr.id}
+                    className="p-5 rounded-3xl border-2 border-[#7A35A3]/25 bg-gradient-to-b from-white to-[#FBF7FE] shadow-xs flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="text-[11px] font-mono font-bold text-gray-400">
                           #{attr.indexNumber}
                         </span>
-                      </div>
-
-                      <div className="flex items-center gap-1.5">
-                        {attr.isQuizSourced && (
-                          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                            Quiz Match
-                          </span>
-                        )}
-                        <span className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${styleMeta.badge}`}>
-                          {styleMeta.label}
+                        <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
+                          {styleMeta.badgeText}
                         </span>
                       </div>
-                    </div>
 
-                    <h3 className="font-bold text-gray-900 text-base leading-snug">{attr.label}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5 italic">{attr.checks}</p>
+                      <h3 className="font-sans text-base font-extrabold text-gray-900 leading-snug">
+                        {attr.label}
+                      </h3>
 
-                    {/* Uniform observation container */}
-                    <div className="mt-2.5 p-3 rounded-xl bg-[#FBF7FE] border border-[#EADBFA]/60 min-h-[58px] flex items-center">
-                      <p className="text-xs text-gray-700 leading-relaxed">
+                      {attr.isQuizSourced && (
+                        <span className="inline-block text-[10px] font-bold text-[#7A35A3] bg-[#F4E8FC] px-2 py-0.5 rounded-md mt-1 mb-1">
+                          Quiz-Assisted Profile
+                        </span>
+                      )}
+
+                      <p className="text-xs text-gray-700 leading-relaxed mt-2 min-h-[44px]">
                         {attr.shortTakeaway}
                       </p>
-                    </div>
 
-                    {/* Score comparison bars */}
-                    <div className="mt-4 pt-3 border-t border-[#EADBFA]/70 space-y-2">
-                      <div>
+                      {/* Single clean user score bar */}
+                      <div className="mt-4 pt-3 border-t border-[#EADBFA]/70 space-y-2">
                         <div className="flex items-center justify-between text-xs mb-1">
                           <span className="font-bold text-gray-900 flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full bg-[#7A35A3]" />
                             <span>Your Score:</span>
                           </span>
                           <span className="font-mono font-bold text-[#4A1766]">
-                            {attr.isQuizSourced ? `${attr.userScore}% (Target Concern)` : `${attr.userScore}%`}
+                            {attr.userScore}%
                           </span>
                         </div>
                         <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
@@ -836,17 +823,285 @@ export default function Result() {
                             style={{ width: `${attr.userScore}%` }}
                           />
                         </div>
+
+                        {/* Clean Comparison Row (No grey line) */}
+                        <div className="flex items-center justify-between pt-2 border-t border-[#EADBFA]/50 text-xs">
+                          <div className="flex items-center gap-1.5 text-gray-600 font-medium">
+                            <Users className="w-3.5 h-3.5 text-gray-400" />
+                            <span>Average:</span>
+                            <span className="font-mono font-bold text-gray-800">{attr.othersScore}%</span>
+                          </div>
+                          <span
+                            className={`text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
+                              attr.delta > 0
+                                ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                                : attr.delta < 0
+                                ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
+                                : "bg-gray-100 text-gray-700"
+                            }`}
+                          >
+                            {attr.delta > 0 ? `+${attr.delta}% clearer` : attr.delta < 0 ? `${attr.delta}% vs avg` : "On par"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Recommendation box */}
+                    <div className="mt-4 pt-3 border-t border-[#EADBFA] bg-[#F4E8FC]/40 -mx-5 -mb-5 p-4 rounded-b-3xl">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A35A3] block mb-1">
+                        Recommended Treatment
+                      </span>
+                      <p className="text-xs font-bold text-gray-900 leading-snug">
+                        {attr.keyActive}
+                      </p>
+                      <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">
+                        {attr.actionBenefit}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Seamless invitation to view all 11 conditions */}
+            <div className="mt-6 p-4 rounded-2xl bg-[#FBF7FE] border border-[#EADBFA] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div>
+                <h4 className="text-xs font-bold text-gray-900">Curious about your full 11-condition profile?</h4>
+                <p className="text-xs text-gray-600 mt-0.5">
+                  Inspect your scores across Wrinkles, Pores, Redness, Nevi, Moles, Freckles & Scars.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setConditionView("all11")}
+                className="px-4 py-2 rounded-full bg-[#7A35A3] hover:bg-[#5C237D] text-white text-xs font-bold shrink-0 transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
+              >
+                <span>Explore All 11 Conditions</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* -------------------------------------------------------------
+            MODE B: FULL 11 CONDITIONS BREAKDOWN (Available Separately!)
+           ------------------------------------------------------------- */}
+        {conditionView === "all11" && (
+          <div id="conditions-section">
+            {/* View switcher & filters */}
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+              <div className="flex items-center gap-1 p-0.5 bg-[#F4E8FC]/60 rounded-xl border border-[#EADBFA]">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("cards")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    viewMode === "cards" ? "bg-[#7A35A3] text-white shadow-xs" : "text-gray-700 hover:text-gray-900"
+                  }`}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span>Cards View</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("chart")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    viewMode === "chart" ? "bg-[#7A35A3] text-white shadow-xs" : "text-gray-700 hover:text-gray-900"
+                  }`}
+                >
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  <span>Comparison Chart</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-1 p-0.5 bg-white rounded-xl border border-[#EADBFA]">
+                {[
+                  { id: "all", label: "All (11)" },
+                  { id: "needs_boost", label: "Focus Areas" },
+                  { id: "leading", label: "Above Average" },
+                  { id: "good", label: "Optimal" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setFilterCategory(tab.id)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                      filterCategory === tab.id
+                        ? "bg-[#4A1766] text-white"
+                        : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 4 Skincare Pillar Chips */}
+            {viewMode === "cards" && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setActivePillar("all")}
+                  className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
+                    activePillar === "all"
+                      ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs"
+                      : "bg-[#FBF7FE] text-gray-800 border-[#EADBFA] hover:bg-white"
+                  }`}
+                >
+                  <span className="text-[10px] uppercase font-bold tracking-wider opacity-85 block">View All</span>
+                  <p className="font-bold text-xs mt-0.5">All 11 Conditions</p>
+                </button>
+
+                {SKIN_PILLARS.map((pillar) => {
+                  const isSelected = activePillar === pillar.id;
+                  return (
+                    <button
+                      key={pillar.id}
+                      type="button"
+                      onClick={() => setActivePillar(isSelected ? "all" : pillar.id)}
+                      className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
+                        isSelected
+                          ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs"
+                          : "bg-[#FBF7FE] text-gray-800 border-[#EADBFA] hover:bg-white"
+                      }`}
+                    >
+                      <span className="text-[10px] uppercase font-bold tracking-wider opacity-85 block truncate">
+                        {pillar.badge}
+                      </span>
+                      <p className="font-bold text-xs mt-0.5 truncate">{pillar.title}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* View 1: 11 Cards Grid */}
+            {viewMode === "cards" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredAttributes.map((attr) => {
+                  const styleMeta = getScoreStyleMeta(attr.category, attr.userScore);
+                  return (
+                    <div
+                      key={attr.id}
+                      className={`p-5 rounded-3xl border ${styleMeta.border} ${styleMeta.bgLight} bg-white shadow-2xs flex flex-col justify-between`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <span className="text-[11px] font-mono font-bold text-gray-400">#{attr.indexNumber}</span>
+                          <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
+                            {styleMeta.badgeText}
+                          </span>
+                        </div>
+
+                        <h3 className="font-sans text-base font-extrabold text-gray-900 leading-snug">
+                          {attr.label}
+                        </h3>
+
+                        {attr.isQuizSourced && (
+                          <span className="inline-block text-[10px] font-bold text-[#7A35A3] bg-[#F4E8FC] px-2 py-0.5 rounded-md mt-1 mb-1">
+                            Quiz-Assisted Profile
+                          </span>
+                        )}
+
+                        <p className="text-xs text-gray-700 leading-relaxed mt-2 min-h-[44px]">
+                          {attr.shortTakeaway}
+                        </p>
+
+                        {/* Single User Bar (No Grey Bar!) */}
+                        <div className="mt-4 pt-3 border-t border-[#EADBFA]/70 space-y-2">
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="font-bold text-gray-900 flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-[#7A35A3]" />
+                              <span>Your Score:</span>
+                            </span>
+                            <span className="font-mono font-bold text-[#4A1766]">
+                              {attr.userScore}%
+                            </span>
+                          </div>
+                          <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${styleMeta.bar}`}
+                              style={{ width: `${attr.userScore}%` }}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between pt-2 border-t border-[#EADBFA]/50 text-xs">
+                            <div className="flex items-center gap-1.5 text-gray-600 font-medium">
+                              <Users className="w-3.5 h-3.5 text-gray-400" />
+                              <span>Average:</span>
+                              <span className="font-mono font-bold text-gray-800">{attr.othersScore}%</span>
+                            </div>
+                            <span
+                              className={`text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
+                                attr.delta > 0
+                                  ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                                  : attr.delta < 0
+                                  ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
+                                  : "bg-gray-100 text-gray-700"
+                              }`}
+                            >
+                              {attr.delta > 0 ? `+${attr.delta}% clearer` : attr.delta < 0 ? `${attr.delta}% vs avg` : "On par"}
+                            </span>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Clean Comparison Row (No grey line) */}
-                      <div className="flex items-center justify-between pt-2 border-t border-[#EADBFA]/50 text-xs">
-                        <div className="flex items-center gap-1.5 text-gray-600 font-medium">
-                          <Users className="w-3.5 h-3.5 text-gray-400" />
-                          <span>Average:</span>
-                          <span className="font-mono font-bold text-gray-800">{attr.othersScore}%</span>
+                      {/* Recommendation box */}
+                      <div className="mt-4 pt-3 border-t border-[#EADBFA] bg-[#F4E8FC]/30 -mx-5 -mb-5 p-4 rounded-b-3xl">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A35A3] block mb-1">
+                          {attr.isOptimal ? "Preservation Routine" : "Recommended Treatment"}
+                        </span>
+                        <p className="text-xs font-bold text-gray-900 leading-snug">
+                          {attr.keyActive}
+                        </p>
+                        <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">
+                          {attr.actionBenefit}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              /* View 2: Comparison Chart */
+              <div className="space-y-3">
+                <div className="grid grid-cols-12 text-xs font-bold uppercase tracking-wider text-gray-600 px-3 pb-2 border-b border-[#EADBFA]">
+                  <span className="col-span-4 sm:col-span-3">Skin Condition</span>
+                  <span className="col-span-5 sm:col-span-6">Your Score & Average</span>
+                  <span className="col-span-3 text-right">Difference</span>
+                </div>
+
+                <div className="space-y-2">
+                  {filteredAttributes.map((attr) => (
+                    <div
+                      key={attr.id}
+                      className="p-3.5 rounded-2xl border border-[#EADBFA]/80 bg-[#FBF7FE] hover:bg-white transition-all grid grid-cols-12 items-center gap-2"
+                    >
+                      <div className="col-span-4 sm:col-span-3">
+                        <span className="font-mono text-xs text-gray-500">#{attr.indexNumber} </span>
+                        <strong className="text-xs text-gray-900">{attr.label}</strong>
+                      </div>
+
+                      <div className="col-span-5 sm:col-span-6">
+                        <div className="flex items-center gap-2">
+                          <span className="w-8 font-mono text-xs font-bold text-[#4A1766] text-right">
+                            {attr.userScore}%
+                          </span>
+                          <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-[#7A35A3] to-[#C883EB] rounded-full"
+                              style={{ width: `${attr.userScore}%` }}
+                            />
+                          </div>
                         </div>
+                        <div className="flex items-center justify-between text-[11px] text-gray-500 mt-1 pl-10">
+                          <span>Average: <strong className="font-mono font-bold text-gray-700">{attr.othersScore}%</strong></span>
+                        </div>
+                      </div>
+
+                      <div className="col-span-3 text-right">
                         <span
-                          className={`text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
+                          className={`text-xs font-bold px-2.5 py-0.5 rounded-full inline-block ${
                             attr.delta > 0
                               ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
                               : attr.delta < 0
@@ -854,147 +1109,81 @@ export default function Result() {
                               : "bg-gray-100 text-gray-700"
                           }`}
                         >
-                          {attr.delta > 0
-                            ? `+${attr.delta}% clearer`
-                            : attr.delta < 0
-                            ? `${attr.delta}% vs avg`
-                            : "On par"}
+                          {attr.delta > 0 ? `+${attr.delta}%` : `${attr.delta}%`}
                         </span>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Uniform Bottom Formula Box (Aligned across all cards!) */}
-                  <div className="mt-4 pt-3 border-t border-gray-100">
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-500 block mb-1">
-                      {attr.isOptimal ? "Skincare Status:" : "Recommended Formula:"}
-                    </span>
-                    <div className={`p-2.5 rounded-xl border min-h-[64px] flex flex-col justify-center ${
-                      attr.isOptimal ? "bg-emerald-50/50 border-emerald-200/80" : "bg-[#F4E8FC]/30 border-[#EADBFA]"
-                    }`}>
-                      <p className={`font-bold text-xs leading-snug ${attr.isOptimal ? "text-emerald-800" : "text-[#4A1766]"}`}>
-                        {attr.keyActive}
-                      </p>
-                      <p className="text-xs text-gray-600 mt-1 leading-snug">
-                        {attr.actionBenefit}
-                      </p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          /* VIEW 2: SIMPLE COMPARISON BAR CHART */
-          <div className="space-y-3">
-            <div className="grid grid-cols-12 text-xs font-bold uppercase tracking-wider text-gray-600 px-3 pb-2 border-b border-[#EADBFA]">
-              <span className="col-span-4 sm:col-span-3">Skin Condition</span>
-              <span className="col-span-5 sm:col-span-6">Your Score vs. Average</span>
-              <span className="col-span-3 text-right">Difference</span>
-            </div>
-
-            <div className="space-y-2">
-              {filteredAttributes.map((attr) => {
-                return (
-                  <div
-                    key={attr.id}
-                    className="p-3.5 rounded-2xl border border-[#EADBFA]/80 bg-[#FBF7FE] hover:bg-white transition-all grid grid-cols-12 items-center gap-2"
-                  >
-                    <div className="col-span-4 sm:col-span-3">
-                      <span className="font-mono text-xs text-gray-500">#{attr.indexNumber} </span>
-                      <strong className="text-xs text-gray-900">{attr.label}</strong>
-                    </div>
-
-                    <div className="col-span-5 sm:col-span-6">
-                      <div className="flex items-center gap-2">
-                        <span className="w-8 font-mono text-xs font-bold text-[#4A1766] text-right">
-                          {attr.userScore}%
-                        </span>
-                        <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-[#7A35A3] to-[#C883EB] rounded-full"
-                            style={{ width: `${attr.userScore}%` }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between text-[11px] text-gray-500 mt-1 pl-10">
-                        <span>Average: <strong className="font-mono font-bold text-gray-700">{attr.othersScore}%</strong></span>
-                      </div>
-                    </div>
-
-                    <div className="col-span-3 text-right">
-                      <span
-                        className={`text-xs font-bold px-2.5 py-0.5 rounded-full inline-block ${
-                          attr.delta > 0
-                            ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
-                            : attr.delta < 0
-                            ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
-                            : "bg-gray-100 text-gray-700"
-                        }`}
-                      >
-                        {attr.delta > 0 ? `+${attr.delta}%` : `${attr.delta}%`}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* =========================================================================
-          SECTION 4: DAILY REGIMEN PROTOCOL
+          SECTION 3: DAILY REGIMEN PROTOCOL (Moved Right Up Here!)
          ========================================================================= */}
-      <RoutineProtocol
-        skinProfile={skinProfile}
-        onSelectProduct={() => {}}
-      />
+      <div id="routine-section">
+        <RoutineProtocol
+          skinProfile={skinProfile}
+          onSelectProduct={() => {}}
+        />
+      </div>
 
       {/* =========================================================================
-          SECTION 5: 4-WEEK EXPECTED PROGRESSION
+          SECTION 4: FACIAL ZONE EXPLORER & 4-WEEK PROGRESSION
          ========================================================================= */}
-      <div className="bg-gradient-to-r from-white to-[#F4F7FA] rounded-[28px] p-5 sm:p-7 border border-[#EADBFA] shadow-xs">
-        <span className="text-xs font-bold uppercase tracking-wider text-[#4A1766] bg-[#F4E8FC] px-2.5 py-0.5 rounded-full">
-          Expected Progression
-        </span>
-        <h3 className="font-sans text-xl sm:text-2xl font-bold text-gray-900 mt-1 mb-4">
-          Your 4-Week Expected Results
-        </h3>
+      <div id="facemap-section" className="space-y-6">
+        <FaceHeatmap
+          attributes={attributes}
+          activeRegion={activeRegion}
+          onSelectRegion={setActiveRegion}
+          userPhoto={userPhoto}
+        />
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
-            <span className="text-xs font-bold text-[#4A1766] uppercase tracking-wider block">
-              Week 1: Soothe & Hydrate
-            </span>
-            <p className="text-sm font-bold text-gray-900 mt-1">Barrier Relief</p>
-            <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
-              Reduction in dryness, tight feeling, and reactive surface redness.
-            </p>
-          </div>
-          <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
-            <span className="text-xs font-bold text-[#4A1766] uppercase tracking-wider block">
-              Week 2: Clear Pores
-            </span>
-            <p className="text-sm font-bold text-gray-900 mt-1">Oil & Pore Balance</p>
-            <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
-              Clears congestion in the T-zone and visibly refines pore appearance.
-            </p>
-          </div>
-          <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
-            <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
-              Week 4+: Healthy Glow
-            </span>
-            <p className="text-sm font-bold text-gray-900 mt-1">Radiant & Even Tone</p>
-            <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
-              Noticeable fading of dark spots, smoother skin bounce, and even skin tone.
-            </p>
+        <div className="bg-gradient-to-r from-white to-[#F4F7FA] rounded-[28px] p-5 sm:p-7 border border-[#EADBFA] shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#4A1766] bg-[#F4E8FC] px-2.5 py-0.5 rounded-full">
+            Expected Progression
+          </span>
+          <h3 className="font-sans text-xl sm:text-2xl font-bold text-gray-900 mt-1 mb-4">
+            Your 4-Week Expected Results
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
+              <span className="text-xs font-bold text-[#4A1766] uppercase tracking-wider block">
+                Week 1: Soothe & Hydrate
+              </span>
+              <p className="text-sm font-bold text-gray-900 mt-1">Barrier Relief</p>
+              <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                Reduction in dryness, tight feeling, and reactive surface redness.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
+              <span className="text-xs font-bold text-[#4A1766] uppercase tracking-wider block">
+                Week 2: Clear Pores
+              </span>
+              <p className="text-sm font-bold text-gray-900 mt-1">Oil & Pore Balance</p>
+              <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                Clears congestion in the T-zone and visibly refines pore appearance.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
+              <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
+                Week 4+: Healthy Glow
+              </span>
+              <p className="text-sm font-bold text-gray-900 mt-1">Radiant & Even Tone</p>
+              <p className="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                Noticeable fading of dark spots, smoother skin bounce, and even skin tone.
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          SECTION 6: PERSONAL SKIN ID CARD
+          SECTION 5: PERSONAL SKIN ID CARD
          ========================================================================= */}
       <SkinPassport
         reportId={reportMeta?.reportId}
@@ -1006,9 +1195,9 @@ export default function Result() {
       />
 
       {/* =========================================================================
-          SECTION 7: TRUSTWORTHY PRICING & DIRECT ORDER (With Cart / Checkout Modal!)
+          SECTION 6: PRICING & DIRECT ORDER (With Direct Checkout Modal!)
          ========================================================================= */}
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 md:p-10 border border-[#EADBFA] shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] text-center relative overflow-hidden">
+      <div id="pricing-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 md:p-10 border border-[#EADBFA] shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] text-center relative overflow-hidden">
         {/* Soft, trustworthy banner */}
         <div className="bg-[#4A1766] text-white py-2 px-4 rounded-2xl mb-4 text-center flex items-center justify-center gap-2 shadow-sm max-w-md mx-auto">
           <Clock className="w-3.5 h-3.5 text-[#C883EB]" />
@@ -1018,319 +1207,261 @@ export default function Result() {
         </div>
 
         <h2 className="font-sans text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight">
-          Start Your Tailored Skincare Plan
+          Choose Your Routine Protocol
         </h2>
-        <p className="text-xs sm:text-sm text-gray-600 mt-1.5 max-w-md mx-auto">
-          Formulated to target your 11 assessed skin conditions with pure clinical-grade actives.
+        <p className="text-xs sm:text-sm text-gray-600 mt-2 max-w-lg mx-auto">
+          Formulated to target your specific skin score. Includes your customized daily regimen and WhatsApp advisor access.
         </p>
 
-        {/* Voucher Tag Pill (Consistent ₹ Currency) */}
-        <div className="my-5 p-3 rounded-2xl bg-gradient-to-r from-[#F4F7FA] to-[#F4E8FC] border border-[#EADBFA] flex items-center justify-between max-w-md mx-auto">
-          <div className="flex items-center gap-2">
-            <Tag className="w-4 h-4 text-[#4A1766]" />
-            <span className="font-mono text-xs font-bold text-gray-900 tracking-wider">
-              MILC50SPECIAL
-            </span>
-          </div>
-          <span className="text-xs font-bold text-[#1E2700] bg-[#D4FF3F] border border-[#BDE820] px-2.5 py-0.5 rounded-full">
-            50% Discount Applied
-          </span>
-        </div>
-
-        {/* Pricing Tier Selection Cards (All in ₹ INR!) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 my-6 text-left">
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 text-left">
           {PRICING_PLANS.map((plan) => {
             const isSelected = selectedPlanId === plan.id;
+            const planTitle = plan.title || plan.name || "Custom Plan";
+            const planPrice = plan.discountedPrice || plan.price || "₹499";
+            const planBadge = plan.badge || plan.discount || "50% OFF";
+            const planRate = plan.dailyRate ? `${plan.dailyRate}` : plan.perDay || "";
+            const planFeatures = plan.features || [
+              "11-Condition Biometric Profile",
+              "Personalized AM/PM Topical Regimen",
+              "Direct WhatsApp Advisor Access",
+              "4-Week Transformation Monitoring",
+            ];
+
             return (
               <div
                 key={plan.id}
-                onClick={() => {
-                  setSelectedPlanId(plan.id);
-                  setSelectedPlan?.(plan.id);
-                }}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between ${
+                onClick={() => setSelectedPlanId(plan.id)}
+                className={`p-5 rounded-3xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${
                   isSelected
-                    ? "border-2 border-[#7A35A3] bg-white ring-2 ring-[#7A35A3]/15 shadow-sm"
-                    : "border-gray-200/90 bg-[#F4F7FA]/70 hover:bg-white shadow-2xs"
+                    ? "border-[#7A35A3] bg-gradient-to-b from-[#FBF7FE] to-white shadow-md ring-2 ring-[#7A35A3]/20"
+                    : "border-[#EADBFA] bg-white hover:border-[#7A35A3]/40"
                 }`}
               >
+                {plan.popular && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820] text-[10px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-xs">
+                    Most Popular Choice
+                  </span>
+                )}
+
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <span
-                      className={`text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                        plan.popular
-                          ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
-                          : "bg-slate-200 text-slate-700"
-                      }`}
-                    >
-                      {plan.badge}
+                    <h3 className="font-sans font-bold text-base text-gray-900">{planTitle}</h3>
+                    <span className="text-xs font-bold text-[#7A35A3] bg-[#F4E8FC] px-2 py-0.5 rounded-md">
+                      {planBadge}
                     </span>
-                    <div
-                      className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                        isSelected ? "border-[#7A35A3] bg-[#7A35A3] text-white" : "border-gray-300"
-                      }`}
-                    >
-                      {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                    </div>
                   </div>
 
-                  <h4 className="font-bold text-gray-900 text-sm sm:text-base">{plan.title}</h4>
-                  <p className="text-xs text-gray-500 mt-0.5 line-through">
-                    {plan.originalPrice} → <span className="font-bold text-gray-800 no-underline">{plan.discountedPrice}</span>
-                  </p>
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="font-sans text-3xl font-extrabold text-gray-900">
+                      {planPrice}
+                    </span>
+                    {plan.originalPrice && (
+                      <span className="text-xs text-gray-400 line-through">
+                        {plan.originalPrice}
+                      </span>
+                    )}
+                  </div>
+                  {planRate && (
+                    <p className="text-xs text-[#7A35A3] font-semibold mt-0.5">
+                      {planRate} {plan.period ? `· ${plan.period}` : ""}
+                    </p>
+                  )}
+
+                  <ul className="mt-4 space-y-2 text-xs text-gray-700 pt-3 border-t border-[#EADBFA]/70">
+                    {planFeatures.map((feat, i) => (
+                      <li key={i} className="flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                <div className="text-right mt-4 pt-3 border-t border-slate-100 flex items-baseline justify-between">
-                  <span className="text-xs text-gray-500 uppercase font-semibold">Cost</span>
-                  <div>
-                    <span className="font-sans text-2xl font-bold text-gray-900 leading-none">
-                      {plan.dailyRate}
-                    </span>
-                    <span className="text-xs text-gray-500 ml-1">/ day</span>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedPlanId(plan.id);
+                    setIsCheckoutOpen(true);
+                  }}
+                  className={`mt-6 w-full py-2.5 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs ${
+                    isSelected
+                      ? "bg-[#7A35A3] text-white hover:bg-[#5C237D]"
+                      : "bg-[#F4E8FC] text-[#4A1766] hover:bg-[#EADBFA]"
+                  }`}
+                >
+                  <ShoppingBag className="w-3.5 h-3.5" />
+                  <span>Select {planTitle}</span>
+                </button>
               </div>
             );
           })}
         </div>
 
-        {/* What's Included */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#F4F7FA] border border-[#EADBFA] text-left text-xs sm:text-sm space-y-2 mb-6 max-w-2xl mx-auto shadow-2xs">
-          <p className="font-bold text-gray-900 uppercase tracking-wider text-xs">
-            Your Routine Package Includes:
-          </p>
-          <div className="flex items-center gap-2 text-slate-700">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>4 full-sized custom MILC active products tailored to your assessment</span>
-          </div>
-          <div className="flex items-center gap-2 text-slate-700">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Free express delivery across India + routine tracking</span>
-          </div>
-          <div className="flex items-center gap-2 text-slate-700">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Direct WhatsApp access to a skincare specialist whenever you need advice</span>
-          </div>
-        </div>
-
-        {/* Social Proof */}
-        <div className="flex items-center justify-center gap-1.5 text-amber-500 mb-6">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} className="w-4 h-4 fill-current" />
-          ))}
-          <span className="text-xs sm:text-sm font-bold text-slate-700 ml-1.5">
-            4.9/5 from 23,000+ users across India
-          </span>
-        </div>
-
-        {/* DUAL CHECKOUT OPTIONS */}
+        {/* Action Buttons: Direct Checkout & WhatsApp Option */}
         <div className="max-w-md mx-auto space-y-3">
           <button
             type="button"
-            onClick={() => setShowCheckoutModal(true)}
-            className="w-full h-14 bg-gradient-to-r from-[#E34234] to-[#C72F22] text-white rounded-full font-bold text-sm cursor-pointer shadow-md shadow-[#E34234]/20 hover:shadow-lg hover:shadow-[#E34234]/25 flex items-center justify-center gap-2 transition-all"
+            onClick={() => setIsCheckoutOpen(true)}
+            className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#7A35A3] to-[#4A1766] text-white text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <ShoppingBag className="w-4 h-4" />
-            <span>Order My Custom Routine ({selectedPlan.discountedPrice})</span>
-            <ArrowRight className="w-4 h-4" />
+            <CreditCard className="w-4 h-4" />
+            <span>Proceed to Instant Checkout ({selectedPlanPrice})</span>
           </button>
 
           <a
             href={advisorHref}
             target="_blank"
-            rel="noreferrer"
-            className="w-full h-11 rounded-full border border-[#EADBFA] bg-[#FBF7FE] hover:bg-white text-gray-700 font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+            rel="noopener noreferrer"
+            className="w-full py-2.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-all flex items-center justify-center gap-2"
           >
             <MessageCircle className="w-4 h-4 text-emerald-600" />
-            <span>Prefer to chat first? Ask on WhatsApp</span>
+            <span>Prefer to order or ask questions via WhatsApp? Chat with Advisor</span>
           </a>
         </div>
-
-        {/* Honest Medical Disclaimer */}
-        <p className="text-xs text-gray-500 mt-6 max-w-lg mx-auto leading-relaxed border-t border-gray-100 pt-4">
-          Disclaimer: MILC Skin Lab provides cosmetic skincare recommendations based on AI computer vision and your self-reported profile. This assessment is not a medical diagnosis. If you have an active dermatological disease, please consult a physician.
-        </p>
-      </div>
-
-      {/* Retake options */}
-      <div className="flex items-center justify-between text-xs text-gray-500 px-2 pt-2">
-        <button
-          type="button"
-          onClick={() => goToStep(2, "backward")}
-          className="underline hover:text-gray-800 cursor-pointer flex items-center gap-1"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          Retake photo scan
-        </button>
-        <button
-          type="button"
-          onClick={resetQuiz}
-          className="underline hover:text-gray-800 cursor-pointer"
-        >
-          Start new assessment
-        </button>
       </div>
 
       {/* =========================================================================
-          DIRECT ONLINE CHECKOUT MODAL
+          DIRECT ORDER CHECKOUT MODAL (No WhatsApp forced!)
          ========================================================================= */}
       <AnimatePresence>
-        {showCheckoutModal && (
-          <div
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
-            onClick={() => setShowCheckoutModal(false)}
-          >
+        {isCheckoutOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-[28px] max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-[#EADBFA] max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[#EADBFA] max-h-[90vh] overflow-y-auto"
             >
-              {checkoutComplete ? (
-                <div className="text-center py-8 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-                    <Check className="w-8 h-8" />
-                  </div>
-                  <h3 className="font-sans text-2xl font-bold text-gray-900">Order Confirmed!</h3>
-                  <p className="text-xs text-gray-600 max-w-sm mx-auto">
-                    Thank you, {isRealName ? firstName : "there"}! Your custom routine is being prepared by the lab. You will receive tracking details shortly.
+              <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
+                <div>
+                  <h3 className="font-sans text-xl font-bold text-gray-900">Direct Order Checkout</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {selectedPlanTitle} · <span className="font-bold text-[#7A35A3]">{selectedPlanPrice}</span> (50% Off Applied)
                   </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCheckoutComplete(false);
-                      setShowCheckoutModal(false);
-                    }}
-                    className="h-11 px-6 rounded-full bg-[#7A35A3] text-white text-xs font-bold cursor-pointer hover:bg-[#4A1766]"
-                  >
-                    Back to Report
-                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsCheckoutOpen(false)}
+                  className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center cursor-pointer hover:bg-gray-200"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {orderSuccess ? (
+                <div className="py-8 text-center space-y-3">
+                  <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-8 h-8" />
+                  </div>
+                  <h4 className="text-lg font-bold text-gray-900">Order Confirmed!</h4>
+                  <p className="text-xs text-gray-600 max-w-xs mx-auto">
+                    Your custom routine kit is being prepared. You will receive tracking details via SMS/WhatsApp.
+                  </p>
                 </div>
               ) : (
-                <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
-                    <div>
-                      <h3 className="font-sans text-xl font-bold text-gray-900">Order Summary</h3>
-                      <p className="text-xs text-gray-500">Selected Plan: {selectedPlan.title}</p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowCheckoutModal(false)}
-                      className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center cursor-pointer"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Products Included */}
-                  <div className="space-y-2 mb-4">
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-500 block">
-                      Custom 4-Product Set Included:
-                    </span>
-                    <div className="p-3 bg-[#F4F7FA] rounded-2xl space-y-1.5 text-xs text-gray-700">
-                      <div className="flex justify-between">
-                        <span>1. Pore Calm Gentle Cleanser</span>
-                        <span className="font-medium">₹790</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>2. Active Even Tone Serum</span>
-                        <span className="font-medium">₹1,090</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>3. Peptide Barrier Recovery Cream</span>
-                        <span className="font-medium">₹1,190</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>4. Daily Shield SPF 30</span>
-                        <span className="font-medium">₹890</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pricing Breakdown */}
-                  <div className="p-3.5 rounded-2xl border border-[#EADBFA] bg-[#FBF7FE] space-y-1.5 text-xs mb-5">
-                    <div className="flex justify-between text-gray-600">
-                      <span>Standard Retail Value</span>
-                      <span className="line-through">{selectedPlan.originalPrice}</span>
-                    </div>
-                    <div className="flex justify-between text-emerald-700 font-semibold">
-                      <span>Assessment 50% Voucher</span>
-                      <span>-50% Off</span>
-                    </div>
-                    <div className="flex justify-between text-gray-600">
-                      <span>Express Shipping (All India)</span>
-                      <span className="text-emerald-700 font-semibold">FREE</span>
-                    </div>
-                    <div className="pt-2 border-t border-[#EADBFA] flex justify-between text-sm font-bold text-gray-900">
-                      <span>Total Due Today</span>
-                      <span className="text-base text-[#7A35A3] font-sans font-extrabold">{selectedPlan.discountedPrice}</span>
-                    </div>
-                  </div>
-
-                  {/* Delivery Info */}
-                  <div className="space-y-3 mb-5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-500 block">
-                      Shipping Details:
-                    </span>
+                <form onSubmit={handleOrderSubmit} className="space-y-4">
+                  <div>
+                    <label className="text-xs font-bold text-gray-700 block mb-1">Full Name</label>
                     <input
                       type="text"
+                      required
                       defaultValue={isRealName ? fullName : ""}
-                      placeholder="Full Name"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-900 outline-none focus:border-[#7A35A3]"
+                      placeholder="Your full name"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
                     />
-                    <input
-                      type="text"
-                      placeholder="Delivery Address (Street, Flat / House No.)"
-                      className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-900 outline-none focus:border-[#7A35A3]"
-                    />
-                    <div className="grid grid-cols-2 gap-2">
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold text-gray-700 block mb-1">Phone (for Delivery updates)</label>
                       <input
-                        type="text"
-                        placeholder="City"
-                        className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-900 outline-none focus:border-[#7A35A3]"
+                        type="tel"
+                        required
+                        placeholder="+91 98765 43210"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
                       />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-700 block mb-1">Email</label>
                       <input
-                        type="text"
-                        placeholder="PIN Code"
-                        className="w-full h-10 px-3 rounded-xl border border-gray-200 text-xs text-gray-900 outline-none focus:border-[#7A35A3]"
+                        type="email"
+                        required
+                        placeholder="you@email.com"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
                       />
                     </div>
                   </div>
 
-                  {/* Payment Method */}
-                  <div className="space-y-2 mb-6">
-                    <span className="text-xs font-bold uppercase tracking-wider text-gray-500 block">
-                      Payment Method:
-                    </span>
+                  <div>
+                    <label className="text-xs font-bold text-gray-700 block mb-1">Shipping Address (India)</label>
+                    <textarea
+                      required
+                      rows={2}
+                      placeholder="House / Flat No., Street, Landmark"
+                      className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold text-gray-700 block mb-1">City</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="City"
+                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-gray-700 block mb-1">PIN Code</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="PIN Code"
+                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-gray-700 block mb-1.5">Payment Method</label>
                     <div className="grid grid-cols-3 gap-2">
-                      <div className="p-2.5 rounded-xl border-2 border-[#7A35A3] bg-[#F4E8FC]/30 text-center text-xs font-bold text-[#4A1766] cursor-pointer">
-                        UPI / GPay
+                      <div className="p-2.5 rounded-xl border-2 border-[#7A35A3] bg-[#F4E8FC]/30 text-center text-xs font-bold text-[#4A1766]">
+                        UPI / QR
                       </div>
-                      <div className="p-2.5 rounded-xl border border-gray-200 text-center text-xs font-medium text-gray-600 hover:border-gray-400 cursor-pointer">
+                      <div className="p-2.5 rounded-xl border border-gray-200 text-center text-xs text-gray-600">
                         Cards
                       </div>
-                      <div className="p-2.5 rounded-xl border border-gray-200 text-center text-xs font-medium text-gray-600 hover:border-gray-400 cursor-pointer">
+                      <div className="p-2.5 rounded-xl border border-gray-200 text-center text-xs text-gray-600">
                         Net Banking
                       </div>
                     </div>
                   </div>
 
-                  {/* Direct Buy Button */}
                   <button
-                    type="button"
-                    onClick={() => setCheckoutComplete(true)}
-                    className="w-full h-12 bg-gradient-to-r from-[#E34234] to-[#C72F22] text-white rounded-full font-bold text-xs cursor-pointer shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                    type="submit"
+                    className="w-full mt-4 py-3 rounded-full bg-[#7A35A3] hover:bg-[#5C237D] text-white text-xs font-extrabold shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
                   >
                     <Lock className="w-3.5 h-3.5" />
-                    <span>Pay {selectedPlan.discountedPrice} Securely</span>
+                    <span>Pay {selectedPlanPrice} & Place Order</span>
                   </button>
-                </div>
+                </form>
               )}
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-    </motion.div>
+
+      {/* =========================================================================
+          FOOTER DISCLAIMER
+         ========================================================================= */}
+      <footer className="pt-6 border-t border-[#EADBFA]/70 text-center text-[11px] text-gray-500 max-w-2xl mx-auto leading-relaxed">
+        <p>
+          MILC AI Skin Lab provides educational cosmetic skin profiling and customized topical routines. This assessment is not a clinical medical diagnosis or treatment for dermatological disease.
+        </p>
+      </footer>
+    </div>
   );
 }
