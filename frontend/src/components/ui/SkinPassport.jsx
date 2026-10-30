@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Share2, Check, Sparkles, ShieldCheck, MessageCircle, Copy } from "lucide-react";
+import { Share2, Check, Sparkles, ShieldCheck, MessageCircle, Copy, Award } from "lucide-react";
 
 export default function SkinPassport({
   reportId,
@@ -12,6 +12,10 @@ export default function SkinPassport({
 }) {
   const [copied, setCopied] = useState(false);
 
+  const displayName = clientName?.trim() && clientName.trim() !== "Client"
+    ? clientName.trim()
+    : "Your Skin Profile";
+
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.clipboard) {
@@ -22,61 +26,61 @@ export default function SkinPassport({
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#0B1E32] to-[#132B45] text-white rounded-[32px] p-6 sm:p-8 shadow-xl relative overflow-hidden">
+    <div className="bg-gradient-to-br from-[#2D143E] via-[#4A1766] to-[#7A35A3] text-white rounded-[32px] p-6 sm:p-8 shadow-xl relative overflow-hidden border border-[#EADBFA]/30">
       {/* Subtle luxury ambient pattern overlay */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#204060]/25 to-transparent rounded-bl-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-60 h-60 bg-gradient-to-tr from-[#132B45]/40 to-transparent rounded-tr-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#C883EB]/20 to-transparent rounded-bl-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-60 h-60 bg-gradient-to-tr from-[#D4FF3F]/10 to-transparent rounded-tr-full pointer-events-none" />
 
       <div className="relative z-10">
         <div className="flex items-center justify-between border-b border-white/15 pb-4 mb-6">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-xs font-serif font-bold text-white border border-white/20">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-xs font-serif font-bold text-[#D4FF3F] border border-white/20">
               M
             </div>
             <div>
               <span className="font-serif tracking-widest text-sm font-bold text-[#F4E8FC] uppercase">
                 MILC SKIN LAB
               </span>
-              <span className="block text-[9px] uppercase tracking-[0.2em] text-white/50">
-                Official Clinical Skin ID
+              <span className="block text-[9px] uppercase tracking-[0.2em] text-[#C883EB]">
+                Personal Skin Profile ID
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px]">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="font-medium text-white/90">Verified Telemetry</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-[#D4FF3F]" />
+            <span className="font-medium text-white/90">Assessment Verified</span>
           </div>
         </div>
 
         {/* Passport Content Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-white/50">Subject</p>
-            <p className="text-base font-bold text-[#F4E8FC] mt-0.5 truncate">{clientName || "Client"}</p>
+          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[10px] uppercase tracking-wider text-white/60">Profile Name</p>
+            <p className="text-base font-bold text-white mt-0.5 truncate">{displayName}</p>
           </div>
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-white/50">Skin Baseline</p>
-            <p className="text-base font-bold text-[#F4E8FC] mt-0.5 capitalize">{skinType || "Normal"}</p>
+          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[10px] uppercase tracking-wider text-white/60">Skin Type</p>
+            <p className="text-base font-bold text-white mt-0.5 capitalize">{skinType || "Normal"}</p>
           </div>
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-white/50">Primary Target</p>
-            <p className="text-base font-bold text-[#F4E8FC] mt-0.5 capitalize truncate">{mainConcern || "Balance"}</p>
+          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[10px] uppercase tracking-wider text-white/60">Primary Goal</p>
+            <p className="text-base font-bold text-white mt-0.5 capitalize truncate">{mainConcern || "Balance"}</p>
           </div>
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-white/50">Radiance Index</p>
-            <p className="text-base font-bold text-emerald-400 mt-0.5">{vitalityScore} / 100</p>
+          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[10px] uppercase tracking-wider text-white/60">Skin Health Score</p>
+            <p className="text-base font-bold text-[#D4FF3F] mt-0.5">{vitalityScore} / 100</p>
           </div>
         </div>
 
         {/* Report ID & Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-white/15">
           <div className="text-center sm:text-left">
-            <p className="text-[11px] text-white/60 font-mono tracking-wider">
+            <p className="text-[11px] text-[#EADBFA] font-mono tracking-wider">
               ID: {reportId || "MILC-PROVISIONAL"}
             </p>
-            <p className="text-[10px] text-white/40 mt-0.5">
-              Derived from multi-factor cosmetic vision metrics
+            <p className="text-[10px] text-white/50 mt-0.5">
+              Formulated for educational skincare matching · Not a medical diagnosis
             </p>
           </div>
 
@@ -86,32 +90,30 @@ export default function SkinPassport({
               whileTap={{ scale: 0.97 }}
               type="button"
               onClick={handleShare}
-              className="flex-1 sm:flex-none h-11 px-4 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-xs font-semibold text-white flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              className="flex-1 sm:flex-none h-11 px-5 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-xs font-semibold text-white flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               {copied ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <Check className="w-3.5 h-3.5 text-[#D4FF3F]" />
                   <span>Link Copied!</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5" />
-                  <span>Share Report</span>
+                  <span>Share Skin ID</span>
                 </>
               )}
             </motion.button>
 
-            <motion.a
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+            <a
               href={expertHref}
               target="_blank"
               rel="noreferrer"
-              className="flex-1 sm:flex-none h-11 px-4 rounded-full bg-[#F4E8FC] hover:bg-white text-[#0B1E32] text-xs font-bold flex items-center justify-center gap-2 transition-colors"
+              className="flex-1 sm:flex-none h-11 px-5 rounded-full bg-[#D4FF3F] text-[#1E2700] hover:bg-[#bde820] text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-sm"
             >
-              <MessageCircle className="w-3.5 h-3.5 text-[#4A1766]" />
-              <span>Derm Consult</span>
-            </motion.a>
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Ask an Advisor</span>
+            </a>
           </div>
         </div>
       </div>

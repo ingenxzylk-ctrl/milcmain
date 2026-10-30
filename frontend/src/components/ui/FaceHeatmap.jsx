@@ -1,57 +1,67 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Eye, Camera, Layers, Check } from "lucide-react";
+import { Sparkles, Eye, Camera, Layers, Check, ShieldCheck, ChevronRight, Activity, Info } from "lucide-react";
 
-// Regional definitions mapping to attribute categories
-const REGIONS = [
-  {
-    id: "forehead",
-    name: "Forehead",
-    attrIds: ["wrinkles", "visible_pores", "whiteheads", "pigmentation"],
-    badge: "Wrinkles & tone",
-    path: "M 60 55 C 60 30, 140 30, 140 55 C 140 68, 60 68, 60 55 Z",
-  },
+// 5 Facial Zones mapping to the 11 skin conditions
+export const REGIONS = [
   {
     id: "tzone",
     name: "T-Zone & Nose",
     attrIds: ["visible_pores", "whiteheads", "acne_inflammatory", "freckles"],
-    badge: "Pores & congestion",
-    path: "M 88 72 L 112 72 L 110 115 C 110 125, 90 125, 90 115 Z",
+    badge: "Pores & Congestion",
+    insight: "Central area with high oil gland density. Monitored for trapped sebum, blackheads, and pore size.",
+    applicationTip: "Gently pat your clarifying BHA or Niacinamide formula along the nose bridge and chin.",
+  },
+  {
+    id: "cheeks",
+    name: "Cheeks",
+    attrIds: ["redness", "postacne_spots", "freckles", "pigmentation", "scars"],
+    badge: "Tone & Moisture Barrier",
+    insight: "Primary moisture barrier zone. Monitored for facial flushing, sun spots, and past blemish marks.",
+    applicationTip: "Layer soothing Centella and barrier cream evenly to lock in hydration and reduce redness.",
+  },
+  {
+    id: "forehead",
+    name: "Forehead",
+    attrIds: ["wrinkles", "visible_pores", "whiteheads", "pigmentation"],
+    badge: "Expression Lines & Texture",
+    insight: "Upper facial area. Monitored for dynamic expression lines, sun exposure, and upper pore smoothness.",
+    applicationTip: "Smooth serums upward toward the hairline to support skin elasticity.",
   },
   {
     id: "undereye",
     name: "Under-Eyes",
     attrIds: ["wrinkles", "pigmentation"],
-    badge: "Lines & tone",
-    path: "M 60 85 C 65 92, 82 92, 86 85 M 114 85 C 118 92, 135 92, 140 85",
-    isStroke: true,
-  },
-  {
-    id: "cheeks",
-    name: "Cheeks",
-    attrIds: ["redness", "postacne_spots", "freckles", "pigmentation", "scars", "moles", "nevi", "visible_pores"],
-    badge: "Redness, spots & scars",
-    path: "M 52 100 C 45 125, 75 145, 82 135 C 75 115, 65 105, 52 100 Z M 148 100 C 155 125, 125 145, 118 135 C 125 115, 135 105, 148 100 Z",
+    badge: "Delicate Eye Area",
+    insight: "Thin, delicate skin zone. Monitored for fine dehydration lines, darkness, and fatigue shadows.",
+    applicationTip: "Gently tap eye cream with your ring finger along the orbital bone—never pull or rub.",
   },
   {
     id: "jawline",
     name: "Jawline & Chin",
-    attrIds: ["acne_inflammatory", "postacne_spots", "scars", "whiteheads", "moles", "nevi"],
-    badge: "Breakouts & post-acne marks",
-    path: "M 62 145 C 75 180, 125 180, 138 145 C 130 162, 70 162, 62 145 Z",
+    attrIds: ["acne_inflammatory", "postacne_spots", "scars", "whiteheads"],
+    badge: "Breakouts & Recovery",
+    insight: "Lower facial area often influenced by hormonal shifts, friction, and residual marks.",
+    applicationTip: "Carry your evening moisturizer all the way down across the jawline and neck.",
   },
 ];
 
 export default function FaceHeatmap({
   attributes = [],
-  activeRegion,
+  activeRegion: propActiveRegion,
   onSelectRegion,
   userPhoto = null,
 }) {
-  const [hoveredRegion, setHoveredRegion] = useState(null);
-  const [showOverlays, setShowOverlays] = useState(true);
+  // Default to T-Zone so the inspection box is NEVER empty!
+  const [internalActive, setInternalActive] = useState("tzone");
+  const currentRegionId = propActiveRegion || internalActive;
 
-  // Determine category urgency status for a given region
+  const handleSelect = (id) => {
+    setInternalActive(id);
+    onSelectRegion?.(id);
+  };
+
+  // Determine health status for a given region
   const getRegionStatus = (attrIds) => {
     const relevant = attributes.filter((a) => attrIds.includes(a.id));
     if (relevant.some((a) => a.category === "Needs a boost")) return "needs_boost";
@@ -59,197 +69,165 @@ export default function FaceHeatmap({
     return "good";
   };
 
-  const currentActive = hoveredRegion || activeRegion;
-  const activeMeta = REGIONS.find((r) => r.id === currentActive);
+  const activeMeta = REGIONS.find((r) => r.id === currentRegionId) || REGIONS[0];
+  const activeAttributes = attributes.filter((a) => activeMeta.attrIds.includes(a.id));
 
   return (
-    <div className="bg-gradient-to-b from-white to-[#F4F7FA] rounded-[28px] p-5 sm:p-6 border border-[#EADBFA] shadow-xs relative overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 border border-[#EADBFA] shadow-xs relative overflow-hidden">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 flex items-center gap-1.5 font-serif text-base">
-            <Sparkles className="w-4 h-4 text-[#4A1766]" />
-            {userPhoto ? "Your Face Scan & Zone Analysis" : "Interactive Facial Zone Map"}
-          </h4>
-          <p className="text-[11px] text-gray-500">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#7A35A3]" />
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-gray-900">
+              Facial Zone Explorer
+            </h3>
+          </div>
+          <p className="text-xs text-gray-500">
             {userPhoto
-              ? "Tap any mapped zone on your photo to filter clinical attributes"
-              : "Tap any face zone to inspect tailored clinical reads"}
+              ? "Your face photo mapped across 5 primary facial zones. Tap any zone to see localized skin findings."
+              : "Explore the 5 facial zones to see how products target different areas of your face."}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          {userPhoto && (
-            <button
-              type="button"
-              onClick={() => setShowOverlays((v) => !v)}
-              className="text-[11px] font-semibold text-gray-600 hover:text-gray-900 cursor-pointer bg-white px-3 py-1 rounded-full border border-[#EADBFA] flex items-center gap-1.5 shadow-2xs"
-            >
-              <Layers className="w-3 h-3 text-[#4A1766]" />
-              <span>{showOverlays ? "Hide Overlay" : "Show Overlay"}</span>
-            </button>
-          )}
-
-          {activeRegion && (
-            <button
-              type="button"
-              onClick={() => onSelectRegion(null)}
-              className="text-[11px] font-semibold text-[#4A1766] hover:underline cursor-pointer bg-white px-3 py-1 rounded-full border border-[#EADBFA]"
-            >
-              Reset Filter
-            </button>
-          )}
-        </div>
+        {propActiveRegion && (
+          <button
+            type="button"
+            onClick={() => onSelectRegion?.(null)}
+            className="self-start sm:self-auto text-xs font-semibold text-[#4A1766] hover:underline cursor-pointer bg-[#F4E8FC] px-3.5 py-1.5 rounded-full border border-[#EADBFA] transition-colors"
+          >
+            Show All Conditions
+          </button>
+        )}
       </div>
 
-      <div className="flex flex-col md:flex-row items-center gap-6">
-        {/* Face Image Frame / SVG Visualizer */}
-        <div className="relative w-48 sm:w-56 aspect-[1/1.2] shrink-0 rounded-2xl overflow-hidden border border-[#EADBFA] bg-[#F4F7FA] shadow-inner group">
-          {/* If user uploaded a photo, display their photo */}
-          {userPhoto ? (
-            <>
-              <img
-                src={userPhoto}
-                alt="Your Analyzed Face Scan"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              {/* Subtle biometric scan lines */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/25 pointer-events-none" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        {/* Left: Clean Biometric Photo Lens (NO awkward dots on glasses/hair!) */}
+        <div className="lg:col-span-5 flex flex-col items-center">
+          <div className="relative w-56 sm:w-64 aspect-[1/1.2] rounded-3xl overflow-hidden border-2 border-[#EADBFA] bg-[#FBF7FE] shadow-sm group">
+            {userPhoto ? (
+              <>
+                <img
+                  src={userPhoto}
+                  alt="Your Face Scan"
+                  className="w-full h-full object-cover"
+                />
+                {/* Subtle biometric scan line & vignette */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15 pointer-events-none" />
+                <div className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-[#D4FF3F] to-transparent opacity-50 animate-pulse pointer-events-none top-1/2" />
+              </>
+            ) : (
+              /* Sleek clinical silhouette fallback */
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-[#FBF7FE] to-[#F4E8FC]/30 select-none">
+                <svg viewBox="0 0 200 240" className="w-44 h-52">
+                  <ellipse cx="100" cy="115" rx="60" ry="78" fill="#FFFFFF" stroke="#EADBFA" strokeWidth="2" />
+                  <circle cx="80" cy="98" r="3" fill="#C883EB" />
+                  <circle cx="120" cy="98" r="3" fill="#C883EB" />
+                  <path d="M 92 148 Q 100 154 108 148" stroke="#7A35A3" strokeWidth="2" fill="none" strokeLinecap="round" />
+                  <path d="M 98 106 L 98 126 L 104 126" stroke="#C883EB" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                </svg>
+              </div>
+            )}
 
-              {/* Viewfinder corner HUD marks */}
-              <div className="absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-[#7A35A3]/80 z-20 pointer-events-none" />
-              <div className="absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-[#7A35A3]/80 z-20 pointer-events-none" />
-              <div className="absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-[#7A35A3]/80 z-20 pointer-events-none" />
-              <div className="absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-[#7A35A3]/80 z-20 pointer-events-none" />
-            </>
-          ) : (
-            /* Fallback sleek minimalist SVG face silhouette */
-            <svg viewBox="0 0 200 220" className="w-full h-full select-none">
-              <ellipse
-                cx="100"
-                cy="105"
-                rx="62"
-                ry="82"
-                className="fill-white stroke-[#EADBFA]"
-                strokeWidth="2"
-              />
-              <circle cx="78" cy="80" r="3.5" className="fill-[#b0c0d0]" />
-              <circle cx="122" cy="80" r="3.5" className="fill-[#b0c0d0]" />
-              <path d="M 88 140 Q 100 148 112 140" stroke="#b0c0d0" strokeWidth="2" fill="none" />
-            </svg>
-          )}
+            {/* Corner Reticles */}
+            <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-[#D4FF3F] pointer-events-none z-20" />
+            <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-[#D4FF3F] pointer-events-none z-20" />
+            <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-[#D4FF3F] pointer-events-none z-20" />
+            <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-[#D4FF3F] pointer-events-none z-20" />
 
-          {/* Interactive SVG Hotspots on top of photo or illustration */}
-          {showOverlays && (
-            <svg
-              viewBox="0 0 200 220"
-              className="absolute inset-0 w-full h-full select-none z-10"
-            >
-              {REGIONS.map((region) => {
-                const status = getRegionStatus(region.attrIds);
-                const isSelected = activeRegion === region.id;
-                const isHovered = hoveredRegion === region.id;
-
-                let fillColor = userPhoto ? "rgba(19, 43, 69, 0.15)" : "rgba(19, 43, 69, 0.08)";
-                let strokeColor = "rgba(19, 43, 69, 0.4)";
-
-                if (status === "needs_boost") {
-                  fillColor = isSelected || isHovered ? "rgba(19, 43, 69, 0.45)" : "rgba(19, 43, 69, 0.25)";
-                  strokeColor = "#132B45";
-                } else if (status === "fine") {
-                  fillColor = isSelected || isHovered ? "rgba(217, 119, 6, 0.4)" : "rgba(217, 119, 6, 0.2)";
-                  strokeColor = "#d97706";
-                } else {
-                  fillColor = isSelected || isHovered ? "rgba(16, 185, 129, 0.4)" : "rgba(16, 185, 129, 0.2)";
-                  strokeColor = "#10b981";
-                }
-
-                if (region.isStroke) {
-                  return (
-                    <path
-                      key={region.id}
-                      d={region.path}
-                      fill="none"
-                      stroke={isSelected || isHovered ? strokeColor : (userPhoto ? "#ffffff" : "#94a3b8")}
-                      strokeWidth={isSelected || isHovered ? "4.5" : "3"}
-                      strokeLinecap="round"
-                      className="cursor-pointer transition-all duration-200"
-                      onMouseEnter={() => setHoveredRegion(region.id)}
-                      onMouseLeave={() => setHoveredRegion(null)}
-                      onClick={() => onSelectRegion(isSelected ? null : region.id)}
-                    />
-                  );
-                }
-
-                return (
-                  <path
-                    key={region.id}
-                    d={region.path}
-                    fill={fillColor}
-                    stroke={isSelected || isHovered ? strokeColor : (userPhoto ? "rgba(255,255,255,0.4)" : "transparent")}
-                    strokeWidth={isSelected || isHovered ? "2.5" : "1"}
-                    className="cursor-pointer transition-all duration-200"
-                    onMouseEnter={() => setHoveredRegion(region.id)}
-                    onMouseLeave={() => setHoveredRegion(null)}
-                    onClick={() => onSelectRegion(isSelected ? null : region.id)}
-                  />
-                );
-              })}
-            </svg>
-          )}
+            {/* Bottom active zone label pill */}
+            <div className="absolute bottom-3 inset-x-3 z-20 text-center">
+              <span className="bg-black/60 backdrop-blur-md text-[#D4FF3F] text-[11px] font-bold px-3 py-1 rounded-full shadow-xs border border-white/20 inline-block">
+                Active Zone: {activeMeta.name}
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Region Detail & Pills */}
-        <div className="flex-1 w-full flex flex-col justify-center">
-          <div className="flex flex-wrap gap-2 mb-3">
-            {REGIONS.map((r) => {
-              const isSelected = activeRegion === r.id;
-              const status = getRegionStatus(r.attrIds);
+        {/* Right: Interactive Zone Selector Buttons & Pre-Filled Zone Card */}
+        <div className="lg:col-span-7 space-y-4">
+          {/* Quick Zone Selector Buttons */}
+          <div className="flex flex-wrap items-center gap-2">
+            {REGIONS.map((region) => {
+              const isSelected = currentRegionId === region.id;
+              const status = getRegionStatus(region.attrIds);
+
+              const dotColor =
+                status === "needs_boost"
+                  ? "bg-[#7A35A3]"
+                  : status === "fine"
+                  ? "bg-amber-500"
+                  : "bg-emerald-500";
+
               return (
                 <button
-                  key={r.id}
+                  key={region.id}
                   type="button"
-                  onClick={() => onSelectRegion(isSelected ? null : r.id)}
-                  className={`text-xs px-3 py-1.5 rounded-full border transition-all cursor-pointer font-medium flex items-center gap-1.5 ${
+                  onClick={() => handleSelect(region.id)}
+                  className={`px-3.5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
                     isSelected
-                      ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs"
-                      : "bg-white text-gray-700 border-gray-200/90 hover:border-gray-300"
+                      ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs scale-102"
+                      : "bg-[#FBF7FE] text-gray-700 border-[#EADBFA] hover:bg-white hover:border-[#C883EB]"
                   }`}
                 >
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      status === "needs_boost"
-                        ? "bg-[#7A35A3]"
-                        : status === "fine"
-                          ? "bg-amber-500"
-                          : "bg-emerald-500"
-                    }`}
-                  />
-                  <span>{r.name}</span>
+                  <span className={`w-2 h-2 rounded-full ${dotColor}`} />
+                  <span>{region.name}</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-white border border-[#EADBFA]">
-            {activeMeta ? (
+          {/* Contextual Zone Diagnostic Breakdown Card (Never Empty!) */}
+          <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FBF7FE] to-[#F4E8FC]/40 border border-[#EADBFA] shadow-2xs space-y-3">
+            <div className="flex items-center justify-between border-b border-[#EADBFA]/80 pb-2.5">
               <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-gray-900">{activeMeta.name} Region</span>
-                  <span className="text-[10px] font-semibold text-[#4A1766] uppercase tracking-wider bg-[#F4E8FC] px-2 py-0.5 rounded-full">
-                    {activeMeta.badge}
-                  </span>
-                </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Filtering attributes for {activeMeta.name.toLowerCase()} area. Click below to inspect findings.
-                </p>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A35A3]">
+                  Zone Focus
+                </span>
+                <h4 className="font-bold text-gray-900 text-base">{activeMeta.name}</h4>
               </div>
-            ) : (
-              <p className="text-xs text-gray-500">
-                {userPhoto
-                  ? "Your face photo is loaded with mapped zones. Tap any zone to filter your 8 skin factors."
-                  : "Tap any facial zone to filter attributes and reveal clinical insights."}
-              </p>
+              <span className="text-[10px] font-bold text-[#1E2700] bg-[#D4FF3F] border border-[#BDE820] px-2.5 py-0.5 rounded-full">
+                {activeMeta.badge}
+              </span>
+            </div>
+
+            <p className="text-xs text-gray-700 leading-relaxed">
+              {activeMeta.insight}
+            </p>
+
+            {/* Mapped conditions in this zone */}
+            {activeAttributes.length > 0 && (
+              <div>
+                <span className="text-[10px] font-bold uppercase text-gray-400 block mb-1.5">
+                  Conditions in this zone ({activeAttributes.length}):
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {activeAttributes.map((attr) => (
+                    <span
+                      key={attr.id}
+                      className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
+                        attr.category === "Needs a boost"
+                          ? "bg-[#F4E8FC] text-[#4A1766] border-[#EADBFA]"
+                          : attr.category === "Fine for now"
+                          ? "bg-amber-50 text-amber-800 border-amber-200"
+                          : "bg-emerald-50 text-emerald-800 border-emerald-200"
+                      }`}
+                    >
+                      {attr.label} ({attr.userScore}%)
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
+
+            {/* Routine Application Tip */}
+            <div className="pt-2 border-t border-[#EADBFA]/80 flex items-start gap-2 text-xs text-[#4A1766]">
+              <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#7A35A3]" />
+              <span>
+                <strong className="font-semibold text-gray-900">Skincare Tip: </strong>
+                {activeMeta.applicationTip}
+              </span>
+            </div>
           </div>
         </div>
       </div>

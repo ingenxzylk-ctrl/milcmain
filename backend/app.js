@@ -1,4 +1,6 @@
 import "dotenv/config";
+import path from "path";
+import { fileURLToPath } from "url";
 import express from "express";
 import cors from "cors";
 import quizRouter from "./routes/quiz.js";
@@ -12,6 +14,10 @@ setGlobalDispatcher(
   })
 );
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const frontendDist = path.join(__dirname, "../frontend/dist");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.set("trust proxy", 1);
@@ -22,7 +28,22 @@ app.use(
   })
 );
 app.use(express.json({ limit: "50mb" }));
+
+// API endpoints
 app.use("/api", quizRouter);
+
+// Serve production frontend assets
+app.use(express.static(frontendDist));
+
+// SPA fallback for non-API client-side routes
+app.get("*", (req, res) => {
+  const indexHtml = path.join(frontendDist, "index.html");
+  res.sendFile(indexHtml, (err) => {
+    if (err) {
+      res.status(200).send("MILC Skin Lab backend is running. Please build the frontend with `npm run build`.");
+    }
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`MILC backend running on http://localhost:${PORT}`);

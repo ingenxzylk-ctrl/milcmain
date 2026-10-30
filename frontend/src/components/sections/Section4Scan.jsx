@@ -19,10 +19,10 @@ import { analyzeSkin } from "../../api/quizApi";
 import { clearFaceImagesIdb } from "../../utils/quizImageStore";
 
 const PHOTO_TIPS = [
-  { label: "No makeup", key: "makeup" },
-  { label: "Natural light", key: "insufficientLight" },
-  { label: "No filters", key: "filtersApplied" },
-  { label: "Hair back", key: "hair" },
+  { label: "Remove glasses", key: "glasses" },
+  { label: "Natural front light", key: "insufficientLight" },
+  { label: "No makeup or filters", key: "filtersApplied" },
+  { label: "Hair tucked back", key: "hair" },
 ];
 
 const SCAN_STAGES = [
@@ -284,7 +284,7 @@ export default function Section4Scan({ onComplete, onBack }) {
             Front-Facing Face Scan
           </h2>
           <p className="text-gray-500 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xl">
-            One clear photo is all we need. Neutral expression, face forward, well-lit natural environment.
+            Please remove eyeglasses, face even natural light, and keep a neutral expression so the AI can accurately assess your raw skin surface.
           </p>
         </div>
 
