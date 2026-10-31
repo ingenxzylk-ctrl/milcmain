@@ -1,6 +1,15 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # OPTION A (VPS Proxy): Uncomment the line below and set your VPS IP to forward /api calls directly to your VPS backend
+  # RewriteRule ^api/(.*)$ http://YOUR_VPS_IP:5000/api/$1 [P,L]
+
+  # OPTION B (cPanel Node.js App or Subdomain): Never serve index.html for /api routes
+  RewriteCond %{REQUEST_URI} ^/api [NC]
+  RewriteRule ^ - [L]
+
+  # Standard SPA Fallback for React/Vite routing
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
