@@ -19,7 +19,7 @@ const __dirname = path.dirname(__filename);
 const frontendDist = path.join(__dirname, "../frontend/dist");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5050;
 app.set("trust proxy", 1);
 
 app.use(
