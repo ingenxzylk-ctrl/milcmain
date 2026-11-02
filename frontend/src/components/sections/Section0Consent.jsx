@@ -35,7 +35,7 @@ function LegalLinkButton({ docId, children, onOpen }) {
         e.stopPropagation();
         onOpen(docId);
       }}
-      className="text-[#4A1766] font-semibold underline underline-offset-2 hover:text-[#0B1E32] cursor-pointer bg-transparent border-0 p-0 inline"
+      className="text-[#18181B] font-semibold underline underline-offset-2 hover:text-[#0B1E32] cursor-pointer bg-transparent border-0 p-0 inline"
     >
       {children}
     </button>
@@ -58,12 +58,12 @@ export default function Section0Consent({ onComplete }) {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="max-w-xl mx-auto mt-4 px-4 pb-12"
     >
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-7 md:p-10 shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] border border-[#EADBFA] relative overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-7 md:p-10 shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] border border-[#E8E3DA] relative overflow-hidden">
         {/* Luxury ambient accent light */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#F4E8FC]/80 via-transparent to-transparent rounded-bl-full pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#FAF8F5]/80 via-transparent to-transparent rounded-bl-full pointer-events-none" />
 
         <div className="mb-8 text-center relative z-10">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-[#4A1766] uppercase bg-[#F4E8FC]/90 border border-[#7A35A3]/15 px-3.5 py-1.5 rounded-full shadow-xs">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-[#18181B] uppercase bg-[#FAF8F5]/90 border border-[#9E3A26]/15 px-3.5 py-1.5 rounded-full shadow-xs">
             <ShieldCheck className="w-3.5 h-3.5" />
             Clinical Privacy & Consent
           </span>
@@ -72,7 +72,7 @@ export default function Section0Consent({ onComplete }) {
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
-            className="mt-6 mx-auto w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#E34234] to-[#C72F22] flex items-center justify-center text-white shadow-lg shadow-[#E34234]/20"
+            className="mt-6 mx-auto w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#9E3A26] to-[#832C1B] flex items-center justify-center text-white shadow-lg shadow-[#9E3A26]/20"
           >
             <ShieldCheck className="w-8 h-8" />
           </motion.div>
@@ -94,10 +94,10 @@ export default function Section0Consent({ onComplete }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 + idx * 0.05 }}
-                className="p-4 rounded-2xl bg-[#F4F7FA]/80 border border-[#EADBFA] hover:border-[#7A35A3]/30 transition-colors flex flex-col justify-between"
+                className="p-4 rounded-2xl bg-[#F4F7FA]/80 border border-[#E8E3DA] hover:border-[#9E3A26]/30 transition-colors flex flex-col justify-between"
               >
                 <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="w-8 h-8 rounded-xl bg-white text-[#4A1766] shadow-xs flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-white text-[#18181B] shadow-xs flex items-center justify-center shrink-0">
                     <Icon className="w-4 h-4" />
                   </div>
                   <p className="text-xs font-bold text-gray-900 leading-snug">{point.title}</p>
@@ -113,7 +113,7 @@ export default function Section0Consent({ onComplete }) {
           whileTap={{ scale: 0.995 }}
           className={`flex items-start gap-3.5 p-4 rounded-2xl border transition-all cursor-pointer select-none mb-6 relative z-10 ${
             agreedConsent
-              ? "border-[#7A35A3] bg-[#C883EB]/15 ring-1 ring-[#7A35A3]/20"
+              ? "border-[#9E3A26] bg-[#C46853]/15 ring-1 ring-[#9E3A26]/20"
               : "border-gray-200/90 bg-white hover:border-gray-300"
           }`}
         >
@@ -143,7 +143,7 @@ export default function Section0Consent({ onComplete }) {
             type="button"
             disabled={!agreedConsent}
             onClick={onComplete}
-            className="w-full h-14 bg-gradient-to-r from-[#E34234] to-[#C72F22] text-white rounded-full font-semibold hover:shadow-xl hover:shadow-[#E34234]/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none text-base cursor-pointer inline-flex items-center justify-center gap-2.5"
+            className="w-full h-14 bg-gradient-to-r from-[#9E3A26] to-[#832C1B] text-white rounded-full font-semibold hover:shadow-xl hover:shadow-[#9E3A26]/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none text-base cursor-pointer inline-flex items-center justify-center gap-2.5"
           >
             <span>Begin My AI Face Assessment</span>
             <ArrowRight className="w-5 h-5 stroke-[2.2]" />

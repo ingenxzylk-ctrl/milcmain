@@ -203,11 +203,11 @@ function getScoreStyleMeta(category, score) {
     };
   }
   return {
-    bar: "bg-gradient-to-r from-[#7A35A3] to-[#C883EB]",
-    badgeBg: "bg-[#F4E8FC] text-[#4A1766] border-[#EADBFA]",
+    bar: "bg-gradient-to-r from-[#9E3A26] to-[#C46853]",
+    badgeBg: "bg-[#FAF8F5] text-[#18181B] border-[#E8E3DA]",
     badgeText: "Focus Area",
-    border: "border-[#7A35A3]/30",
-    bgLight: "bg-[#7A35A3]/[0.02]",
+    border: "border-[#9E3A26]/30",
+    bgLight: "bg-[#9E3A26]/[0.02]",
   };
 }
 
@@ -495,39 +495,39 @@ export default function Result() {
       {/* =========================================================================
           STICKY QUICK-JUMP ANCHOR NAVIGATION (Eliminates 15 Mobile Swipes!)
          ========================================================================= */}
-      <nav className="sticky top-2 z-30 bg-white/90 backdrop-blur-md rounded-2xl p-1.5 border border-[#EADBFA] shadow-xs flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
+      <nav className="sticky top-2 z-30 bg-white/90 backdrop-blur-md rounded-2xl p-1.5 border border-[#E8E3DA] shadow-xs flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
         <a
           href="#summary-section"
-          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#7A35A3] hover:bg-[#F4E8FC]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#9E3A26] hover:bg-[#FAF8F5]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
-          <Target className="w-3.5 h-3.5 text-[#7A35A3]" />
+          <Target className="w-3.5 h-3.5 text-[#9E3A26]" />
           <span>Takeaway</span>
         </a>
         <a
           href="#focus-section"
-          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#7A35A3] hover:bg-[#F4E8FC]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#9E3A26] hover:bg-[#FAF8F5]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
           <Activity className="w-3.5 h-3.5 text-amber-600" />
           <span>Focus Areas</span>
         </a>
         <a
           href="#routine-section"
-          className="px-3 py-1.5 rounded-xl text-xs font-bold text-[#1E2700] bg-[#D4FF3F] hover:bg-[#c2ef30] border border-[#BDE820] transition-colors whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-[#18181B] bg-[#FAF8F5] hover:bg-[#c2ef30] border border-[#E8E3DA] transition-colors whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
         >
-          <ShoppingBag className="w-3.5 h-3.5 text-[#1E2700]" />
+          <ShoppingBag className="w-3.5 h-3.5 text-[#18181B]" />
           <span>Your 2-Step Routine</span>
         </a>
         <a
           href="#conditions-section"
           onClick={() => setConditionView("all11")}
-          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#7A35A3] hover:bg-[#F4E8FC]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-gray-700 hover:text-[#9E3A26] hover:bg-[#FAF8F5]/60 transition-colors whitespace-nowrap flex items-center gap-1.5"
         >
-          <Layers className="w-3.5 h-3.5 text-[#7A35A3]" />
+          <Layers className="w-3.5 h-3.5 text-[#9E3A26]" />
           <span>11 Conditions (Full)</span>
         </a>
         <a
           href="#pricing-section"
-          className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-[#7A35A3] hover:bg-[#5C237D] transition-colors whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
+          className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-[#9E3A26] hover:bg-[#832C1B] transition-colors whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
         >
           <Tag className="w-3.5 h-3.5 text-white" />
           <span>Plans (50% Off)</span>
@@ -537,14 +537,14 @@ export default function Result() {
       {/* =========================================================================
           SECTION 1: SUMMARY SCORECARD & 3-LINE QUICK TAKEAWAY
          ========================================================================= */}
-      <div id="summary-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EADBFA] shadow-xs relative overflow-hidden">
+      <div id="summary-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#E8E3DA] shadow-xs relative overflow-hidden">
         {/* Top Badges */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#1E2700] bg-[#D4FF3F] border border-[#BDE820] px-3 py-1 rounded-full shadow-2xs">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#18181B] bg-[#FAF8F5] border border-[#E8E3DA] px-3 py-1 rounded-full shadow-2xs">
               AI Skin Assessment
             </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#4A1766] bg-[#F4E8FC] px-3 py-1 rounded-full border border-[#EADBFA]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#18181B] bg-[#FAF8F5] px-3 py-1 rounded-full border border-[#E8E3DA]">
               11 Conditions Evaluated
             </span>
             <span className="text-xs text-gray-500 font-mono">
@@ -559,7 +559,7 @@ export default function Result() {
         </div>
 
         {/* Headline & Dual Score */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#EADBFA]/70">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#E8E3DA]/70">
           <div>
             <h1 className="font-sans text-2xl sm:text-4xl text-gray-900 font-extrabold tracking-tight leading-tight">
               {titleName} Skin Assessment
@@ -577,25 +577,25 @@ export default function Result() {
                 <span className="w-2 h-2 rounded-full bg-amber-500" />
                 {attributes.filter((a) => a.category === "Fine for now").length} Balanced
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]">
-                <span className="w-2 h-2 rounded-full bg-[#7A35A3]" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]">
+                <span className="w-2 h-2 rounded-full bg-[#9E3A26]" />
                 {attributes.filter((a) => a.category === "Needs a boost").length} Focus Areas
               </span>
             </div>
           </div>
 
           {/* Overall Health Score Card */}
-          <div className="flex flex-col sm:flex-row md:flex-col items-center gap-3.5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#FBF7FE] to-[#F4E8FC]/40 border border-[#EADBFA] self-start md:self-auto shrink-0 shadow-2xs">
+          <div className="flex flex-col sm:flex-row md:flex-col items-center gap-3.5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#FAF8F5] to-[#FAF8F5]/40 border border-[#E8E3DA] self-start md:self-auto shrink-0 shadow-2xs">
             <div className="flex items-center gap-4">
               <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#EADBFA" strokeWidth="8" />
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="#E8E3DA" strokeWidth="8" />
                   <motion.circle
                     cx="50"
                     cy="50"
                     r="40"
                     fill="transparent"
-                    stroke="#7A35A3"
+                    stroke="#9E3A26"
                     strokeWidth="8"
                     strokeLinecap="round"
                     strokeDasharray="251"
@@ -609,7 +609,7 @@ export default function Result() {
 
               <div>
                 <p className="text-xs font-bold text-gray-900">Skin Health Score</p>
-                <p className="text-xs font-semibold text-[#7A35A3]">
+                <p className="text-xs font-semibold text-[#9E3A26]">
                   {vitalityScore >= 80 ? "Radiant & Strong" : "Active Recovery"}
                 </p>
                 <div className="mt-1 flex items-center gap-1 text-xs text-gray-600 font-mono">
@@ -619,10 +619,10 @@ export default function Result() {
               </div>
             </div>
 
-            <div className="w-full pt-2 border-t border-[#EADBFA] text-center">
+            <div className="w-full pt-2 border-t border-[#E8E3DA] text-center">
               <span className={`text-xs font-bold px-3 py-1 rounded-full inline-block ${
                 overallDelta >= 0
-                  ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                  ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                   : "bg-amber-100 text-amber-800"
               }`}>
                 {overallDelta >= 0 ? `+${overallDelta}% higher than average` : `${overallDelta}% vs average`}
@@ -634,28 +634,28 @@ export default function Result() {
         {/* =========================================================================
             ⭐ THE 3-LINE QUICK TAKEAWAY (Answers What User Cares About Instantly!)
            ========================================================================= */}
-        <div className="mt-6 p-4 sm:p-6 rounded-3xl bg-gradient-to-br from-[#FBF7FE] via-white to-[#F4E8FC]/40 border-2 border-[#7A35A3]/25 shadow-xs">
-          <div className="flex items-center justify-between gap-3 mb-3 pb-2 border-b border-[#EADBFA]/70">
+        <div className="mt-6 p-4 sm:p-6 rounded-3xl bg-gradient-to-br from-[#FAF8F5] via-white to-[#FAF8F5]/40 border-2 border-[#9E3A26]/25 shadow-xs">
+          <div className="flex items-center justify-between gap-3 mb-3 pb-2 border-b border-[#E8E3DA]/70">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#7A35A3] animate-pulse" />
-              <h3 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#4A1766]">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#9E3A26] animate-pulse" />
+              <h3 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#18181B]">
                 Quick Takeaway Summary
               </h3>
             </div>
-            <span className="text-[11px] font-bold text-[#7A35A3] bg-[#F4E8FC] px-2.5 py-0.5 rounded-full border border-[#EADBFA]">
+            <span className="text-[11px] font-bold text-[#9E3A26] bg-[#FAF8F5] px-2.5 py-0.5 rounded-full border border-[#E8E3DA]">
               Action Plan
             </span>
           </div>
 
           <div className="space-y-2.5">
             {/* Line 1: Priority to Fix */}
-            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#EADBFA]">
-              <div className="w-8 h-8 rounded-xl bg-purple-100 text-[#7A35A3] flex items-center justify-center shrink-0 mt-0.5">
+            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#E8E3DA]">
+              <div className="w-8 h-8 rounded-xl bg-purple-100 text-[#9E3A26] flex items-center justify-center shrink-0 mt-0.5">
                 <Target className="w-4 h-4" />
               </div>
               <div className="text-xs sm:text-sm">
                 <span className="font-extrabold text-gray-900 block sm:inline">Your #1 Priority to Fix: </span>
-                <span className="font-bold text-[#7A35A3]">{topPriorityCondition.label} ({topPriorityCondition.userScore}%) </span>
+                <span className="font-bold text-[#9E3A26]">{topPriorityCondition.label} ({topPriorityCondition.userScore}%) </span>
                 <span className="text-gray-600 block sm:inline">— {topPriorityCondition.actionBenefit || "Active congestion and surface irritation around T-Zone."}</span>
               </div>
             </div>
@@ -673,13 +673,13 @@ export default function Result() {
             </div>
 
             {/* Line 3: The Simple 2-Step Fix */}
-            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#BDE820]">
-              <div className="w-8 h-8 rounded-xl bg-[#D4FF3F]/50 text-[#1E2700] flex items-center justify-center shrink-0 mt-0.5">
+            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#E8E3DA]">
+              <div className="w-8 h-8 rounded-xl bg-[#FAF8F5]/50 text-[#18181B] flex items-center justify-center shrink-0 mt-0.5">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
               <div className="text-xs sm:text-sm">
                 <span className="font-extrabold text-gray-900 block sm:inline">The Simple 2-Step Fix: </span>
-                <span className="font-bold text-[#4A1766]">
+                <span className="font-bold text-[#18181B]">
                   {isDry ? "Hydrating Barrier Cleanser + Deep Moisture Gel" : "Salicylic Clarifying Cleanser + Niacinamide Calming Gel"}
                 </span>
                 <span className="text-gray-600 block sm:inline"> — Daily morning & evening ritual to clear breakouts while sealing hydration.</span>
@@ -688,13 +688,13 @@ export default function Result() {
           </div>
 
           {/* Quick CTA to jump right to routine */}
-          <div className="mt-4 pt-3 border-t border-[#EADBFA]/70 flex flex-wrap items-center justify-between gap-3">
+          <div className="mt-4 pt-3 border-t border-[#E8E3DA]/70 flex flex-wrap items-center justify-between gap-3">
             <p className="text-xs text-gray-600">
               Ready to see the recommended products for this 2-step fix?
             </p>
             <a
               href="#routine-section"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#7A35A3] hover:bg-[#5C237D] text-white text-xs font-bold transition-all shadow-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#9E3A26] hover:bg-[#832C1B] text-white text-xs font-bold transition-all shadow-xs"
             >
               <span>View Your 2-Step Routine</span>
               <ArrowDown className="w-3.5 h-3.5" />
@@ -706,12 +706,12 @@ export default function Result() {
       {/* =========================================================================
           SECTION 2: PRIMARY FOCUS AREAS (Shows 2-3 Focus Conditions; 11 kept separately!)
          ========================================================================= */}
-      <div id="focus-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EADBFA] shadow-xs">
+      <div id="focus-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#E8E3DA] shadow-xs">
         {/* Section Header with Segmented View Switcher */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-4 border-b border-[#EADBFA]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-4 border-b border-[#E8E3DA]">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#7A35A3]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#9E3A26]" />
               <h2 className="font-sans text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">
                 {conditionView === "focus" ? "Primary Focus Areas (Needs Attention)" : "All 11 Conditions: Complete Biometric Diagnostic"}
               </h2>
@@ -724,13 +724,13 @@ export default function Result() {
           </div>
 
           {/* Segmented Control: Focus vs All 11 */}
-          <div className="flex items-center gap-1.5 p-1 bg-[#F4E8FC]/70 rounded-2xl border border-[#EADBFA] self-start md:self-auto shrink-0">
+          <div className="flex items-center gap-1.5 p-1 bg-[#FAF8F5]/70 rounded-2xl border border-[#E8E3DA] self-start md:self-auto shrink-0">
             <button
               type="button"
               onClick={() => setConditionView("focus")}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 conditionView === "focus"
-                  ? "bg-[#7A35A3] text-white shadow-xs"
+                  ? "bg-[#9E3A26] text-white shadow-xs"
                   : "text-gray-700 hover:text-gray-900"
               }`}
             >
@@ -742,7 +742,7 @@ export default function Result() {
               onClick={() => setConditionView("all11")}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 conditionView === "all11"
-                  ? "bg-[#7A35A3] text-white shadow-xs"
+                  ? "bg-[#9E3A26] text-white shadow-xs"
                   : "text-gray-700 hover:text-gray-900"
               }`}
             >
@@ -753,8 +753,8 @@ export default function Result() {
         </div>
 
         {/* Score Guide Legend */}
-        <div className="flex flex-wrap items-center gap-3 sm:gap-5 py-2 px-3.5 rounded-xl bg-[#F4E8FC]/30 border border-[#EADBFA] text-xs text-gray-700 mb-5">
-          <span className="font-bold text-[#4A1766]">Score Guide:</span>
+        <div className="flex flex-wrap items-center gap-3 sm:gap-5 py-2 px-3.5 rounded-xl bg-[#FAF8F5]/30 border border-[#E8E3DA] text-xs text-gray-700 mb-5">
+          <span className="font-bold text-[#18181B]">Score Guide:</span>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
             <span className="font-semibold text-gray-800">Optimal (85–100%)</span>
@@ -764,7 +764,7 @@ export default function Result() {
             <span className="font-semibold text-gray-800">Balanced (70–84%)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#7A35A3]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#9E3A26]" />
             <span className="font-semibold text-gray-800">Focus Area (&lt;70%)</span>
           </div>
         </div>
@@ -780,7 +780,7 @@ export default function Result() {
                 return (
                   <div
                     key={attr.id}
-                    className="p-5 rounded-3xl border-2 border-[#7A35A3]/25 bg-gradient-to-b from-white to-[#FBF7FE] shadow-xs flex flex-col justify-between"
+                    className="p-5 rounded-3xl border-2 border-[#9E3A26]/25 bg-gradient-to-b from-white to-[#FAF8F5] shadow-xs flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-2">
@@ -797,7 +797,7 @@ export default function Result() {
                       </h3>
 
                       {attr.isQuizSourced && (
-                        <span className="inline-block text-[10px] font-bold text-[#7A35A3] bg-[#F4E8FC] px-2 py-0.5 rounded-md mt-1 mb-1">
+                        <span className="inline-block text-[10px] font-bold text-[#9E3A26] bg-[#FAF8F5] px-2 py-0.5 rounded-md mt-1 mb-1">
                           Quiz-Assisted Profile
                         </span>
                       )}
@@ -807,13 +807,13 @@ export default function Result() {
                       </p>
 
                       {/* Single clean user score bar */}
-                      <div className="mt-4 pt-3 border-t border-[#EADBFA]/70 space-y-2">
+                      <div className="mt-4 pt-3 border-t border-[#E8E3DA]/70 space-y-2">
                         <div className="flex items-center justify-between text-xs mb-1">
                           <span className="font-bold text-gray-900 flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-[#7A35A3]" />
+                            <span className="w-2 h-2 rounded-full bg-[#9E3A26]" />
                             <span>Your Score:</span>
                           </span>
-                          <span className="font-mono font-bold text-[#4A1766]">
+                          <span className="font-mono font-bold text-[#18181B]">
                             {attr.userScore}%
                           </span>
                         </div>
@@ -825,7 +825,7 @@ export default function Result() {
                         </div>
 
                         {/* Clean Comparison Row (No grey line) */}
-                        <div className="flex items-center justify-between pt-2 border-t border-[#EADBFA]/50 text-xs">
+                        <div className="flex items-center justify-between pt-2 border-t border-[#E8E3DA]/50 text-xs">
                           <div className="flex items-center gap-1.5 text-gray-600 font-medium">
                             <Users className="w-3.5 h-3.5 text-gray-400" />
                             <span>Average:</span>
@@ -834,9 +834,9 @@ export default function Result() {
                           <span
                             className={`text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
                               attr.delta > 0
-                                ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                                ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                                 : attr.delta < 0
-                                ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
+                                ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                                 : "bg-gray-100 text-gray-700"
                             }`}
                           >
@@ -847,8 +847,8 @@ export default function Result() {
                     </div>
 
                     {/* Recommendation box */}
-                    <div className="mt-4 pt-3 border-t border-[#EADBFA] bg-[#F4E8FC]/40 -mx-5 -mb-5 p-4 rounded-b-3xl">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A35A3] block mb-1">
+                    <div className="mt-4 pt-3 border-t border-[#E8E3DA] bg-[#FAF8F5]/40 -mx-5 -mb-5 p-4 rounded-b-3xl">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#9E3A26] block mb-1">
                         Recommended Treatment
                       </span>
                       <p className="text-xs font-bold text-gray-900 leading-snug">
@@ -864,7 +864,7 @@ export default function Result() {
             </div>
 
             {/* Seamless invitation to view all 11 conditions */}
-            <div className="mt-6 p-4 rounded-2xl bg-[#FBF7FE] border border-[#EADBFA] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div className="mt-6 p-4 rounded-2xl bg-[#FAF8F5] border border-[#E8E3DA] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
               <div>
                 <h4 className="text-xs font-bold text-gray-900">Curious about your full 11-condition profile?</h4>
                 <p className="text-xs text-gray-600 mt-0.5">
@@ -874,7 +874,7 @@ export default function Result() {
               <button
                 type="button"
                 onClick={() => setConditionView("all11")}
-                className="px-4 py-2 rounded-full bg-[#7A35A3] hover:bg-[#5C237D] text-white text-xs font-bold shrink-0 transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
+                className="px-4 py-2 rounded-full bg-[#9E3A26] hover:bg-[#832C1B] text-white text-xs font-bold shrink-0 transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
               >
                 <span>Explore All 11 Conditions</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -890,12 +890,12 @@ export default function Result() {
           <div id="conditions-section">
             {/* View switcher & filters */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-              <div className="flex items-center gap-1 p-0.5 bg-[#F4E8FC]/60 rounded-xl border border-[#EADBFA]">
+              <div className="flex items-center gap-1 p-0.5 bg-[#FAF8F5]/60 rounded-xl border border-[#E8E3DA]">
                 <button
                   type="button"
                   onClick={() => setViewMode("cards")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                    viewMode === "cards" ? "bg-[#7A35A3] text-white shadow-xs" : "text-gray-700 hover:text-gray-900"
+                    viewMode === "cards" ? "bg-[#9E3A26] text-white shadow-xs" : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
@@ -905,7 +905,7 @@ export default function Result() {
                   type="button"
                   onClick={() => setViewMode("chart")}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                    viewMode === "chart" ? "bg-[#7A35A3] text-white shadow-xs" : "text-gray-700 hover:text-gray-900"
+                    viewMode === "chart" ? "bg-[#9E3A26] text-white shadow-xs" : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   <BarChart3 className="w-3.5 h-3.5" />
@@ -913,7 +913,7 @@ export default function Result() {
                 </button>
               </div>
 
-              <div className="flex items-center gap-1 p-0.5 bg-white rounded-xl border border-[#EADBFA]">
+              <div className="flex items-center gap-1 p-0.5 bg-white rounded-xl border border-[#E8E3DA]">
                 {[
                   { id: "all", label: "All (11)" },
                   { id: "needs_boost", label: "Focus Areas" },
@@ -926,7 +926,7 @@ export default function Result() {
                     onClick={() => setFilterCategory(tab.id)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       filterCategory === tab.id
-                        ? "bg-[#4A1766] text-white"
+                        ? "bg-[#18181B] text-white"
                         : "text-gray-600 hover:text-gray-900"
                     }`}
                   >
@@ -944,8 +944,8 @@ export default function Result() {
                   onClick={() => setActivePillar("all")}
                   className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
                     activePillar === "all"
-                      ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs"
-                      : "bg-[#FBF7FE] text-gray-800 border-[#EADBFA] hover:bg-white"
+                      ? "bg-[#9E3A26] text-white border-[#9E3A26] shadow-xs"
+                      : "bg-[#FAF8F5] text-gray-800 border-[#E8E3DA] hover:bg-white"
                   }`}
                 >
                   <span className="text-[10px] uppercase font-bold tracking-wider opacity-85 block">View All</span>
@@ -961,8 +961,8 @@ export default function Result() {
                       onClick={() => setActivePillar(isSelected ? "all" : pillar.id)}
                       className={`p-3 rounded-2xl text-left border transition-all cursor-pointer ${
                         isSelected
-                          ? "bg-[#7A35A3] text-white border-[#7A35A3] shadow-xs"
-                          : "bg-[#FBF7FE] text-gray-800 border-[#EADBFA] hover:bg-white"
+                          ? "bg-[#9E3A26] text-white border-[#9E3A26] shadow-xs"
+                          : "bg-[#FAF8F5] text-gray-800 border-[#E8E3DA] hover:bg-white"
                       }`}
                     >
                       <span className="text-[10px] uppercase font-bold tracking-wider opacity-85 block truncate">
@@ -998,7 +998,7 @@ export default function Result() {
                         </h3>
 
                         {attr.isQuizSourced && (
-                          <span className="inline-block text-[10px] font-bold text-[#7A35A3] bg-[#F4E8FC] px-2 py-0.5 rounded-md mt-1 mb-1">
+                          <span className="inline-block text-[10px] font-bold text-[#9E3A26] bg-[#FAF8F5] px-2 py-0.5 rounded-md mt-1 mb-1">
                             Quiz-Assisted Profile
                           </span>
                         )}
@@ -1008,13 +1008,13 @@ export default function Result() {
                         </p>
 
                         {/* Single User Bar (No Grey Bar!) */}
-                        <div className="mt-4 pt-3 border-t border-[#EADBFA]/70 space-y-2">
+                        <div className="mt-4 pt-3 border-t border-[#E8E3DA]/70 space-y-2">
                           <div className="flex items-center justify-between text-xs mb-1">
                             <span className="font-bold text-gray-900 flex items-center gap-1.5">
-                              <span className="w-2 h-2 rounded-full bg-[#7A35A3]" />
+                              <span className="w-2 h-2 rounded-full bg-[#9E3A26]" />
                               <span>Your Score:</span>
                             </span>
-                            <span className="font-mono font-bold text-[#4A1766]">
+                            <span className="font-mono font-bold text-[#18181B]">
                               {attr.userScore}%
                             </span>
                           </div>
@@ -1025,7 +1025,7 @@ export default function Result() {
                             />
                           </div>
 
-                          <div className="flex items-center justify-between pt-2 border-t border-[#EADBFA]/50 text-xs">
+                          <div className="flex items-center justify-between pt-2 border-t border-[#E8E3DA]/50 text-xs">
                             <div className="flex items-center gap-1.5 text-gray-600 font-medium">
                               <Users className="w-3.5 h-3.5 text-gray-400" />
                               <span>Average:</span>
@@ -1034,9 +1034,9 @@ export default function Result() {
                             <span
                               className={`text-xs font-bold px-2.5 py-0.5 rounded-full shrink-0 ${
                                 attr.delta > 0
-                                  ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                                  ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                                   : attr.delta < 0
-                                  ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
+                                  ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                                   : "bg-gray-100 text-gray-700"
                               }`}
                             >
@@ -1047,8 +1047,8 @@ export default function Result() {
                       </div>
 
                       {/* Recommendation box */}
-                      <div className="mt-4 pt-3 border-t border-[#EADBFA] bg-[#F4E8FC]/30 -mx-5 -mb-5 p-4 rounded-b-3xl">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#7A35A3] block mb-1">
+                      <div className="mt-4 pt-3 border-t border-[#E8E3DA] bg-[#FAF8F5]/30 -mx-5 -mb-5 p-4 rounded-b-3xl">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#9E3A26] block mb-1">
                           {attr.isOptimal ? "Preservation Routine" : "Recommended Treatment"}
                         </span>
                         <p className="text-xs font-bold text-gray-900 leading-snug">
@@ -1065,7 +1065,7 @@ export default function Result() {
             ) : (
               /* View 2: Comparison Chart */
               <div className="space-y-3">
-                <div className="grid grid-cols-12 text-xs font-bold uppercase tracking-wider text-gray-600 px-3 pb-2 border-b border-[#EADBFA]">
+                <div className="grid grid-cols-12 text-xs font-bold uppercase tracking-wider text-gray-600 px-3 pb-2 border-b border-[#E8E3DA]">
                   <span className="col-span-4 sm:col-span-3">Skin Condition</span>
                   <span className="col-span-5 sm:col-span-6">Your Score & Average</span>
                   <span className="col-span-3 text-right">Difference</span>
@@ -1075,7 +1075,7 @@ export default function Result() {
                   {filteredAttributes.map((attr) => (
                     <div
                       key={attr.id}
-                      className="p-3.5 rounded-2xl border border-[#EADBFA]/80 bg-[#FBF7FE] hover:bg-white transition-all grid grid-cols-12 items-center gap-2"
+                      className="p-3.5 rounded-2xl border border-[#E8E3DA]/80 bg-[#FAF8F5] hover:bg-white transition-all grid grid-cols-12 items-center gap-2"
                     >
                       <div className="col-span-4 sm:col-span-3">
                         <span className="font-mono text-xs text-gray-500">#{attr.indexNumber} </span>
@@ -1084,12 +1084,12 @@ export default function Result() {
 
                       <div className="col-span-5 sm:col-span-6">
                         <div className="flex items-center gap-2">
-                          <span className="w-8 font-mono text-xs font-bold text-[#4A1766] text-right">
+                          <span className="w-8 font-mono text-xs font-bold text-[#18181B] text-right">
                             {attr.userScore}%
                           </span>
                           <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-[#7A35A3] to-[#C883EB] rounded-full"
+                              className="h-full bg-gradient-to-r from-[#9E3A26] to-[#C46853] rounded-full"
                               style={{ width: `${attr.userScore}%` }}
                             />
                           </div>
@@ -1103,9 +1103,9 @@ export default function Result() {
                         <span
                           className={`text-xs font-bold px-2.5 py-0.5 rounded-full inline-block ${
                             attr.delta > 0
-                              ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                              ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                               : attr.delta < 0
-                              ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
+                              ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                               : "bg-gray-100 text-gray-700"
                           }`}
                         >
@@ -1142,8 +1142,8 @@ export default function Result() {
           userPhoto={userPhoto}
         />
 
-        <div className="bg-gradient-to-r from-white to-[#F4F7FA] rounded-[28px] p-5 sm:p-7 border border-[#EADBFA] shadow-xs">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#4A1766] bg-[#F4E8FC] px-2.5 py-0.5 rounded-full">
+        <div className="bg-gradient-to-r from-white to-[#F4F7FA] rounded-[28px] p-5 sm:p-7 border border-[#E8E3DA] shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#18181B] bg-[#FAF8F5] px-2.5 py-0.5 rounded-full">
             Expected Progression
           </span>
           <h3 className="font-sans text-xl sm:text-2xl font-bold text-gray-900 mt-1 mb-4">
@@ -1151,8 +1151,8 @@ export default function Result() {
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-            <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
-              <span className="text-xs font-bold text-[#4A1766] uppercase tracking-wider block">
+            <div className="p-4 rounded-2xl bg-white border border-[#E8E3DA] shadow-2xs">
+              <span className="text-xs font-bold text-[#18181B] uppercase tracking-wider block">
                 Week 1: Soothe & Hydrate
               </span>
               <p className="text-sm font-bold text-gray-900 mt-1">Barrier Relief</p>
@@ -1160,8 +1160,8 @@ export default function Result() {
                 Reduction in dryness, tight feeling, and reactive surface redness.
               </p>
             </div>
-            <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
-              <span className="text-xs font-bold text-[#4A1766] uppercase tracking-wider block">
+            <div className="p-4 rounded-2xl bg-white border border-[#E8E3DA] shadow-2xs">
+              <span className="text-xs font-bold text-[#18181B] uppercase tracking-wider block">
                 Week 2: Clear Pores
               </span>
               <p className="text-sm font-bold text-gray-900 mt-1">Oil & Pore Balance</p>
@@ -1169,7 +1169,7 @@ export default function Result() {
                 Clears congestion in the T-zone and visibly refines pore appearance.
               </p>
             </div>
-            <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] shadow-2xs">
+            <div className="p-4 rounded-2xl bg-white border border-[#E8E3DA] shadow-2xs">
               <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block">
                 Week 4+: Healthy Glow
               </span>
@@ -1197,10 +1197,10 @@ export default function Result() {
       {/* =========================================================================
           SECTION 6: PRICING & DIRECT ORDER (With Direct Checkout Modal!)
          ========================================================================= */}
-      <div id="pricing-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 md:p-10 border border-[#EADBFA] shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] text-center relative overflow-hidden">
+      <div id="pricing-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 md:p-10 border border-[#E8E3DA] shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] text-center relative overflow-hidden">
         {/* Soft, trustworthy banner */}
-        <div className="bg-[#4A1766] text-white py-2 px-4 rounded-2xl mb-4 text-center flex items-center justify-center gap-2 shadow-sm max-w-md mx-auto">
-          <Clock className="w-3.5 h-3.5 text-[#C883EB]" />
+        <div className="bg-[#18181B] text-white py-2 px-4 rounded-2xl mb-4 text-center flex items-center justify-center gap-2 shadow-sm max-w-md mx-auto">
+          <Clock className="w-3.5 h-3.5 text-[#C46853]" />
           <span className="text-xs font-medium tracking-wide">
             Special 50% assessment discount active · {formatTimer(offerTimer)} remaining
           </span>
@@ -1234,12 +1234,12 @@ export default function Result() {
                 onClick={() => setSelectedPlanId(plan.id)}
                 className={`p-5 rounded-3xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${
                   isSelected
-                    ? "border-[#7A35A3] bg-gradient-to-b from-[#FBF7FE] to-white shadow-md ring-2 ring-[#7A35A3]/20"
-                    : "border-[#EADBFA] bg-white hover:border-[#7A35A3]/40"
+                    ? "border-[#9E3A26] bg-gradient-to-b from-[#FAF8F5] to-white shadow-md ring-2 ring-[#9E3A26]/20"
+                    : "border-[#E8E3DA] bg-white hover:border-[#9E3A26]/40"
                 }`}
               >
                 {plan.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820] text-[10px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-xs">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA] text-[10px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-xs">
                     Most Popular Choice
                   </span>
                 )}
@@ -1247,7 +1247,7 @@ export default function Result() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-sans font-bold text-base text-gray-900">{planTitle}</h3>
-                    <span className="text-xs font-bold text-[#7A35A3] bg-[#F4E8FC] px-2 py-0.5 rounded-md">
+                    <span className="text-xs font-bold text-[#9E3A26] bg-[#FAF8F5] px-2 py-0.5 rounded-md">
                       {planBadge}
                     </span>
                   </div>
@@ -1263,12 +1263,12 @@ export default function Result() {
                     )}
                   </div>
                   {planRate && (
-                    <p className="text-xs text-[#7A35A3] font-semibold mt-0.5">
+                    <p className="text-xs text-[#9E3A26] font-semibold mt-0.5">
                       {planRate} {plan.period ? `· ${plan.period}` : ""}
                     </p>
                   )}
 
-                  <ul className="mt-4 space-y-2 text-xs text-gray-700 pt-3 border-t border-[#EADBFA]/70">
+                  <ul className="mt-4 space-y-2 text-xs text-gray-700 pt-3 border-t border-[#E8E3DA]/70">
                     {planFeatures.map((feat, i) => (
                       <li key={i} className="flex items-center gap-1.5">
                         <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
@@ -1287,8 +1287,8 @@ export default function Result() {
                   }}
                   className={`mt-6 w-full py-2.5 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs ${
                     isSelected
-                      ? "bg-[#7A35A3] text-white hover:bg-[#5C237D]"
-                      : "bg-[#F4E8FC] text-[#4A1766] hover:bg-[#EADBFA]"
+                      ? "bg-[#9E3A26] text-white hover:bg-[#832C1B]"
+                      : "bg-[#FAF8F5] text-[#18181B] hover:bg-[#E8E3DA]"
                   }`}
                 >
                   <ShoppingBag className="w-3.5 h-3.5" />
@@ -1304,7 +1304,7 @@ export default function Result() {
           <button
             type="button"
             onClick={() => setIsCheckoutOpen(true)}
-            className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#7A35A3] to-[#4A1766] text-white text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#9E3A26] to-[#18181B] text-white text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <CreditCard className="w-4 h-4" />
             <span>Proceed to Instant Checkout ({selectedPlanPrice})</span>
@@ -1332,13 +1332,13 @@ export default function Result() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[#EADBFA] max-h-[90vh] overflow-y-auto"
+              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[#E8E3DA] max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
                 <div>
                   <h3 className="font-sans text-xl font-bold text-gray-900">Direct Order Checkout</h3>
                   <p className="text-xs text-gray-500 mt-0.5">
-                    {selectedPlanTitle} · <span className="font-bold text-[#7A35A3]">{selectedPlanPrice}</span> (50% Off Applied)
+                    {selectedPlanTitle} · <span className="font-bold text-[#9E3A26]">{selectedPlanPrice}</span> (50% Off Applied)
                   </p>
                 </div>
                 <button
@@ -1369,7 +1369,7 @@ export default function Result() {
                       required
                       defaultValue={isRealName ? fullName : ""}
                       placeholder="Your full name"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#9E3A26]"
                     />
                   </div>
 
@@ -1380,7 +1380,7 @@ export default function Result() {
                         type="tel"
                         required
                         placeholder="+91 98765 43210"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#9E3A26]"
                       />
                     </div>
                     <div>
@@ -1389,7 +1389,7 @@ export default function Result() {
                         type="email"
                         required
                         placeholder="you@email.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#9E3A26]"
                       />
                     </div>
                   </div>
@@ -1400,7 +1400,7 @@ export default function Result() {
                       required
                       rows={2}
                       placeholder="House / Flat No., Street, Landmark"
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                      className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#9E3A26]"
                     />
                   </div>
 
@@ -1411,7 +1411,7 @@ export default function Result() {
                         type="text"
                         required
                         placeholder="City"
-                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#9E3A26]"
                       />
                     </div>
                     <div>
@@ -1420,7 +1420,7 @@ export default function Result() {
                         type="text"
                         required
                         placeholder="PIN Code"
-                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#7A35A3]"
+                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#9E3A26]"
                       />
                     </div>
                   </div>
@@ -1428,7 +1428,7 @@ export default function Result() {
                   <div>
                     <label className="text-xs font-bold text-gray-700 block mb-1.5">Payment Method</label>
                     <div className="grid grid-cols-3 gap-2">
-                      <div className="p-2.5 rounded-xl border-2 border-[#7A35A3] bg-[#F4E8FC]/30 text-center text-xs font-bold text-[#4A1766]">
+                      <div className="p-2.5 rounded-xl border-2 border-[#9E3A26] bg-[#FAF8F5]/30 text-center text-xs font-bold text-[#18181B]">
                         UPI / QR
                       </div>
                       <div className="p-2.5 rounded-xl border border-gray-200 text-center text-xs text-gray-600">
@@ -1442,7 +1442,7 @@ export default function Result() {
 
                   <button
                     type="submit"
-                    className="w-full mt-4 py-3 rounded-full bg-[#7A35A3] hover:bg-[#5C237D] text-white text-xs font-extrabold shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    className="w-full mt-4 py-3 rounded-full bg-[#9E3A26] hover:bg-[#832C1B] text-white text-xs font-extrabold shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
                   >
                     <Lock className="w-3.5 h-3.5" />
                     <span>Pay {selectedPlanPrice} & Place Order</span>
@@ -1457,7 +1457,7 @@ export default function Result() {
       {/* =========================================================================
           FOOTER DISCLAIMER
          ========================================================================= */}
-      <footer className="pt-6 border-t border-[#EADBFA]/70 text-center text-[11px] text-gray-500 max-w-2xl mx-auto leading-relaxed">
+      <footer className="pt-6 border-t border-[#E8E3DA]/70 text-center text-[11px] text-gray-500 max-w-2xl mx-auto leading-relaxed">
         <p>
           MILC AI Skin Lab provides educational cosmetic skin profiling and customized topical routines. This assessment is not a clinical medical diagnosis or treatment for dermatological disease.
         </p>

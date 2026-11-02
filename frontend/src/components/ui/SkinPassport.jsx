@@ -26,94 +26,79 @@ export default function SkinPassport({
   };
 
   return (
-    <div className="bg-gradient-to-br from-[#2D143E] via-[#4A1766] to-[#7A35A3] text-white rounded-[32px] p-6 sm:p-8 shadow-xl relative overflow-hidden border border-[#EADBFA]/30">
+    <div className="bg-gradient-to-br from-[#18181B] via-[#221F1D] to-[#18181B] text-[#FAF8F5] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-xl relative overflow-hidden border border-[#9E3A26]/25">
       {/* Subtle luxury ambient pattern overlay */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#C883EB]/20 to-transparent rounded-bl-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-60 h-60 bg-gradient-to-tr from-[#D4FF3F]/10 to-transparent rounded-tr-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-[#9E3A26]/15 to-transparent rounded-bl-full pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-60 h-60 bg-gradient-to-tr from-[#B8860B]/10 to-transparent rounded-tr-full pointer-events-none" />
 
       <div className="relative z-10">
-        <div className="flex items-center justify-between border-b border-white/15 pb-4 mb-6">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-white/15 backdrop-blur-md flex items-center justify-center text-xs font-serif font-bold text-[#D4FF3F] border border-white/20">
+            <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center text-xs font-serif font-bold text-[#FAF8F5] border border-white/15">
               M
             </div>
             <div>
-              <span className="font-serif tracking-widest text-sm font-bold text-[#F4E8FC] uppercase">
-                MILC SKIN LAB
+              <span className="font-serif tracking-widest text-sm font-bold text-[#FAF8F5] uppercase">
+                MILC ATELIER
               </span>
-              <span className="block text-[9px] uppercase tracking-[0.2em] text-[#C883EB]">
-                Personal Skin Profile ID
+              <span className="block text-[9px] uppercase tracking-[0.25em] font-mono text-[#A8A193]">
+                Dermatological Passport
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px]">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#D4FF3F]" />
-            <span className="font-medium text-white/90">Assessment Verified</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[10px] font-mono">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#CCE0D4]" />
+            <span className="font-medium text-white/90">Clinical Verification</span>
           </div>
         </div>
 
         {/* Passport Content Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-            <p className="text-[10px] uppercase tracking-wider text-white/60">Profile Name</p>
-            <p className="text-base font-bold text-white mt-0.5 truncate">{displayName}</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Dossier Name</p>
+            <p className="text-sm sm:text-base font-bold text-white mt-1 truncate">{displayName}</p>
           </div>
-          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-            <p className="text-[10px] uppercase tracking-wider text-white/60">Skin Type</p>
-            <p className="text-base font-bold text-white mt-0.5 capitalize">{skinType || "Normal"}</p>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Lipid Profile</p>
+            <p className="text-sm sm:text-base font-bold text-white mt-1 capitalize">{skinType || "Normal"}</p>
           </div>
-          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-            <p className="text-[10px] uppercase tracking-wider text-white/60">Primary Goal</p>
-            <p className="text-base font-bold text-white mt-0.5 capitalize truncate">{mainConcern || "Balance"}</p>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Primary Target</p>
+            <p className="text-sm sm:text-base font-bold text-white mt-1 capitalize truncate">{mainConcern || "Balance"}</p>
           </div>
-          <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
-            <p className="text-[10px] uppercase tracking-wider text-white/60">Skin Health Score</p>
-            <p className="text-base font-bold text-[#D4FF3F] mt-0.5">{vitalityScore} / 100</p>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Vitality Index</p>
+            <p className="text-sm sm:text-base font-bold text-[#E8CEC5] mt-1 font-mono">{vitalityScore} / 100</p>
           </div>
         </div>
 
-        {/* Report ID & Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-white/15">
-          <div className="text-center sm:text-left">
-            <p className="text-[11px] text-[#EADBFA] font-mono tracking-wider">
-              ID: {reportId || "MILC-PROVISIONAL"}
-            </p>
-            <p className="text-[10px] text-white/50 mt-0.5">
-              Formulated for educational skincare matching · Not a medical diagnosis
-            </p>
-          </div>
+        {/* Footer Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-white/10">
+          <span className="text-[10px] font-mono text-white/50">
+            Report Token: <span className="text-white/80 font-bold">{reportId || "MILC-LIVE-2026"}</span>
+          </span>
 
-          <div className="flex items-center gap-2.5 w-full sm:w-auto">
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+          <div className="flex items-center gap-2">
+            <button
               type="button"
               onClick={handleShare}
-              className="flex-1 sm:flex-none h-11 px-5 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-xs font-semibold text-white flex items-center justify-center gap-2 cursor-pointer transition-colors"
+              className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer border border-white/15"
             >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-[#D4FF3F]" />
-                  <span>Link Copied!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Share Skin ID</span>
-                </>
-              )}
-            </motion.button>
-
-            <a
-              href={expertHref}
-              target="_blank"
-              rel="noreferrer"
-              className="flex-1 sm:flex-none h-11 px-5 rounded-full bg-[#D4FF3F] text-[#1E2700] hover:bg-[#bde820] text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors shadow-sm"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>Ask an Advisor</span>
-            </a>
+              {copied ? <Check className="w-3.5 h-3.5 text-[#CCE0D4]" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>{copied ? "Link Copied" : "Share Dossier"}</span>
+            </button>
+            {expertHref && (
+              <a
+                href={expertHref}
+                target="_blank"
+                rel="noreferrer"
+                className="px-4 py-2 rounded-full bg-[#9E3A26] hover:bg-[#832C1B] text-white text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Consult Specialist</span>
+              </a>
+            )}
           </div>
         </div>
       </div>

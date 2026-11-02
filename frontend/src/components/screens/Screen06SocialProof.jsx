@@ -21,17 +21,14 @@ const PINPOINTS = [
 export default function Screen06SocialProof({ onComplete, onBack }) {
   const [activeCountry, setActiveCountry] = useState(null);
 
-  // Immediate 0ms hover feedback
   const handleMouseEnter = (id) => {
     setActiveCountry(id);
   };
 
-  // Immediate 0ms dismissal on leaving country or map
   const handleMouseLeave = () => {
     setActiveCountry(null);
   };
 
-  // Click/tap toggle for touch devices
   const handleClick = (id, e) => {
     e.stopPropagation();
     setActiveCountry((prev) => (prev === id ? null : id));
@@ -44,45 +41,43 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.35 }}
-      className="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 pb-12 pt-2"
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-3 sm:px-6 pb-12 pt-2"
     >
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 md:p-10 shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] border border-[#EADBFA] text-center relative overflow-hidden">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-[#4A1766] uppercase bg-[#F4E8FC] px-3.5 py-1 rounded-full mb-5">
-          <HeartHandshake className="w-3.5 h-3.5" />
-          You're in good hands
+      <div className="atelier-card rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 md:p-10 text-center relative overflow-hidden bg-white/95 backdrop-blur-sm">
+        <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF8F5] border border-[#E8E3DA] px-3.5 py-1 rounded-full mb-5 shadow-2xs">
+          <HeartHandshake className="w-3.5 h-3.5 text-[#9E3A26]" />
+          COMMUNITY VALIDATION · STEP 07
         </span>
 
         {/* Real World Map Container */}
         <div
           onPointerLeave={handleMouseLeave}
           onClick={handleMouseLeave}
-          className="relative w-full max-w-[340px] sm:max-w-[480px] md:max-w-[620px] lg:max-w-[680px] aspect-[2000/857] mx-auto mb-3 p-1 rounded-2xl bg-[#F4F7FA]/90 border border-[#EADBFA] flex items-center justify-center overflow-visible shadow-xs select-none"
+          className="relative w-full max-w-[340px] sm:max-w-[480px] md:max-w-[620px] lg:max-w-[680px] aspect-[2000/857] mx-auto mb-3 p-1 rounded-2xl bg-[#FAF8F5] border border-[#E8E3DA] flex items-center justify-center overflow-visible shadow-xs select-none"
         >
           {/* Subtle grid pattern */}
-          <div className="absolute inset-0 rounded-2xl opacity-15 pointer-events-none bg-[radial-gradient(#132B45_1px,transparent_1px)] [background-size:16px_16px] overflow-hidden" />
+          <div className="absolute inset-0 rounded-2xl opacity-15 pointer-events-none bg-[radial-gradient(#18181B_1px,transparent_1px)] [background-size:16px_16px] overflow-hidden" />
 
-          {/* Genuine Real World Map Vector Image */}
+          {/* Real World Map Vector Image */}
           <img
             src={worldMapUrl}
             alt="Real World Map"
             className="w-full h-full object-contain pointer-events-none select-none rounded-xl"
           />
 
-          {/* Interactive Geographic SVG Layer (matching 2000 x 857 coordinate space) */}
+          {/* Interactive Geographic SVG Layer */}
           <svg
             viewBox="0 0 2000 857"
             className="absolute inset-0 w-full h-full overflow-visible pointer-events-none"
           >
             <defs>
-              {/* Drop-shadow filter that elevates the popped-up country off the map */}
               <filter id="countryPopShadow" x="-25%" y="-25%" width="150%" height="150%">
-                <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#4A1766" floodOpacity="0.4" />
-                <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#4A1766" floodOpacity="0.2" />
+                <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor="#9E3A26" floodOpacity="0.3" />
               </filter>
             </defs>
 
-            {/* ===== 1. INDIA (Geographic Path + Beacon unified in single group) ===== */}
+            {/* India Group */}
             <g
               onPointerEnter={() => handleMouseEnter("india")}
               onPointerLeave={handleMouseLeave}
@@ -92,8 +87,8 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
               <path
                 d={INDIA_PATH}
                 className="transition-all duration-200"
-                fill={activeCountry === "india" ? "#132B45" : "transparent"}
-                stroke={activeCountry === "india" ? "#0B1E32" : "transparent"}
+                fill={activeCountry === "india" ? "#9E3A26" : "transparent"}
+                stroke={activeCountry === "india" ? "#832C1B" : "transparent"}
                 strokeWidth={activeCountry === "india" ? 1.8 : 0}
                 style={{
                   transformOrigin: "1430px 375px",
@@ -101,27 +96,26 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
                   filter: activeCountry === "india" ? "url(#countryPopShadow)" : "none",
                 }}
               />
-              {/* Hit target */}
               <circle cx="1430" cy="375" r="45" fill="transparent" />
               {/* Pulse ring */}
-              <circle cx="1430" cy="375" r="10" fill="#8E7CC3" opacity="0.45">
+              <circle cx="1430" cy="375" r="10" fill="#9E3A26" opacity="0.35">
                 <animate attributeName="r" from="10" to="34" dur="2.4s" repeatCount="indefinite" />
-                <animate attributeName="opacity" from="0.5" to="0" dur="2.4s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.4" to="0" dur="2.4s" repeatCount="indefinite" />
               </circle>
               {/* Core Beacon Pin */}
               <circle
                 cx="1430"
                 cy="375"
                 r={activeCountry === "india" ? "11" : "8.5"}
-                fill={activeCountry === "india" ? "#0E2034" : "#132B45"}
+                fill={activeCountry === "india" ? "#832C1B" : "#9E3A26"}
                 stroke="#FFFFFF"
-                strokeWidth={activeCountry === "india" ? "3.8" : "2.8"}
+                strokeWidth={activeCountry === "india" ? "3.5" : "2.5"}
                 className="transition-all duration-200 drop-shadow-md"
               />
             </g>
           </svg>
 
-          {/* ===== SINGLE UNIFIED PILL TOOLTIP (Zero overlap, instant swap, clean mouse-out dismiss) ===== */}
+          {/* Unified Pill Tooltip */}
           <AnimatePresence>
             {activePin && (
               <motion.div
@@ -135,10 +129,9 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
                 }}
                 className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full pb-2.5 transition-[left,top] duration-150 ease-out"
               >
-                <div className="relative bg-[#7A35A3] text-white text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-full shadow-2xl border border-white/20 whitespace-nowrap flex items-center justify-center select-none tracking-wide">
+                <div className="relative bg-[#18181B] text-[#FAF8F5] text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-full shadow-2xl border border-[#E8E3DA]/30 whitespace-nowrap flex items-center justify-center select-none tracking-wide">
                   <span>{activePin.name}</span>
-                  {/* Downward pointer caret */}
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 rotate-45 bg-[#7A35A3]" />
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 rotate-45 bg-[#18181B]" />
                 </div>
               </motion.div>
             )}
@@ -146,39 +139,39 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
         </div>
 
         {/* Prompt Hint */}
-        <p className="text-[11px] sm:text-xs text-slate-400 font-medium mb-4 flex items-center justify-center gap-1">
-          <MapPin className="w-3 h-3 text-[#4A1766]" />
-          <span>Hover or tap India on the map to pop up its location</span>
+        <p className="text-[11px] sm:text-xs text-[#71717A] font-mono mb-4 flex items-center justify-center gap-1.5">
+          <MapPin className="w-3.5 h-3.5 text-[#9E3A26]" />
+          <span>Interactive map · Hover or tap India to inspect local profiles</span>
         </p>
 
-        <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-          You're not alone!
+        <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#18181B] leading-tight">
+          You are in excellent company
         </h2>
-        <p className="text-gray-600 text-sm sm:text-base mt-2 leading-relaxed max-w-md mx-auto">
+        <p className="text-[#52525B] text-sm sm:text-base mt-2 leading-relaxed max-w-md mx-auto">
           MILC has personalized routines for{" "}
-          <span className="font-bold text-[#4A1766]">1,001 people</span> with similar skin concerns across{" "}
-          <span className="font-semibold text-gray-900">India</span>.
+          <span className="font-bold text-[#9E3A26]">1,001+ skin profiles</span> with similar cellular concerns across{" "}
+          <span className="font-semibold text-[#18181B]">India</span>.
         </p>
 
-        {/* Center-aligned Navigation Buttons */}
-        <div className="mt-8 flex items-center justify-between gap-3 max-w-md mx-auto">
+        {/* Action Controls */}
+        <div className="mt-8 flex items-center justify-between gap-3 max-w-md mx-auto pt-5 border-t border-[#F0EBE1]">
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ x: -2 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={onBack}
-            className="flex-1 h-12 border border-gray-200/90 text-gray-700 rounded-full font-semibold hover:bg-gray-50 text-sm cursor-pointer flex items-center justify-center gap-1.5 transition-all"
+            className="flex-1 h-12 border border-[#E8E3DA] bg-[#FAF8F5] text-[#52525B] rounded-full font-semibold hover:bg-[#F2ECE3] hover:text-[#18181B] text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-1.5 transition-colors"
           >
-            <ChevronLeft className="w-4 h-4 text-gray-500" />
+            <ChevronLeft className="w-4 h-4" />
             <span>Back</span>
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.015, y: -1 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={onComplete}
-            className="flex-[1.5] h-12 bg-gradient-to-r from-[#E34234] to-[#C72F22] text-white rounded-full font-bold text-sm cursor-pointer shadow-md shadow-[#E34234]/20 hover:shadow-lg hover:shadow-[#E34234]/25 flex items-center justify-center gap-2 transition-all"
+            className="flex-[1.4] h-12 bg-[#9E3A26] hover:bg-[#832C1B] text-white rounded-full font-bold text-xs sm:text-sm cursor-pointer shadow-[0_8px_20px_-4px_rgba(158,58,38,0.22)] hover:shadow-[0_12px_24px_-4px_rgba(158,58,38,0.3)] flex items-center justify-center gap-2 transition-all"
           >
             <span>Next</span>
             <ArrowRight className="w-4 h-4 stroke-[2.2]" />

@@ -5,10 +5,10 @@ export default function LegalDocumentPage({ docId, onBack }) {
 
   return (
     <div className="max-w-xl mx-auto mt-6 px-4 animate-[fadeIn_0.3s_ease-out]">
-      <div className="bg-white rounded-[32px] shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-[#EADBFA] overflow-hidden flex flex-col max-h-[85vh]">
+      <div className="bg-white rounded-[32px] shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-[#E8E3DA] overflow-hidden flex flex-col max-h-[85vh]">
         <div className="p-5 md:p-6 border-b border-gray-100 flex items-start justify-between gap-3 shrink-0">
           <div className="min-w-0">
-            <span className="text-[10px] font-bold tracking-[0.1em] text-[#4A1766] uppercase bg-[#F4E8FC] px-2.5 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold tracking-[0.1em] text-[#18181B] uppercase bg-[#FAF8F5] px-2.5 py-0.5 rounded-full">
               Legal
             </span>
             <h2 className="text-xl font-bold text-gray-900 mt-2 leading-tight">{doc.title}</h2>
@@ -34,7 +34,7 @@ export default function LegalDocumentPage({ docId, onBack }) {
           <button
             type="button"
             onClick={onBack}
-            className="w-full h-12 bg-[#7A35A3] text-white rounded-xl font-semibold hover:bg-[#4A1766] text-sm cursor-pointer"
+            className="w-full h-12 bg-[#9E3A26] text-white rounded-xl font-semibold hover:bg-[#18181B] text-sm cursor-pointer"
           >
             Back to Privacy & Consent
           </button>

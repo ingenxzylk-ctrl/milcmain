@@ -12,11 +12,11 @@ export default function ProductChip({ product, compact, onSelect }) {
       whileTap={{ scale: 0.98 }}
       type="button"
       onClick={() => onSelect?.(item)}
-      className={`inline-flex items-center gap-2 rounded-full border border-[#EADBFA] bg-white hover:border-[#7A35A3]/40 transition-all cursor-pointer shadow-2xs hover:shadow-xs text-left ${
+      className={`inline-flex items-center gap-2 rounded-full border border-[#E8E3DA] bg-white hover:border-[#9E3A26]/40 transition-all cursor-pointer shadow-2xs hover:shadow-xs text-left ${
         compact ? "px-3 py-1.5" : "px-3.5 py-2"
       }`}
     >
-      <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A1766] bg-[#F4E8FC] px-2 py-0.5 rounded-full">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-[#18181B] bg-[#FAF8F5] px-2 py-0.5 rounded-full">
         {item.role}
       </span>
       <span className="text-xs font-semibold text-gray-800">{item.label}</span>

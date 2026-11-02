@@ -9,7 +9,7 @@ export default function ProgressBar({
 }) {
   const steps = [
     { number: 1, label: "Scan", icon: Camera },
-    { number: 2, label: "About You", icon: User },
+    { number: 2, label: "Profile", icon: User },
     { number: 3, label: "Skin", icon: Sparkles },
     { number: 4, label: "Lifestyle", icon: HeartPulse },
   ];
@@ -18,25 +18,25 @@ export default function ProgressBar({
   const qNum = Math.min(Math.max(Number(questionNumber) || 1, 1), Math.max(Number(questionTotal) || 1, 1));
   const qTotal = Math.max(Number(questionTotal) || 1, 1);
   const progressPercentage = Math.min(100, Math.max(0, ((currentStep - 1 + qNum / qTotal) / 4) * 100));
-  const resolvedSectionLabel = sectionLabel || `Section ${currentStep} of 4`;
+  const resolvedSectionLabel = sectionLabel || `Phase ${currentStep} of 4`;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-2 select-none">
+    <div className="w-full max-w-2xl mx-auto px-3 select-none mb-4">
       {/* Step nodes */}
-      <div className="relative flex justify-between items-center mb-5">
+      <div className="relative flex justify-between items-center mb-4">
         {/* Background track */}
         <div
-          className="absolute top-1/2 left-[12%] right-[12%] -translate-y-1/2 h-[2px] bg-[#EADBFA] pointer-events-none"
+          className="absolute top-1/2 left-[10%] right-[10%] -translate-y-1/2 h-[1.5px] bg-[#E8E3DA] pointer-events-none"
           aria-hidden
         />
         {/* Active filled line */}
         <motion.div
-          className="absolute top-1/2 left-[12%] -translate-y-1/2 h-[2px] bg-gradient-to-r from-[#E34234] to-[#C72F22] pointer-events-none origin-left"
+          className="absolute top-1/2 left-[10%] -translate-y-1/2 h-[1.5px] bg-[#9E3A26] pointer-events-none origin-left"
           initial={false}
           animate={{
-            width: `${Math.max(0, Math.min(100, ((currentStep - 1) / 3) * 76))}%`,
+            width: `${Math.max(0, Math.min(100, ((currentStep - 1) / 3) * 80))}%`,
           }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          transition={{ type: "spring", stiffness: 280, damping: 28 }}
         />
 
         {steps.map((item) => {
@@ -49,43 +49,31 @@ export default function ProgressBar({
               <motion.div
                 initial={false}
                 animate={{
-                  scale: isActive ? 1.1 : 1,
+                  scale: isActive ? 1.08 : 1,
                 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="relative"
+                transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 shadow-2xs ${
+                  isPast
+                    ? "bg-[#9E3A26] border-[#9E3A26] text-white"
+                    : isActive
+                    ? "bg-white border-[#9E3A26] text-[#9E3A26] ring-4 ring-[#9E3A26]/10"
+                    : "bg-[#FAF8F5] border-[#E8E3DA] text-[#A8A193]"
+                }`}
               >
-                {/* Active glow ring */}
-                {isActive && (
-                  <span className="absolute -inset-1.5 rounded-full bg-[#7A35A3]/20 animate-ping opacity-75" />
+                {isPast ? (
+                  <Check className="w-4 h-4 stroke-[2.5]" />
+                ) : (
+                  <Icon className="w-4 h-4" />
                 )}
-
-                <div
-                  className={[
-                    "w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 shadow-sm",
-                    isActive
-                      ? "bg-[#7A35A3] text-white ring-4 ring-[#7A35A3]/15 shadow-[#E34234]/20 shadow-md"
-                      : isPast
-                        ? "bg-[#7A35A3] text-white"
-                        : "bg-white text-gray-400 border border-gray-200/90",
-                  ].join(" ")}
-                >
-                  {isPast ? (
-                    <Check className="w-4 h-4 text-white stroke-[2.5]" />
-                  ) : (
-                    <Icon className="w-4 h-4" />
-                  )}
-                </div>
               </motion.div>
-
               <span
-                className={[
-                  "text-[11px] mt-2.5 tracking-wide font-medium text-center leading-tight transition-colors duration-200",
+                className={`text-[10px] tracking-wider uppercase font-mono mt-1.5 transition-colors font-medium ${
                   isActive
-                    ? "text-[#4A1766] font-bold"
+                    ? "text-[#18181B] font-bold"
                     : isPast
-                      ? "text-gray-700 font-semibold"
-                      : "text-gray-400",
-                ].join(" ")}
+                    ? "text-[#52525B]"
+                    : "text-[#A8A193]"
+                }`}
               >
                 {item.label}
               </span>
@@ -94,27 +82,22 @@ export default function ProgressBar({
         })}
       </div>
 
-      {/* Fluid progress bar */}
-      <div className="relative h-2 bg-[#F4E8FC] rounded-full w-full overflow-hidden mb-3 p-[1px]">
-        <motion.div
-          className="h-full bg-gradient-to-r from-[#132B45] via-[#204060] to-[#2B5278] rounded-full relative"
-          initial={false}
-          animate={{ width: `${progressPercentage}%` }}
-          transition={{ type: "spring", stiffness: 180, damping: 24 }}
-        >
-          <div className="absolute right-0 top-0 bottom-0 w-3 bg-white/40 rounded-full blur-[1px]" />
-        </motion.div>
-      </div>
-
-      {/* Metric Labels */}
-      <div className="flex items-center justify-between gap-3 text-xs text-gray-500 font-medium px-1">
-        <span className="flex items-center gap-1.5 font-medium text-gray-700">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#7A35A3]" />
+      {/* Sub-bar with question count */}
+      <div className="flex items-center justify-between text-[11px] text-[#71717A] px-1 font-mono">
+        <span className="tracking-wide uppercase text-[10px] font-semibold text-[#52525B]">
           {resolvedSectionLabel}
         </span>
-        <span className="bg-[#F4E8FC] text-[#4A1766] px-2.5 py-0.5 rounded-full text-[11px] font-semibold">
-          Question {qNum} of {qTotal}
+        <span className="font-medium text-[#71717A]">
+          Question {qNum} <span className="text-[#D5CFC3]">/</span> {qTotal}
         </span>
+      </div>
+      <div className="w-full bg-[#E8E3DA] h-1 rounded-full overflow-hidden mt-1.5">
+        <motion.div
+          className="bg-gradient-to-r from-[#9E3A26] to-[#C46853] h-full rounded-full"
+          initial={false}
+          animate={{ width: `${progressPercentage}%` }}
+          transition={{ duration: 0.35, ease: "easeOut" }}
+        />
       </div>
     </div>
   );

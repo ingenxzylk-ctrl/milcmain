@@ -74,17 +74,17 @@ export default function SkinTelemetryGraph({
   const content = (
     <div>
       {/* Legend */}
-      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mb-6 pb-4 border-b border-[#EADBFA]/70 text-xs">
+      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 mb-6 pb-4 border-b border-[#E8E3DA]/70 text-xs">
         <div className="flex items-center gap-2">
-          <span className="w-3.5 h-3.5 rounded-md bg-[#7A35A3] border border-[#4A1766] shadow-xs" />
-          <span className="font-bold text-[#4A1766]">You ({userName})</span>
+          <span className="w-3.5 h-3.5 rounded-md bg-[#9E3A26] border border-[#18181B] shadow-xs" />
+          <span className="font-bold text-[#18181B]">You ({userName})</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="w-3.5 h-1 border-t-2 border-dashed border-slate-400" />
           <span className="font-medium text-slate-500">Cohort Average (Others)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#D4FF3F] border border-[#BDE820]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FAF8F5] border border-[#E8E3DA]" />
           <span className="font-medium text-gray-700">Higher Area = Higher Clarity & Health</span>
         </div>
       </div>
@@ -99,13 +99,13 @@ export default function SkinTelemetryGraph({
                 <defs>
                   {/* Luxury Lavender Gradient for User's Skin Shape */}
                   <linearGradient id="userRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#C883EB" stopOpacity="0.55" />
-                    <stop offset="100%" stopColor="#7A35A3" stopOpacity="0.25" />
+                    <stop offset="0%" stopColor="#C46853" stopOpacity="0.55" />
+                    <stop offset="100%" stopColor="#9E3A26" stopOpacity="0.25" />
                   </linearGradient>
 
                   {/* Cohort Outline Shadow */}
                   <filter id="radarGlow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#7A35A3" floodOpacity="0.25" />
+                    <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#9E3A26" floodOpacity="0.25" />
                   </filter>
                 </defs>
 
@@ -126,7 +126,7 @@ export default function SkinTelemetryGraph({
                       <polygon
                         points={points}
                         fill={ringIdx % 2 === 0 ? "rgba(244, 232, 252, 0.15)" : "transparent"}
-                        stroke="#EADBFA"
+                        stroke="#E8E3DA"
                         strokeWidth="1"
                         strokeDasharray={scale === 1 ? "none" : "3,3"}
                       />
@@ -159,7 +159,7 @@ export default function SkinTelemetryGraph({
                       y1={center}
                       x2={x2}
                       y2={y2}
-                      stroke={isHovered ? "#7A35A3" : "#EADBFA"}
+                      stroke={isHovered ? "#9E3A26" : "#E8E3DA"}
                       strokeWidth={isHovered ? "1.5" : "1"}
                       className="transition-colors duration-200"
                     />
@@ -179,7 +179,7 @@ export default function SkinTelemetryGraph({
                 <polygon
                   points={userPolygonPoints}
                   fill="url(#userRadarGrad)"
-                  stroke="#7A35A3"
+                  stroke="#9E3A26"
                   strokeWidth="2.5"
                   filter="url(#radarGlow)"
                   className="transition-all duration-300"
@@ -217,7 +217,7 @@ export default function SkinTelemetryGraph({
                         cx={userCoords.x}
                         cy={userCoords.y}
                         r={isSelected ? "6.5" : "4.5"}
-                        fill={attr.delta >= 0 ? "#7A35A3" : "#C883EB"}
+                        fill={attr.delta >= 0 ? "#9E3A26" : "#C46853"}
                         stroke="#FFFFFF"
                         strokeWidth="2"
                         className="transition-all duration-200"
@@ -241,7 +241,7 @@ export default function SkinTelemetryGraph({
                         textAnchor={textAnchor}
                         fontSize={isSelected ? "11" : "10"}
                         fontWeight={isSelected ? "700" : "600"}
-                        fill={isSelected ? "#4A1766" : "#64748b"}
+                        fill={isSelected ? "#18181B" : "#64748b"}
                         className="transition-all duration-200 select-none"
                         onMouseEnter={() => setHoveredAttr(attr.id)}
                         onMouseLeave={() => setHoveredAttr(null)}
@@ -270,7 +270,7 @@ export default function SkinTelemetryGraph({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
-                  className="p-6 rounded-3xl bg-gradient-to-br from-[#FBF7FE] to-[#F4E8FC]/40 border-2 border-[#7A35A3]/30 shadow-sm space-y-4"
+                  className="p-6 rounded-3xl bg-gradient-to-br from-[#FAF8F5] to-[#FAF8F5]/40 border-2 border-[#9E3A26]/30 shadow-sm space-y-4"
                 >
                   {/* Top: Protocol # and Category Badge */}
                   <div className="flex items-center justify-between">
@@ -280,7 +280,7 @@ export default function SkinTelemetryGraph({
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
                         activeAttr.category === "Needs a boost"
-                          ? "bg-[#F4E8FC] text-[#4A1766] border-[#EADBFA]"
+                          ? "bg-[#FAF8F5] text-[#18181B] border-[#E8E3DA]"
                           : activeAttr.category === "Fine for now"
                           ? "bg-amber-50 text-amber-800 border-amber-200"
                           : "bg-emerald-50 text-emerald-800 border-emerald-200"
@@ -302,18 +302,18 @@ export default function SkinTelemetryGraph({
                   </div>
 
                   {/* Dual Telemetry Comparison Bars */}
-                  <div className="p-4 rounded-2xl bg-white border border-[#EADBFA] space-y-3 shadow-2xs">
+                  <div className="p-4 rounded-2xl bg-white border border-[#E8E3DA] space-y-3 shadow-2xs">
                     <div>
                       <div className="flex items-center justify-between text-xs mb-1">
                         <span className="font-bold text-gray-900 flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#7A35A3]" />
+                          <span className="w-2 h-2 rounded-full bg-[#9E3A26]" />
                           <span>You ({userName}):</span>
                         </span>
-                        <span className="font-mono font-bold text-[#4A1766]">{activeAttr.userScore}% Clarity</span>
+                        <span className="font-mono font-bold text-[#18181B]">{activeAttr.userScore}% Clarity</span>
                       </div>
                       <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
                         <motion.div
-                          className="h-full bg-gradient-to-r from-[#7A35A3] to-[#C883EB] rounded-full"
+                          className="h-full bg-gradient-to-r from-[#9E3A26] to-[#C46853] rounded-full"
                           initial={{ width: 0 }}
                           animate={{ width: `${activeAttr.userScore}%` }}
                           transition={{ duration: 0.5 }}
@@ -343,9 +343,9 @@ export default function SkinTelemetryGraph({
                       <span
                         className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
                           activeAttr.delta > 0
-                            ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                            ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                             : activeAttr.delta < 0
-                            ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
+                            ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                             : "bg-gray-100 text-gray-600"
                         }`}
                       >
@@ -359,17 +359,17 @@ export default function SkinTelemetryGraph({
                   </div>
 
                   {/* Clinical Observation */}
-                  <p className="text-xs text-gray-700 leading-relaxed bg-white/80 p-3 rounded-2xl border border-[#EADBFA]/80">
+                  <p className="text-xs text-gray-700 leading-relaxed bg-white/80 p-3 rounded-2xl border border-[#E8E3DA]/80">
                     {activeAttr.shortTakeaway}
                   </p>
 
                   {/* Prescribed Active */}
-                  <div className="p-3.5 rounded-2xl bg-[#7A35A3] text-white space-y-1 shadow-xs">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4FF3F] block">
+                  <div className="p-3.5 rounded-2xl bg-[#9E3A26] text-white space-y-1 shadow-xs">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#FAF8F5] block">
                       Prescribed Active Formula
                     </span>
                     <p className="font-bold text-sm text-white">{activeAttr.keyActive}</p>
-                    <p className="text-[11px] text-[#F4E8FC]/90">{activeAttr.actionBenefit}</p>
+                    <p className="text-[11px] text-[#FAF8F5]/90">{activeAttr.actionBenefit}</p>
                   </div>
                 </motion.div>
               ) : null}
@@ -379,7 +379,7 @@ export default function SkinTelemetryGraph({
       ) : (
         /* GRAPH TYPE 2: HORIZON COMPARATIVE BARS VIEW */
         <div className="space-y-3">
-          <div className="grid grid-cols-12 text-[11px] font-bold uppercase tracking-wider text-gray-400 px-3 pb-1 border-b border-[#EADBFA]">
+          <div className="grid grid-cols-12 text-[11px] font-bold uppercase tracking-wider text-gray-400 px-3 pb-1 border-b border-[#E8E3DA]">
             <span className="col-span-4 sm:col-span-3"># Protocol</span>
             <span className="col-span-5 sm:col-span-6">Visual Telemetry (You vs. Cohort)</span>
             <span className="col-span-3 text-right">Variance</span>
@@ -397,8 +397,8 @@ export default function SkinTelemetryGraph({
                   onMouseLeave={() => setHoveredAttr(null)}
                   className={`p-3 rounded-2xl border transition-all cursor-pointer grid grid-cols-12 items-center gap-2 ${
                     isSelected
-                      ? "bg-white border-[#7A35A3] shadow-xs ring-1 ring-[#7A35A3]/20"
-                      : "bg-[#FBF7FE] border-[#EADBFA]/70 hover:bg-white hover:border-[#C883EB]"
+                      ? "bg-white border-[#9E3A26] shadow-xs ring-1 ring-[#9E3A26]/20"
+                      : "bg-[#FAF8F5] border-[#E8E3DA]/70 hover:bg-white hover:border-[#C46853]"
                   }`}
                 >
                   {/* Name */}
@@ -413,12 +413,12 @@ export default function SkinTelemetryGraph({
                   <div className="col-span-5 sm:col-span-6 space-y-1">
                     {/* User bar */}
                     <div className="flex items-center gap-2">
-                      <span className="w-8 font-mono text-[10px] font-bold text-[#4A1766] text-right">
+                      <span className="w-8 font-mono text-[10px] font-bold text-[#18181B] text-right">
                         {attr.userScore}%
                       </span>
                       <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-[#7A35A3] to-[#C883EB] rounded-full"
+                          className="h-full bg-gradient-to-r from-[#9E3A26] to-[#C46853] rounded-full"
                           style={{ width: `${attr.userScore}%` }}
                         />
                       </div>
@@ -443,9 +443,9 @@ export default function SkinTelemetryGraph({
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-block ${
                         attr.delta > 0
-                          ? "bg-[#D4FF3F] text-[#1E2700] border border-[#BDE820]"
+                          ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                           : attr.delta < 0
-                          ? "bg-[#F4E8FC] text-[#4A1766] border border-[#EADBFA]"
+                          ? "bg-[#FAF8F5] text-[#18181B] border border-[#E8E3DA]"
                           : "bg-gray-100 text-gray-600"
                       }`}
                     >
@@ -466,7 +466,7 @@ export default function SkinTelemetryGraph({
   }
 
   return (
-    <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 border border-[#EADBFA] shadow-xs">
+    <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 border border-[#E8E3DA] shadow-xs">
       {content}
     </div>
   );

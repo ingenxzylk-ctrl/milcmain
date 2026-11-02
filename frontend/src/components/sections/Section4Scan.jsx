@@ -20,16 +20,16 @@ import { clearFaceImagesIdb } from "../../utils/quizImageStore";
 
 const PHOTO_TIPS = [
   { label: "Remove glasses", key: "glasses" },
-  { label: "Natural front light", key: "insufficientLight" },
-  { label: "No makeup or filters", key: "filtersApplied" },
-  { label: "Hair tucked back", key: "hair" },
+  { label: "Even natural light", key: "insufficientLight" },
+  { label: "No makeup / filters", key: "filtersApplied" },
+  { label: "Hair swept back", key: "hair" },
 ];
 
 const SCAN_STAGES = [
-  "Facial landmark & symmetry alignment...",
-  "Scanning Whiteheads, Inflammatory Acne, and Visible Pores...",
-  "Auditing Pigmentation, Freckles, Postacne Spots, and Redness...",
-  "Profiling Wrinkles, Scars, Moles, and Nevi...",
+  "Aligning biometric facial landmarks & contours...",
+  "Auditing Whiteheads, Inflammatory Acne, and Pores...",
+  "Analyzing Pigmentation, Freckles, Spots, and Micro-Redness...",
+  "Profiling Wrinkle Depth, Elasticity, and Barrier Integrity...",
   "Synthesizing 11-condition clinical skin protocol...",
 ];
 
@@ -200,41 +200,42 @@ export default function Section4Scan({ onComplete, onBack }) {
   if (isAnalyzing) {
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md md:max-w-xl mx-auto mt-8 px-4"
+        className="w-full max-w-md md:max-w-xl mx-auto mt-6 px-4"
       >
-        <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-8 sm:p-10 border border-[#EADBFA] shadow-[0_20px_50px_-15px_rgba(19,43,69,0.10)] text-center relative overflow-hidden">
-          {/* Animated radar rings in background */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-            <div className="w-72 h-72 rounded-full border border-[#7A35A3] animate-ping" />
-            <div className="w-48 h-48 rounded-full border border-[#7A35A3] animate-pulse" />
+        <div className="atelier-card rounded-[32px] p-8 sm:p-10 text-center relative overflow-hidden bg-white/95 backdrop-blur-sm">
+          {/* Subtle warm ambient radar glow */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25">
+            <div className="w-80 h-80 rounded-full border border-[#9E3A26]/30 animate-ping" />
+            <div className="w-56 h-56 rounded-full border border-[#9E3A26]/40 animate-pulse" />
           </div>
 
-          <div className="relative w-24 h-24 mx-auto mb-6">
-            <div className="absolute inset-0 rounded-full border-4 border-[#F4E8FC]" />
+          <div className="relative w-28 h-28 mx-auto mb-6">
+            <div className="absolute inset-0 rounded-full border-2 border-[#E8E3DA]" />
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#132B45] border-r-[#132B45]"
+              transition={{ repeat: Infinity, duration: 2.2, ease: "linear" }}
+              className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#9E3A26] border-r-[#9E3A26]"
             />
-            <div className="absolute inset-0 flex items-center justify-center text-[#4A1766]">
-              <Sparkles className="w-8 h-8 animate-pulse" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="font-mono text-2xl font-bold text-[#18181B]">{progressPercent}%</span>
+              <span className="text-[9px] font-mono uppercase tracking-widest text-[#71717A]">Analyzing</span>
             </div>
           </div>
 
-          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-            AI Skin Telemetry
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#18181B] tracking-tight">
+            AI Skin Topography Audit
           </h3>
 
-          <p className="text-xs sm:text-sm font-semibold text-[#4A1766] mt-2 uppercase tracking-wider">
-            {progressPercent}% Analyzed
+          <p className="text-[11px] font-mono font-semibold text-[#9E3A26] mt-2 uppercase tracking-wider">
+            Biometric Scan in Progress
           </p>
 
           {/* Progress gauge bar */}
-          <div className="h-2 bg-[#F4E8FC] rounded-full w-full overflow-hidden my-4">
+          <div className="h-1.5 bg-[#E8E3DA] rounded-full w-full overflow-hidden my-5">
             <motion.div
-              className="h-full bg-gradient-to-r from-[#E34234] to-[#C72F22] rounded-full"
+              className="h-full bg-gradient-to-r from-[#9E3A26] to-[#C46853] rounded-full"
               initial={{ width: "12%" }}
               animate={{ width: `${progressPercent}%` }}
               transition={{ duration: 0.4 }}
@@ -249,16 +250,16 @@ export default function Section4Scan({ onComplete, onBack }) {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -6 }}
-                className="text-xs sm:text-sm text-gray-600 font-medium px-2"
+                className="text-xs sm:text-sm text-[#52525B] font-medium px-2"
               >
                 {SCAN_STAGES[stageIndex]}
               </motion.p>
             </AnimatePresence>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-center gap-1.5 text-[11px] text-gray-400">
-            <Shield className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Zero raw photos retained on servers</span>
+          <div className="mt-7 pt-4 border-t border-[#F0EBE1] flex items-center justify-center gap-2 text-[11px] text-[#71717A]">
+            <Shield className="w-3.5 h-3.5 text-[#2D5A43]" />
+            <span>Encrypted locally · Zero raw photos stored</span>
           </div>
         </div>
       </motion.div>
@@ -267,24 +268,24 @@ export default function Section4Scan({ onComplete, onBack }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 18 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -18 }}
-      transition={{ duration: 0.35 }}
-      className="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto mt-4 px-4 sm:px-6 pb-14"
+      exit={{ opacity: 0, y: -16 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto mt-2 px-3 sm:px-6 pb-12"
     >
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-9 md:p-10 shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] border border-[#EADBFA] relative overflow-hidden">
+      <div className="atelier-card rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 md:p-10 relative overflow-hidden bg-white/95 backdrop-blur-sm">
         {/* Header */}
-        <div className="mb-6 pb-5 border-b border-gray-100/80 text-left">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-[#4A1766] uppercase bg-[#F4E8FC]/90 border border-[#7A35A3]/10 px-3.5 py-1 rounded-full mb-3 shadow-xs">
-            <ScanLine className="w-3.5 h-3.5" />
-            Biometric Photo Scan
+        <div className="mb-6 pb-5 border-b border-[#F0EBE1] text-left">
+          <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF8F5] border border-[#E8E3DA] px-3.5 py-1 rounded-full mb-3 shadow-2xs">
+            <ScanLine className="w-3.5 h-3.5 text-[#9E3A26]" />
+            Biometric Mapping
           </span>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 font-serif tracking-tight">
-            Front-Facing Face Scan
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-[#18181B] tracking-tight leading-tight">
+            Front-Facing Facial Topography
           </h2>
-          <p className="text-gray-500 text-xs sm:text-sm mt-1.5 leading-relaxed max-w-xl">
-            Please remove eyeglasses, face even natural light, and keep a neutral expression so the AI can accurately assess your raw skin surface.
+          <p className="text-[#71717A] text-xs sm:text-sm mt-2 leading-relaxed max-w-xl">
+            Please remove glasses, face even natural lighting, and maintain a neutral expression so the AI can accurately evaluate your epidermal surface.
           </p>
         </div>
 
@@ -297,15 +298,15 @@ export default function Section4Scan({ onComplete, onBack }) {
                 key={tip.label}
                 className={`rounded-xl px-2.5 py-2 text-center border transition-all ${
                   failed
-                    ? "bg-red-50 border-red-200 text-red-700"
-                    : "bg-[#F4F7FA] border-[#EADBFA] text-gray-700"
+                    ? "bg-[#FDF2F2] border-[#F8D7D7] text-[#9E2A2B]"
+                    : "bg-[#FAF8F5] border-[#E8E3DA] text-[#52525B]"
                 }`}
               >
-                <p className="text-[11px] font-semibold flex items-center justify-center gap-1">
+                <p className="text-[11px] font-medium flex items-center justify-center gap-1.5">
                   {failed ? (
-                    <AlertCircle className="w-3 h-3 text-red-500" />
+                    <AlertCircle className="w-3 h-3 text-[#9E2A2B]" />
                   ) : (
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <CheckCircle2 className="w-3 h-3 text-[#2D5A43]" />
                   )}
                   <span>{tip.label}</span>
                 </p>
@@ -318,37 +319,37 @@ export default function Section4Scan({ onComplete, onBack }) {
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-3.5 bg-red-50/90 border border-red-200/90 text-red-800 text-xs font-medium rounded-2xl mb-5 flex items-center gap-2"
+            className="p-3.5 bg-[#FDF2F2] border border-[#F8D7D7] text-[#9E2A2B] text-xs font-medium rounded-2xl mb-5 flex items-center gap-2"
           >
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-[#9E2A2B] shrink-0" />
             <span>{error}</span>
           </motion.div>
         )}
 
         {/* Biometric Viewfinder */}
-        <div className="rounded-3xl border border-[#EADBFA] bg-gradient-to-b from-white to-[#F4F7FA] p-3 mb-6 max-w-sm mx-auto shadow-inner relative">
-          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-[#F4F7FA] border border-[#EADBFA]">
+        <div className="rounded-3xl border border-[#E8E3DA] bg-[#FAF8F5] p-2.5 sm:p-3 mb-6 max-w-sm mx-auto shadow-inner relative">
+          <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-[#F2ECE3] border border-[#E8E3DA]">
             {/* Viewfinder corner HUD marks */}
-            <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-[#7A35A3] z-20 pointer-events-none" />
-            <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-[#7A35A3] z-20 pointer-events-none" />
-            <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-[#7A35A3] z-20 pointer-events-none" />
-            <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-[#7A35A3] z-20 pointer-events-none" />
+            <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-[#18181B] z-20 pointer-events-none" />
+            <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-[#18181B] z-20 pointer-events-none" />
+            <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-[#18181B] z-20 pointer-events-none" />
+            <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-[#18181B] z-20 pointer-events-none" />
 
             {/* Mode 1: Live Camera View */}
             {useCamera ? (
               <div className="absolute inset-0 bg-black">
                 <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover -scale-x-100" />
                 {/* Laser scan line animation */}
-                <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#132B45] to-transparent shadow-[0_0_12px_#132B45] animate-laser pointer-events-none z-10" />
+                <div className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-[#9E3A26] to-transparent shadow-[0_0_12px_#9E3A26] animate-laser pointer-events-none z-10" />
 
                 {/* In-viewfinder capture controls */}
-                <div className="absolute bottom-3.5 inset-x-0 flex justify-center items-center gap-2.5 z-30 px-3">
+                <div className="absolute bottom-4 inset-x-0 flex justify-center items-center gap-2.5 z-30 px-3">
                   <button
                     type="button"
                     onClick={captureFromCamera}
-                    className="h-11 px-5 rounded-full bg-white text-[#4A1766] font-bold text-xs cursor-pointer shadow-lg hover:bg-[#F4F7FA] flex items-center gap-1.5 transition-all"
+                    className="h-11 px-6 rounded-full bg-white text-[#18181B] font-bold text-xs cursor-pointer shadow-lg hover:bg-[#FAF8F5] flex items-center gap-1.5 transition-all"
                   >
-                    <Camera className="w-3.5 h-3.5" />
+                    <Camera className="w-3.5 h-3.5 text-[#9E3A26]" />
                     Take Photo
                   </button>
                   <button
@@ -365,14 +366,14 @@ export default function Section4Scan({ onComplete, onBack }) {
               <>
                 <img src={photo} alt="Face Scan" className="absolute inset-0 w-full h-full object-cover" />
                 {/* Laser scan line animation */}
-                <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#132B45] to-transparent shadow-[0_0_12px_#132B45] animate-laser pointer-events-none z-10" />
+                <div className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-[#9E3A26] to-transparent shadow-[0_0_12px_#9E3A26] animate-laser pointer-events-none z-10" />
 
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
                   type="button"
                   onClick={removePhoto}
-                  className="absolute top-3.5 right-3.5 bg-white/95 backdrop-blur-md text-red-600 text-xs font-semibold px-3 py-1.5 rounded-full border border-red-100 shadow-md cursor-pointer z-30 flex items-center gap-1"
+                  className="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-[#9E2A2B] text-xs font-semibold px-3 py-1.5 rounded-full border border-[#F8D7D7] shadow-sm cursor-pointer z-30 flex items-center gap-1"
                 >
                   <RefreshCw className="w-3 h-3" />
                   Change
@@ -382,16 +383,16 @@ export default function Section4Scan({ onComplete, onBack }) {
               /* Mode 3: Placeholder ready for photo/camera */
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#7A35A3]/[0.02] transition-colors"
+                className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-white/40 transition-colors"
               >
-                <div className="w-16 h-16 rounded-2xl bg-[#F4E8FC] text-[#4A1766] flex items-center justify-center mb-3 shadow-xs">
-                  <Camera className="w-8 h-8 stroke-[1.8]" />
+                <div className="w-16 h-16 rounded-2xl bg-white border border-[#E8E3DA] text-[#18181B] flex items-center justify-center mb-3 shadow-xs">
+                  <Camera className="w-7 h-7 stroke-[1.6] text-[#9E3A26]" />
                 </div>
-                <span className="text-sm font-bold text-gray-800 block mb-1">
+                <span className="text-sm font-bold text-[#18181B] block mb-1">
                   Ready for Face Scan
                 </span>
-                <span className="text-xs text-gray-500">
-                  Upload a photo or use live camera below
+                <span className="text-xs text-[#71717A]">
+                  Upload a photo or activate live camera
                 </span>
               </div>
             )}
@@ -403,45 +404,45 @@ export default function Section4Scan({ onComplete, onBack }) {
         {/* Action Controls */}
         <div className="flex flex-col sm:flex-row gap-2.5">
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ x: -2 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={onBack}
-            className="h-13 px-4 border border-gray-200/90 text-gray-600 rounded-full font-semibold hover:bg-gray-50 transition-colors cursor-pointer text-sm flex items-center justify-center gap-1"
+            className="h-12 px-4 border border-[#E8E3DA] bg-[#FAF8F5] text-[#52525B] rounded-full font-semibold hover:bg-[#F2ECE3] transition-colors cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-1"
           >
             <ChevronLeft className="w-4 h-4" />
             Back
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.015, y: -1 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 h-13 border border-[#7A35A3]/20 bg-white text-[#4A1766] rounded-full font-semibold hover:bg-[#C883EB]/15 transition-colors cursor-pointer text-sm flex items-center justify-center gap-2 shadow-xs"
+            className="flex-1 h-12 border border-[#E8E3DA] bg-white text-[#18181B] rounded-full font-semibold hover:border-[#D5CFC3] hover:bg-[#FAF8F5] transition-all cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2 shadow-2xs"
           >
-            <Upload className="w-4 h-4" />
+            <Upload className="w-4 h-4 text-[#71717A]" />
             Upload Photo
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.015, y: -1 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={() => setUseCamera(true)}
-            className="flex-1 h-13 border border-[#7A35A3]/20 bg-white text-[#4A1766] rounded-full font-semibold hover:bg-[#C883EB]/15 transition-colors cursor-pointer text-sm flex items-center justify-center gap-2 shadow-xs"
+            className="flex-1 h-12 border border-[#E8E3DA] bg-white text-[#18181B] rounded-full font-semibold hover:border-[#D5CFC3] hover:bg-[#FAF8F5] transition-all cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2 shadow-2xs"
           >
-            <Camera className="w-4 h-4" />
+            <Camera className="w-4 h-4 text-[#71717A]" />
             Live Camera
           </motion.button>
 
           <motion.button
-            whileHover={photo ? { scale: 1.02 } : {}}
+            whileHover={photo ? { scale: 1.015, y: -1 } : {}}
             whileTap={photo ? { scale: 0.98 } : {}}
             type="button"
             disabled={!photo}
             onClick={runAnalysis}
-            className="flex-[1.4] h-13 bg-gradient-to-r from-[#E34234] to-[#C72F22] text-white rounded-full font-bold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed text-sm shadow-md shadow-[#E34234]/20 hover:shadow-lg flex items-center justify-center gap-2"
+            className="flex-[1.3] h-12 bg-[#9E3A26] hover:bg-[#832C1B] text-white rounded-full font-bold cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed text-xs sm:text-sm shadow-[0_8px_20px_-4px_rgba(158,58,38,0.25)] hover:shadow-[0_12px_24px_-4px_rgba(158,58,38,0.32)] flex items-center justify-center gap-2 transition-all"
           >
             <Sparkles className="w-4 h-4" />
             Analyze My Skin

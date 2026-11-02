@@ -1,25 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --milc: #7A35A3;             /* Deep Rich Lavender / Royal Purple */
-  --milc-dark: #4A1766;        /* Midnight Plum */
-  --milc-light: #C883EB;       /* Primary Lavender (#C883EB) */
-  --milc-soft: #F4E8FC;        /* Soft Lavender Mist for pills & active surfaces */
-  --milc-accent-red: #E34234;  /* Tomato Red (#E34234) for primary CTAs & buttons */
-  --milc-accent-red-hover: #C72F22;
-  --milc-accent-pop: #D4FF3F;  /* Chartreuse (#D4FF3F) for vibrant badges & highlights */
-  --milc-accent-pop-text: #1E2700;
-  --milc-bg: #FBF7FE;          /* Soft Tinted Lavender Canvas */
-  --milc-card: #ffffff;        /* Pure Card White */
-  --milc-border: #EADBFA;      /* Elegant Lavender Divider & Card Borders */
+  /* MILC Haute-Cosmetique Editorial Palette */
+  --milc-canvas: #FAF8F5;          /* Warm Alabaster Silk Canvas */
+  --milc-card: #FFFFFF;            /* Pure Luxury Card White */
+  --milc-card-soft: #FCFBF9;       /* Frosted Alabaster Surface */
+  --milc-border: #E8E3DA;          /* Razor-thin Warm Stone Border */
+  --milc-border-hover: #D5CFC3;    /* Hover State Border */
+  
+  --milc-ink: #18181B;             /* Noir Charcoal Deep Text */
+  --milc-ink-muted: #52525B;       /* Refined Slate Body Text */
+  --milc-ink-light: #71717A;       /* Subtle Micro-label Text */
+  
+  --milc-accent: #9E3A26;          /* Signature Terracotta Rosewood */
+  --milc-accent-hover: #832C1B;    /* Deep Terracotta Hover */
+  --milc-accent-soft: #F9F1ED;     /* Terracotta Silk Tint for active states */
+  --milc-accent-border: #E8CEC5;   /* Active State Border */
+  
+  --milc-sage: #2D5A43;            /* Botanical Clinical Sage (Strengths & Healthy) */
+  --milc-sage-soft: #EEF4F0;       /* Sage Silk Surface */
+  --milc-sage-border: #CCE0D4;     /* Sage Border */
+  
+  --milc-gold: #B8860B;            /* Subtle Dermatologist Seal Gold */
+  --milc-gold-soft: #FDF8ED;       /* Gold Silk Tint */
 }
 
 body {
   margin: 0;
-  background-color: #FBF7FE;
-  color: #2D143E;
+  background-color: var(--milc-canvas);
+  color: var(--milc-ink);
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
@@ -27,34 +39,21 @@ body {
   font-family: "Cormorant Garamond", Georgia, serif;
 }
 
-/* Ambient glow background auras */
-@keyframes floatSlow {
+/* Atmospheric subtle daylight diffusion */
+@keyframes ambientDrift {
   0%, 100% {
     transform: translate(0px, 0px) scale(1);
+    opacity: 0.6;
   }
-  33% {
-    transform: translate(25px, -35px) scale(1.08);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.95);
-  }
-}
-
-@keyframes floatReverse {
-  0%, 100% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  33% {
-    transform: translate(-30px, 25px) scale(1.06);
-  }
-  66% {
-    transform: translate(20px, -25px) scale(0.96);
+  50% {
+    transform: translate(20px, -20px) scale(1.05);
+    opacity: 0.85;
   }
 }
 
 @keyframes laserScan {
   0% {
-    top: 0%;
+    top: 2%;
     opacity: 0;
   }
   15% {
@@ -69,45 +68,41 @@ body {
   }
 }
 
-@keyframes pulseGlow {
+@keyframes reticlePulse {
   0%, 100% {
-    opacity: 0.4;
     transform: scale(1);
+    opacity: 0.45;
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.05);
+    transform: scale(1.03);
+    opacity: 0.85;
   }
 }
 
-.animate-float-slow {
-  animation: floatSlow 18s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: floatReverse 22s ease-in-out infinite;
+.animate-ambient {
+  animation: ambientDrift 20s ease-in-out infinite;
 }
 
 .animate-laser {
-  animation: laserScan 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: laserScan 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 3s ease-in-out infinite;
+.animate-reticle {
+  animation: reticlePulse 3s ease-in-out infinite;
 }
 
-/* Glassmorphism utility */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(216, 226, 236, 0.9);
+/* Luxury Editorial Glassmorphism */
+.atelier-card {
+  background: #FFFFFF;
+  border: 1px solid var(--milc-border);
+  box-shadow: 0 10px 30px -10px rgba(24, 24, 27, 0.04), 0 2px 6px -1px rgba(24, 24, 27, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-pill {
-  background: rgba(228, 235, 242, 0.75);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(19, 43, 69, 0.12);
+.atelier-card-hover:hover {
+  border-color: var(--milc-border-hover);
+  box-shadow: 0 16px 36px -12px rgba(24, 24, 27, 0.07), 0 4px 10px -2px rgba(24, 24, 27, 0.03);
+  transform: translateY(-2px);
 }
 
 /* Custom refined scrollbars */
@@ -116,12 +111,12 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F2F5F8;
+  background: #F4EFEA;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #D5CFC3;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #A8A193;
 }

@@ -74,41 +74,41 @@ export default function RoutineProtocol({ skinProfile, onSelectProduct }) {
   const steps = activeTab === "am" ? amSteps : pmSteps;
 
   return (
-    <div className="bg-white/95 rounded-[28px] p-5 sm:p-7 border border-[#EADBFA] shadow-xs">
-      <div className="flex items-center justify-between gap-3 mb-5">
+    <div className="atelier-card rounded-[28px] sm:rounded-[32px] p-5 sm:p-7 bg-white/95 backdrop-blur-sm relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#4A1766] bg-[#F4E8FC] px-2.5 py-0.5 rounded-full">
-            Daily Regimen
+          <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF8F5] border border-[#E8E3DA] px-2.5 py-1 rounded-full shadow-2xs">
+            DAILY REGIMEN
           </span>
-          <h3 className="font-serif text-xl sm:text-2xl font-bold text-gray-900 mt-1.5">
-            Your 4-Step Routine
+          <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#18181B] mt-2">
+            Your Prescribed Daily Routine
           </h3>
         </div>
 
         {/* AM / PM switcher */}
-        <div className="flex p-1 bg-[#F4F7FA] rounded-2xl border border-[#EADBFA]">
+        <div className="flex p-1 bg-[#FAF8F5] rounded-2xl border border-[#E8E3DA]">
           <button
             type="button"
             onClick={() => setActiveTab("am")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "am"
-                ? "bg-white text-[#4A1766] shadow-xs"
-                : "text-gray-500 hover:text-gray-900"
+                ? "bg-[#18181B] text-white shadow-xs"
+                : "text-[#71717A] hover:text-[#18181B]"
             }`}
           >
-            <Sun className="w-3.5 h-3.5 text-amber-500" />
+            <Sun className="w-3.5 h-3.5 text-[#B8860B]" />
             <span>AM</span>
           </button>
           <button
             type="button"
             onClick={() => setActiveTab("pm")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "pm"
-                ? "bg-white text-[#4A1766] shadow-xs"
-                : "text-gray-500 hover:text-gray-900"
+                ? "bg-[#18181B] text-white shadow-xs"
+                : "text-[#71717A] hover:text-[#18181B]"
             }`}
           >
-            <Moon className="w-3.5 h-3.5 text-indigo-500" />
+            <Moon className="w-3.5 h-3.5 text-[#9E3A26]" />
             <span>PM</span>
           </button>
         </div>
@@ -121,39 +121,39 @@ export default function RoutineProtocol({ skinProfile, onSelectProduct }) {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.25 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
         >
           {steps.map((item) => (
             <div
               key={item.step}
               onClick={() => onSelectProduct?.(item.product)}
-              className="p-4 rounded-2xl border border-[#EADBFA] bg-gradient-to-b from-white to-[#F4F7FA]/60 hover:border-[#7A35A3]/40 transition-all cursor-pointer group flex flex-col justify-between"
+              className="p-4 rounded-2xl border border-[#E8E3DA] bg-[#FAF8F5] hover:border-[#9E3A26]/50 hover:bg-white transition-all cursor-pointer group flex flex-col justify-between shadow-2xs"
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="w-6 h-6 rounded-full bg-[#F4E8FC] text-[#4A1766] font-serif font-bold text-xs flex items-center justify-center">
+                  <span className="w-6 h-6 rounded-full bg-white border border-[#E8E3DA] text-[#18181B] font-mono font-bold text-xs flex items-center justify-center">
                     {item.step}
                   </span>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  <span className="text-[10px] font-mono font-semibold text-[#A8A193] uppercase tracking-wider">
                     {item.dose}
                   </span>
                 </div>
-                <h4 className="text-sm font-bold text-gray-900 leading-tight">
+                <h4 className="text-sm font-bold text-[#18181B] leading-tight">
                   {item.name}
                 </h4>
-                <p className="text-xs font-semibold text-[#4A1766] mt-0.5 truncate">
+                <p className="text-xs font-semibold text-[#9E3A26] mt-0.5 truncate">
                   {item.product.label}
                 </p>
-                <p className="text-[11px] text-gray-500 mt-1 leading-snug">
+                <p className="text-[11px] text-[#52525B] mt-1.5 leading-snug">
                   {item.instruction}
                 </p>
               </div>
 
-              <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-xs">
-                <span className="font-bold text-gray-900">₹{item.product.price}</span>
-                <span className="text-[10px] font-bold text-[#4A1766] uppercase tracking-wider group-hover:underline flex items-center gap-0.5">
-                  View <ChevronRight className="w-3 h-3" />
+              <div className="mt-4 pt-2.5 border-t border-[#E8E3DA] flex items-center justify-between text-xs">
+                <span className="font-bold text-[#18181B] font-mono">₹{item.product.price}</span>
+                <span className="text-[10px] font-mono font-bold text-[#9E3A26] uppercase tracking-wider group-hover:underline flex items-center gap-0.5">
+                  Inspect <ChevronRight className="w-3 h-3" />
                 </span>
               </div>
             </div>

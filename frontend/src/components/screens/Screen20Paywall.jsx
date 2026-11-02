@@ -46,22 +46,22 @@ export default function Screen20Paywall({ onRestart }) {
       className="w-full max-w-md md:max-w-3xl lg:max-w-4xl mx-auto px-4 sm:px-6 pb-16 pt-2"
     >
       {/* Urgency Ribbon Header - Midnight Navy */}
-      <div className="bg-[#4A1766] text-white py-2 px-4 rounded-2xl mb-4 text-center flex items-center justify-center gap-2 shadow-sm max-w-md mx-auto">
+      <div className="bg-[#18181B] text-white py-2 px-4 rounded-2xl mb-4 text-center flex items-center justify-center gap-2 shadow-sm max-w-md mx-auto">
         <Clock className="w-3.5 h-3.5 animate-pulse text-[#8E7CC3]" />
         <span className="text-xs font-bold tracking-wide">
           Introductory offer expires in {formatTimer(timeLeft)}
         </span>
       </div>
 
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 md:p-10 shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] border border-[#EADBFA] text-center relative overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 md:p-10 shadow-[0_16px_40px_-12px_rgba(19,43,69,0.08)] border border-[#E8E3DA] text-center relative overflow-hidden">
         <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
           Get Started with Special Pricing
         </h2>
 
         {/* Voucher Tag Pill */}
-        <div className="my-4 p-3 rounded-2xl bg-gradient-to-r from-[#F4F7FA] to-[#F4E8FC] border border-[#EADBFA] flex items-center justify-between max-w-md mx-auto">
+        <div className="my-4 p-3 rounded-2xl bg-gradient-to-r from-[#F4F7FA] to-[#FAF8F5] border border-[#E8E3DA] flex items-center justify-between max-w-md mx-auto">
           <div className="flex items-center gap-2">
-            <Tag className="w-4 h-4 text-[#4A1766]" />
+            <Tag className="w-4 h-4 text-[#18181B]" />
             <span className="font-mono text-xs font-bold text-gray-900 tracking-wider">
               {name.toUpperCase().replace(/\s/g, "")}2026
             </span>
@@ -86,7 +86,7 @@ export default function Screen20Paywall({ onRestart }) {
                 }}
                 className={`p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer relative flex flex-col justify-between ${
                   isSelected
-                    ? "border-2 border-[#7A35A3] bg-white ring-2 ring-[#7A35A3]/15 shadow-sm"
+                    ? "border-2 border-[#9E3A26] bg-white ring-2 ring-[#9E3A26]/15 shadow-sm"
                     : "border-gray-200/90 bg-[#F4F7FA]/70 hover:bg-white shadow-2xs"
                 }`}
               >
@@ -96,7 +96,7 @@ export default function Screen20Paywall({ onRestart }) {
                     <span
                       className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
                         plan.popular
-                          ? "bg-[#7A35A3] text-white"
+                          ? "bg-[#9E3A26] text-white"
                           : "bg-slate-200 text-slate-700"
                       }`}
                     >
@@ -104,7 +104,7 @@ export default function Screen20Paywall({ onRestart }) {
                     </span>
                     <div
                       className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                        isSelected ? "border-[#7A35A3] bg-[#7A35A3] text-white" : "border-gray-300"
+                        isSelected ? "border-[#9E3A26] bg-[#9E3A26] text-white" : "border-gray-300"
                       }`}
                     >
                       {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
@@ -132,7 +132,7 @@ export default function Screen20Paywall({ onRestart }) {
         </div>
 
         {/* What's Included */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#F4F7FA] border border-[#EADBFA] text-left text-xs sm:text-sm space-y-2 mb-6 max-w-2xl mx-auto shadow-2xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-[#F4F7FA] border border-[#E8E3DA] text-left text-xs sm:text-sm space-y-2 mb-6 max-w-2xl mx-auto shadow-2xs">
           <p className="font-bold text-gray-900 uppercase tracking-wider text-[10px] sm:text-xs">
             Your Program Includes:
           </p>
@@ -166,7 +166,7 @@ export default function Screen20Paywall({ onRestart }) {
             href={expertHref}
             target="_blank"
             rel="noreferrer"
-            className="w-full h-14 bg-gradient-to-r from-[#E34234] to-[#C72F22] text-white rounded-full font-bold text-sm cursor-pointer shadow-md shadow-[#E34234]/20 hover:shadow-lg hover:shadow-[#E34234]/25 flex items-center justify-center gap-2 transition-all"
+            className="w-full h-14 bg-gradient-to-r from-[#9E3A26] to-[#832C1B] text-white rounded-full font-bold text-sm cursor-pointer shadow-md shadow-[#9E3A26]/20 hover:shadow-lg hover:shadow-[#9E3A26]/25 flex items-center justify-center gap-2 transition-all"
           >
             <span>Claim Plan & Order via WhatsApp</span>
             <ArrowRight className="w-4 h-4" />
@@ -175,7 +175,7 @@ export default function Screen20Paywall({ onRestart }) {
           <button
             type="button"
             onClick={onRestart}
-            className="mt-5 text-xs text-slate-400 hover:text-[#4A1766] underline cursor-pointer transition-colors block mx-auto"
+            className="mt-5 text-xs text-slate-400 hover:text-[#18181B] underline cursor-pointer transition-colors block mx-auto"
           >
             Start a new assessment
           </button>

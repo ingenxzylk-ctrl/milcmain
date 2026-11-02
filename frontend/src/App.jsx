@@ -64,21 +64,21 @@ function QuizFlow() {
   let content;
   if (reportBoot.status === "loading") {
     content = (
-      <div className="flex flex-col items-center justify-center p-12 bg-white/95 backdrop-blur-md rounded-3xl border border-[#EADBFA] max-w-md mx-auto my-12 text-center shadow-sm">
-        <div className="w-12 h-12 rounded-full border-4 border-t-[#132B45] border-[#F4E8FC] animate-spin mb-4" />
-        <h3 className="text-lg font-bold font-serif text-gray-900">Retrieving Your Skin Profile</h3>
-        <p className="text-xs text-gray-400 mt-2">Loading report {reportBoot.reportId}…</p>
+      <div className="flex flex-col items-center justify-center p-12 bg-white/95 backdrop-blur-md rounded-[28px] border border-[#E8E3DA] max-w-md mx-auto my-12 text-center shadow-xs">
+        <div className="w-10 h-10 rounded-full border-2 border-t-[#9E3A26] border-[#F0EBE1] animate-spin mb-4" />
+        <h3 className="text-lg font-bold font-serif text-[#18181B]">Retrieving Skin Analysis</h3>
+        <p className="text-xs text-[#71717A] mt-2 font-mono">Loading dossier {reportBoot.reportId}…</p>
       </div>
     );
   } else if (reportBoot.status === "error") {
     content = (
-      <div className="flex flex-col items-center justify-center p-10 bg-white/95 backdrop-blur-md rounded-3xl border border-[#EADBFA] max-w-md mx-auto my-12 text-center shadow-sm">
-        <AlertCircle className="w-10 h-10 text-[#4A1766] mb-3" />
-        <h3 className="text-lg font-bold text-gray-900 font-serif">Report Unavailable</h3>
-        <p className="text-xs text-gray-500 mt-2">{reportBoot.message}</p>
+      <div className="flex flex-col items-center justify-center p-10 bg-white/95 backdrop-blur-md rounded-[28px] border border-[#E8E3DA] max-w-md mx-auto my-12 text-center shadow-xs">
+        <AlertCircle className="w-10 h-10 text-[#9E3A26] mb-3" />
+        <h3 className="text-lg font-bold text-[#18181B] font-serif">Report Unavailable</h3>
+        <p className="text-xs text-[#71717A] mt-2">{reportBoot.message}</p>
         <button
           type="button"
-          className="mt-6 px-6 py-2.5 rounded-full bg-[#7A35A3] hover:bg-[#204060] text-white text-xs font-bold cursor-pointer transition-colors"
+          className="mt-6 px-6 py-2.5 rounded-full bg-[#9E3A26] hover:bg-[#832C1B] text-white text-xs font-bold cursor-pointer transition-colors shadow-xs"
           onClick={() => {
             const url = new URL(window.location.href);
             url.searchParams.delete("report");
@@ -173,10 +173,10 @@ function QuizFlow() {
   // Screen 1: Analyzing/Processing as first section before Welcome
   if (showSplash && step === 1 && reportBoot.status !== "ready") {
     return (
-      <div className="min-h-screen bg-[#FBF7FE] text-[#2D143E] px-4 md:px-8 pb-16 antialiased flex flex-col justify-center items-center relative overflow-hidden">
-        {/* Background Floating Ambient Orbs (Cool Slate & Lavender Mist) */}
-        <div className="fixed top-[-10%] left-[-5%] w-[45vw] h-[45vw] rounded-full bg-gradient-to-br from-[#D8E4F0]/70 to-transparent pointer-events-none blur-3xl animate-float-slow -z-10" />
-        <div className="fixed bottom-[-10%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tl from-[#E2D9F3]/50 to-transparent pointer-events-none blur-3xl animate-float-reverse -z-10" />
+      <div className="min-h-screen bg-[#FAF8F5] text-[#18181B] px-4 md:px-8 pb-16 antialiased flex flex-col justify-center items-center relative overflow-hidden">
+        {/* Soft natural daylight ambient vignettes */}
+        <div className="fixed top-[-10%] left-[-5%] w-[45vw] h-[45vw] rounded-full bg-gradient-to-br from-[#F5EFEB]/90 to-transparent pointer-events-none blur-3xl animate-ambient -z-10" />
+        <div className="fixed bottom-[-10%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tl from-[#EFEAE1]/70 to-transparent pointer-events-none blur-3xl animate-ambient -z-10" />
         <div className="w-full max-w-md md:max-w-2xl lg:max-w-3xl my-auto relative z-10 pt-4">
           <Screen16Analyzing onComplete={() => setShowSplash(false)} />
         </div>
@@ -187,42 +187,42 @@ function QuizFlow() {
   const progressPercent = Math.min(100, Math.max(5, (step / 19) * 100));
 
   return (
-    <div className="min-h-screen bg-[#FBF7FE] text-[#2D143E] px-4 md:px-8 pb-16 antialiased relative overflow-hidden">
-      {/* Background Floating Ambient Orbs (Lavender & Soft Mist) */}
-      <div className="fixed top-[-10%] left-[-5%] w-[45vw] h-[45vw] rounded-full bg-gradient-to-br from-[#C883EB]/30 to-transparent pointer-events-none blur-3xl animate-float-slow -z-10" />
-      <div className="fixed bottom-[-10%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tl from-[#EFE1FA]/60 to-transparent pointer-events-none blur-3xl animate-float-reverse -z-10" />
+    <div className="min-h-screen bg-[#FAF8F5] text-[#18181B] px-3 sm:px-4 md:px-8 pb-16 antialiased relative overflow-hidden">
+      {/* Soft natural daylight ambient background */}
+      <div className="fixed top-[-15%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-br from-[#F5EFEB]/80 to-transparent pointer-events-none blur-3xl animate-ambient -z-10" />
+      <div className="fixed bottom-[-15%] right-[-10%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-tl from-[#EFEAE1]/70 to-transparent pointer-events-none blur-3xl animate-ambient -z-10" />
 
-      {/* Header */}
-      <header className="w-full max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto flex items-center justify-between py-4 border-b border-[#EADBFA] mb-4 relative z-20 px-2 sm:px-4">
+      {/* Haute-Cosmetique Header */}
+      <header className="w-full max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto flex items-center justify-between py-4 border-b border-[#E8E3DA] mb-3 relative z-20 px-2 sm:px-4">
         <div
-          className="flex items-center gap-2 cursor-pointer select-none group"
+          className="flex items-center gap-2.5 cursor-pointer select-none group"
           onClick={() => {
             goToStep(1);
             setShowSplash(true);
           }}
-          title="Click to replay analyzing screen"
+          title="Click to replay introductory scan"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#7A35A3] to-[#C883EB] flex items-center justify-center text-white text-xs font-serif font-bold shadow-xs">
+          <div className="w-8 h-8 rounded-lg bg-[#18181B] flex items-center justify-center text-[#FAF8F5] text-xs font-serif font-bold shadow-xs group-hover:bg-[#9E3A26] transition-colors">
             M
           </div>
           <div>
-            <span className="text-lg font-bold tracking-tight text-[#4A1766] font-serif">MILC</span>
-            <span className="text-[9px] tracking-[0.18em] uppercase text-[#8E5AA8] font-semibold ml-1.5">
-              Skin Lab
+            <span className="text-xl font-bold tracking-tight text-[#18181B] font-serif">MILC</span>
+            <span className="text-[9px] tracking-[0.22em] uppercase text-[#71717A] font-mono ml-2 font-semibold">
+              ATELIER
             </span>
           </div>
         </div>
 
-        {/* Step Indicator & Shield */}
+        {/* Step Indicator & Security Badge */}
         <div className="flex items-center gap-2">
           {step > 1 && step < 19 && (
-            <span className="text-[11px] font-bold text-[#1E2700] bg-[#D4FF3F] border border-[#BDE820] px-2.5 py-0.5 rounded-full shadow-2xs">
-              Step {step} of 19
+            <span className="text-[10px] sm:text-[11px] font-mono font-semibold tracking-wider text-[#52525B] bg-white border border-[#E8E3DA] px-2.5 py-1 rounded-full shadow-2xs">
+              STEP {String(step).padStart(2, "0")} <span className="text-[#A8A193]">/</span> 19
             </span>
           )}
-          <div className="flex items-center gap-1 text-[11px] text-[#6E4282] bg-white/80 px-2 py-0.5 rounded-full border border-[#EADBFA]">
-            <Shield className="w-3 h-3 text-[#7A35A3]" />
-            <span className="text-[10px]">Private</span>
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[#52525B] bg-white px-2.5 py-1 rounded-full border border-[#E8E3DA] shadow-2xs">
+            <Shield className="w-3 h-3 text-[#2D5A43]" />
+            <span className="font-medium">Encrypted</span>
           </div>
         </div>
       </header>
@@ -230,27 +230,27 @@ function QuizFlow() {
       {/* Fluid Linear Stepper Progress Bar */}
       {step > 1 && step < 19 && (
         <div className="w-full max-w-md md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto mb-4 px-2 sm:px-4 relative z-20">
-          <div className="h-1.5 bg-[#EADBFA] rounded-full w-full overflow-hidden">
+          <div className="h-[2px] bg-[#E8E3DA] rounded-full w-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-[#7A35A3] via-[#C883EB] to-[#E34234] rounded-full"
+              className="h-full bg-gradient-to-r from-[#9E3A26] to-[#C46853] rounded-full"
               initial={false}
               animate={{ width: `${progressPercent}%` }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             />
           </div>
         </div>
       )}
 
-      {/* Screen Content Container with Smooth Animation */}
+      {/* Screen Content Container with Smooth Eased Animation */}
       <main className="mx-auto flex justify-center items-start max-w-5xl relative z-10">
         <div className="w-full">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
+              exit={{ opacity: 0, y: -14 }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
               className="w-full"
             >
               {content}

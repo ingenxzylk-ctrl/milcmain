@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ChevronLeft, ArrowRight, AlertCircle, Check } from "lucide-react";
+import { ChevronLeft, ArrowRight, AlertCircle, Sparkles } from "lucide-react";
 
 export default function QuestionLayout({
   badge,
@@ -17,23 +17,25 @@ export default function QuestionLayout({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="max-w-xl mx-auto mt-3 px-4 mb-8 w-full box-border"
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="max-w-xl mx-auto mt-2 px-3 sm:px-4 mb-10 w-full box-border"
     >
-      <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-6 sm:p-8 md:p-10 shadow-[0_16px_40px_-12px_rgba(122,53,163,0.08)] border border-[#EADBFA] w-full relative overflow-hidden">
-        {/* Subtle decorative luxury ambient glow inside top of card */}
-        <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gradient-to-br from-[#C883EB]/25 to-transparent pointer-events-none blur-2xl" />
+      <div className="atelier-card rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 md:p-10 relative overflow-hidden bg-white/95 backdrop-blur-sm">
+        {/* Subtle Warm Editorial Ambient Flare */}
+        <div className="absolute -top-24 -right-24 w-56 h-56 rounded-full bg-gradient-to-br from-[#F5EFEB]/80 to-transparent pointer-events-none blur-2xl" />
 
         <div className="mb-6 relative z-10">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.14em] text-[#1E2700] uppercase bg-[#D4FF3F] border border-[#BDE820] px-3.5 py-1.5 rounded-full shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#1E2700]" />
-            {badge}
-          </span>
-          <h2 className="text-[26px] md:text-[28px] font-bold text-gray-900 mt-4 leading-tight font-serif tracking-tight">
+          {badge && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF7F2] border border-[#E8E3DA] text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-[#71717A] mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#9E3A26]" />
+              {badge}
+            </div>
+          )}
+          <h2 className="text-[26px] sm:text-[28px] md:text-[32px] font-serif font-bold text-[#18181B] leading-[1.18] tracking-tight">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-gray-500 mt-2 text-sm leading-relaxed max-w-lg">
+            <p className="text-[#71717A] mt-2.5 text-xs sm:text-sm leading-relaxed max-w-lg">
               {subtitle}
             </p>
           )}
@@ -41,87 +43,50 @@ export default function QuestionLayout({
 
         {error && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="p-3.5 bg-red-50/90 border border-red-200/80 text-red-800 text-xs font-medium rounded-2xl mb-5 flex items-center gap-2.5 shadow-xs"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-3.5 bg-[#FDF2F2] border border-[#F8D7D7] text-[#9E2A2B] text-xs font-medium rounded-2xl mb-5 flex items-center gap-2.5 shadow-xs"
           >
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-[#9E2A2B] shrink-0" />
             <span>{error}</span>
           </motion.div>
         )}
 
         <div className="relative z-10 space-y-3">{children}</div>
 
-        <div className="flex items-center gap-3.5 mt-8 pt-4 border-t border-gray-100 w-full relative z-10">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            type="button"
-            onClick={onBack}
-            className="flex-1 h-13 border border-gray-200/90 text-gray-600 rounded-full font-semibold hover:bg-gray-50 hover:text-gray-800 transition-colors cursor-pointer text-sm flex items-center justify-center gap-1.5"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back
-          </motion.button>
-          <motion.button
-            whileHover={!continueDisabled ? { scale: 1.02 } : {}}
-            whileTap={!continueDisabled ? { scale: 0.98 } : {}}
-            type="button"
-            disabled={continueDisabled}
-            onClick={onContinue}
-            className="flex-[2] h-13 bg-gradient-to-r from-[#E34234] to-[#C72F22] text-white rounded-full font-bold hover:shadow-lg hover:shadow-[#E34234]/25 transition-all text-sm cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none flex items-center justify-center gap-2 shadow-md shadow-[#E34234]/20"
-          >
-            <span>{continueLabel}</span>
-            <ArrowRight className="w-4 h-4 stroke-[2.2]" />
-          </motion.button>
+        <div className="flex items-center gap-3 mt-8 pt-5 border-t border-[#F0EBE1] w-full relative z-10">
+          {onBack && (
+            <motion.button
+              whileHover={{ x: -2 }}
+              whileTap={{ scale: 0.97 }}
+              type="button"
+              onClick={onBack}
+              className="h-12 px-4 sm:px-5 rounded-full border border-[#E8E3DA] bg-[#FAF8F5] text-[#52525B] text-xs sm:text-sm font-semibold hover:bg-[#F2ECE3] hover:text-[#18181B] transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Back</span>
+            </motion.button>
+          )}
+
+          {onContinue && (
+            <motion.button
+              whileHover={!continueDisabled ? { scale: 1.015, y: -1 } : {}}
+              whileTap={!continueDisabled ? { scale: 0.98 } : {}}
+              type="button"
+              onClick={onContinue}
+              disabled={continueDisabled}
+              className={`h-12 px-6 rounded-full font-bold text-xs sm:text-sm flex-1 flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_8px_20px_-4px_rgba(158,58,38,0.22)] ${
+                continueDisabled
+                  ? "bg-[#EAE5DC] text-[#A8A193] cursor-not-allowed shadow-none"
+                  : "bg-[#9E3A26] hover:bg-[#832C1B] text-white hover:shadow-[0_12px_24px_-4px_rgba(158,58,38,0.3)]"
+              }`}
+            >
+              <span>{continueLabel}</span>
+              <ArrowRight className="w-4 h-4 stroke-[2.2]" />
+            </motion.button>
+          )}
         </div>
       </div>
     </motion.div>
-  );
-}
-
-export function OptionButton({ selected, onClick, label, desc, multi }) {
-  return (
-    <motion.button
-      type="button"
-      whileHover={{ scale: 1.01, y: -1 }}
-      whileTap={{ scale: 0.99 }}
-      onClick={onClick}
-      className={`w-full text-left rounded-2xl p-4 transition-all duration-200 cursor-pointer relative overflow-hidden group ${
-        selected
-          ? "border-2 border-[#7A35A3] bg-gradient-to-r from-[#C883EB]/15 to-[#C883EB]/5 shadow-xs ring-1 ring-[#7A35A3]/25"
-          : "border border-gray-200/80 bg-white/70 hover:border-[#C883EB]/60 hover:bg-white"
-      }`}
-    >
-      <div className="flex items-start justify-between gap-3.5 relative z-10">
-        <div className="flex-1 min-w-0">
-          <p
-            className={`text-sm font-bold transition-colors ${
-              selected ? "text-[#4A1766]" : "text-gray-800 group-hover:text-gray-900"
-            }`}
-          >
-            {label}
-          </p>
-          {desc && <p className="text-xs text-gray-500 mt-1 leading-normal">{desc}</p>}
-        </div>
-
-        <div
-          className={`w-5 h-5 border flex items-center justify-center shrink-0 mt-0.5 transition-all duration-200 ${
-            multi ? "rounded-md" : "rounded-full"
-          } ${
-            selected
-              ? "border-[#7A35A3] bg-[#7A35A3] text-white shadow-xs"
-              : "border-gray-300 bg-white group-hover:border-gray-400"
-          }`}
-        >
-          {selected &&
-            (multi ? (
-              <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-            ) : (
-              <div className="w-2 h-2 rounded-full bg-white" />
-            ))}
-        </div>
-      </div>
-    </motion.button>
   );
 }

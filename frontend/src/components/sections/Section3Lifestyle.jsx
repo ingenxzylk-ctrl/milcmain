@@ -114,7 +114,7 @@ export default function Section3Lifestyle({ onComplete, onBack }) {
               value={localForm.conditionsOther}
               onChange={(e) => persist({ ...localForm, conditionsOther: e.target.value })}
               placeholder="Please specify condition..."
-              className="mt-3 w-full h-13 px-4 border border-gray-200/90 rounded-2xl bg-white text-sm focus:border-[#7A35A3] focus:ring-2 focus:ring-[#7A35A3]/20 outline-none"
+              className="mt-3 w-full h-13 px-4 border border-gray-200/90 rounded-2xl bg-white text-sm focus:border-[#9E3A26] focus:ring-2 focus:ring-[#9E3A26]/20 outline-none"
             />
           )}
 
@@ -126,7 +126,7 @@ export default function Section3Lifestyle({ onComplete, onBack }) {
               value={localForm.treatmentsNote}
               onChange={(e) => persist({ ...localForm, treatmentsNote: e.target.value })}
               placeholder={question.textPlaceholder}
-              className="mt-3 w-full h-13 px-4 border border-gray-200/90 rounded-2xl bg-white text-sm focus:border-[#7A35A3] focus:ring-2 focus:ring-[#7A35A3]/20 outline-none"
+              className="mt-3 w-full h-13 px-4 border border-gray-200/90 rounded-2xl bg-white text-sm focus:border-[#9E3A26] focus:ring-2 focus:ring-[#9E3A26]/20 outline-none"
             />
           )}
         </motion.div>
