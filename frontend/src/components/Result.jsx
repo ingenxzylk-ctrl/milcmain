@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import confetti from "canvas-confetti";
 import {
   Sparkles,
   ShieldCheck,
@@ -12,35 +11,17 @@ import {
   CheckCircle2,
   AlertCircle,
   Info,
-  X,
   ArrowRight,
-  ArrowDown,
   Target,
   Droplets,
-  Sun,
-  Flame,
   Activity,
-  Smile,
-  Users,
-  CircleDot,
-  Eye,
   Layers,
-  Award,
-  Tag,
-  Clock,
-  Star,
-  LayoutGrid,
-  BarChart3,
-  CreditCard,
-  Lock,
   ChevronRight,
   Shield,
-  Phone,
 } from "lucide-react";
 import { useQuiz } from "../context/QuizContext";
 import { CONCERN_LABELS, SKIN_TYPE_LABELS } from "../data/attributes";
 import { MILC_CATALOG } from "../data/products";
-import { PRICING_PLANS } from "../data/questions";
 import FaceHeatmap from "./ui/FaceHeatmap";
 import RoutineProtocol from "./ui/RoutineProtocol";
 import SkinPassport from "./ui/SkinPassport";
@@ -132,14 +113,8 @@ export default function Result() {
   const [activePillar, setActivePillar] = useState("all");
   const [activeRegion, setActiveRegion] = useState(null);
 
-  // Pricing selection (default to recommended 3-Months)
-  const [selectedPlanId, setSelectedPlanId] = useState("3_months");
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [orderSuccess, setOrderSuccess] = useState(false);
-
   // Active section for top nav
   const [activeSection, setActiveSection] = useState("score");
-  const [showStickyBar, setShowStickyBar] = useState(false);
 
   // User name check
   const rawName = aboutMe?.fullName?.trim() || "";
@@ -179,17 +154,10 @@ export default function Result() {
     })();
   }, [archivedReportId, reportMeta?.reportId, aboutMe, skinProfile, lifestyle, attributes, isRealName, rawName, vitalityScore]);
 
-  // Observer for active section & sticky bar
+  // Observer for active section
   useEffect(() => {
     const handleScroll = () => {
-      const plansEl = document.getElementById("plans-section");
-      if (plansEl) {
-        const rect = plansEl.getBoundingClientRect();
-        // Show sticky CTA if scrolled past the top of the plans section
-        setShowStickyBar(rect.top < 0);
-      }
-
-      const sections = ["score", "priorities", "routine", "plans", "deep-diagnostic"];
+      const sections = ["score", "priorities", "routine", "deep-diagnostic"];
       for (const id of sections) {
         const el = document.getElementById(`${id}-section`);
         if (el) {
@@ -219,16 +187,6 @@ export default function Result() {
     return `https://wa.me/919999999999?text=${text}`;
   }, [reportMeta?.reportId, vitalityScore, isWellBalanced, priorityCondition]);
 
-  const handleOrderSubmit = (e) => {
-    e.preventDefault();
-    setOrderSuccess(true);
-    confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
-    setTimeout(() => {
-      setIsCheckoutOpen(false);
-      setOrderSuccess(false);
-    }, 3500);
-  };
-
   const filteredAttributes = useMemo(() => {
     return attributes.filter((attr) => {
       if (activePillar !== "all") {
@@ -251,7 +209,7 @@ export default function Result() {
   }, [attributes, activePillar, activeRegion]);
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-6 md:space-y-8 animate-fadeIn pb-28">
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-6 md:space-y-8 animate-fadeIn pb-24">
 
       {/* =========================================================================
           TOP SMOOTH ANCHOR NAV (Active highlight on scroll)
@@ -289,17 +247,6 @@ export default function Result() {
         >
           <ShoppingBag className="w-3.5 h-3.5 text-[#CD92EB]" />
           <span>Your Routine</span>
-        </a>
-        <a
-          href="#plans-section"
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-            activeSection === "plans"
-              ? "bg-[#E04234] text-white shadow-2xs"
-              : "text-[#E04234] hover:bg-red-50"
-          }`}
-        >
-          <Tag className="w-3.5 h-3.5" />
-          <span>Plans & Pricing</span>
         </a>
         <a
           href="#deep-diagnostic-section"
@@ -557,145 +504,14 @@ export default function Result() {
       </div>
 
       {/* =========================================================================
-          SECTION 4: PLANS & PRIMARY SINGLE CTA (Within ~2 screens!)
-         ========================================================================= */}
-      <div id="plans-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 md:p-10 border border-[#EBE5DC] shadow-sm relative overflow-hidden">
-        <div className="text-center max-w-xl mx-auto mb-6">
-          <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF9F6] border border-[#EBE5DC] px-3.5 py-1 rounded-full shadow-2xs">
-            TREATMENT PLANS
-          </span>
-          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#141416] mt-2">
-            Choose Your Routine Protocol
-          </h2>
-          <p className="text-xs sm:text-sm text-[#52525B] mt-1.5 leading-relaxed">
-            Formulated to target your specific score of {vitalityScore}/100. Select a plan below to continue.
-          </p>
-        </div>
-
-        {/* Pricing Cards Grid (Selectable Radio-style) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 text-left">
-          {PRICING_PLANS.map((plan) => {
-            const isSelected = selectedPlanId === plan.id;
-            return (
-              <div
-                key={plan.id}
-                onClick={() => setSelectedPlanId(plan.id)}
-                className={`p-5 rounded-3xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${
-                  isSelected
-                    ? "border-[#E04234] bg-white shadow-md ring-2 ring-[#E04234]/15 scale-[1.01]"
-                    : "border-[#EBE5DC] bg-[#FAF9F6] hover:bg-white hover:border-[#CD92EB]"
-                }`}
-              >
-                {plan.popular && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#E04234] text-white text-[10px] font-mono font-bold uppercase tracking-wider px-3 py-0.5 rounded-full shadow-xs">
-                    MOST POPULAR
-                  </span>
-                )}
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                        isSelected ? "border-[#E04234] bg-[#E04234]" : "border-[#71717A]"
-                      }`}>
-                        {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-                      </div>
-                      <h3 className="font-serif font-bold text-base text-[#141416]">{plan.title}</h3>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 flex items-baseline gap-2">
-                    <span className="font-mono text-3xl font-extrabold text-[#141416]">
-                      {plan.price}
-                    </span>
-                    <span className="text-xs font-mono text-[#71717A]">
-                      ({plan.dailyRate} {plan.period})
-                    </span>
-                  </div>
-
-                  {/* Billing Details Note */}
-                  <p className="text-[11px] text-[#52525B] mt-1.5 leading-snug">
-                    {plan.billingNote}
-                  </p>
-
-                  {/* Products Included Notice */}
-                  <div className="mt-3 py-1.5 px-2.5 rounded-xl bg-white border border-[#EBE5DC] text-[11px] font-semibold text-[#141416]">
-                    🎁 {plan.productsIncludedText}
-                  </div>
-
-                  {/* Feature Checklist */}
-                  <ul className="mt-4 space-y-2 text-xs text-[#52525B] pt-3 border-t border-[#EBE5DC]">
-                    {plan.features.map((feat, i) => (
-                      <li key={i} className="flex items-start gap-1.5">
-                        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{feat}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Clear Ambiguity Line */}
-        <div className="text-center py-2.5 px-4 rounded-2xl bg-[#FAF9F6] border border-[#EBE5DC] max-w-xl mx-auto mb-6 text-xs text-[#52525B]">
-          <strong className="text-[#141416]">What you get:</strong> 11-Condition Biometric Profile & Custom Routine Protocol.
-          <br className="hidden sm:inline" /> <strong className="text-[#141416]">Products:</strong> Included in all kits as stated above with zero hidden recurring fees.
-        </div>
-
-        {/* SINGLE PRIMARY CTA BUTTON */}
-        <div className="max-w-md mx-auto space-y-3">
-          <motion.button
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.98 }}
-            type="button"
-            onClick={() => setIsCheckoutOpen(true)}
-            className="w-full h-13 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white text-sm font-bold shadow-[0_8px_20px_-4px_rgba(224,66,52,0.35)] flex items-center justify-center gap-2 cursor-pointer transition-all"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            <span>Continue with {selectedPlan?.title} · {selectedPlan?.price}</span>
-            <ArrowRight className="w-4 h-4 stroke-[2.2]" />
-          </motion.button>
-
-          {/* Secondary WhatsApp link */}
-          <a
-            href={advisorHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full py-2.5 rounded-full border border-[#EBE5DC] bg-[#FAF9F6] hover:bg-white text-xs font-bold text-[#52525B] hover:text-[#141416] transition-all flex items-center justify-center gap-2"
-          >
-            <MessageCircle className="w-4 h-4 text-emerald-600" />
-            <span>Prefer to order or ask questions via WhatsApp? Chat with Advisor</span>
-          </a>
-        </div>
-
-        {/* Trust Row near checkout */}
-        <div className="mt-6 pt-5 border-t border-[#EBE5DC] flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-[11px] text-[#71717A]">
-          <span className="flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-emerald-600" />
-            <span>256-Bit SSL Encrypted Checkout</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#CD92EB]" />
-            <span>14-Day Formulation Adjustment Guarantee</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Phone className="w-3.5 h-3.5 text-[#141416]" />
-            <span>Support: support@milccosmetics.com</span>
-          </span>
-        </div>
-      </div>
-
-      {/* =========================================================================
-          SECTION 5: COLLAPSIBLE DEEPER DETAILS (11 Conditions, Facial Zone, Passport)
+          SECTION 4: COLLAPSIBLE DEEPER DETAILS (11 Conditions, Facial Zone, Passport)
          ========================================================================= */}
       <div id="deep-diagnostic-section" className="space-y-6">
         <div className="text-center pt-2">
           <button
             type="button"
             onClick={() => setShowDeepDetails(!showDeepDetails)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-[#EBE5DC] hover:border-[#CD92EB] text-xs font-bold text-[#141416] shadow-2xs transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#EBE5DC] hover:border-[#CD92EB] text-xs font-bold text-[#141416] shadow-2xs transition-all cursor-pointer"
           >
             <span>{showDeepDetails ? "Hide Deep Diagnostic Audit" : "Explore Full 11-Condition Deep Diagnostic & Facial Map"}</span>
             {showDeepDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -923,171 +739,6 @@ export default function Result() {
           </motion.div>
         )}
       </div>
-
-      {/* =========================================================================
-          STICKY MOBILE & DESKTOP BOTTOM BAR (Shows once user passes plans)
-         ========================================================================= */}
-      <AnimatePresence>
-        {showStickyBar && (
-          <motion.div
-            initial={{ y: 80, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 80, opacity: 0 }}
-            className="fixed bottom-0 inset-x-0 z-40 p-3 bg-white/95 backdrop-blur-md border-t border-[#EBE5DC] shadow-lg flex items-center justify-between max-w-lg mx-auto sm:rounded-t-3xl"
-          >
-            <div className="flex items-center gap-2.5 pl-2">
-              <div className="w-9 h-9 rounded-full bg-[#141416] text-[#D4FF3F] font-mono font-bold text-xs flex items-center justify-center">
-                {vitalityScore}
-              </div>
-              <div>
-                <p className="text-xs font-bold text-[#141416] leading-tight">{selectedPlan?.title}</p>
-                <p className="text-[11px] font-mono text-[#E04234] font-bold">{selectedPlan?.price}</p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setIsCheckoutOpen(true)}
-              className="h-10 px-5 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>Continue</span>
-              <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* =========================================================================
-          CHECKOUT MODAL
-         ========================================================================= */}
-      <AnimatePresence>
-        {isCheckoutOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-[#EBE5DC] max-h-[90vh] overflow-y-auto"
-            >
-              <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
-                <div>
-                  <h3 className="font-serif text-xl font-bold text-[#141416]">Order Protocol Kit</h3>
-                  <p className="text-xs text-[#52525B] mt-0.5">
-                    {selectedPlan?.title} · <strong className="font-mono text-[#E04234]">{selectedPlan?.price}</strong>
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsCheckoutOpen(false)}
-                  className="w-8 h-8 rounded-full bg-[#FAF9F6] text-[#71717A] flex items-center justify-center cursor-pointer hover:bg-[#EBE5DC]"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {orderSuccess ? (
-                <div className="py-8 text-center space-y-3">
-                  <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-8 h-8" />
-                  </div>
-                  <h4 className="text-lg font-bold text-[#141416]">Order Confirmed!</h4>
-                  <p className="text-xs text-[#52525B] max-w-xs mx-auto leading-relaxed">
-                    Your customized regimen kit is being prepared. You will receive confirmation and tracking details via SMS/WhatsApp.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleOrderSubmit} className="space-y-4">
-                  <div>
-                    <label className="text-xs font-bold text-[#141416] block mb-1">Full Name</label>
-                    <input
-                      type="text"
-                      required
-                      defaultValue={isRealName ? rawName : ""}
-                      placeholder="Your full name"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#E04234]"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-bold text-[#141416] block mb-1">Phone Number</label>
-                      <input
-                        type="tel"
-                        required
-                        placeholder="+91 98765 43210"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#E04234]"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-[#141416] block mb-1">Email</label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="you@email.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#E04234]"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-bold text-[#141416] block mb-1">Shipping Address (India)</label>
-                    <textarea
-                      required
-                      rows={2}
-                      placeholder="House / Flat No., Street, Landmark"
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#E04234]"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-xs font-bold text-[#141416] block mb-1">City</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="City"
-                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#E04234]"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-[#141416] block mb-1">PIN Code</label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="PIN Code"
-                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-[#E04234]"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-bold text-[#141416] block mb-1.5">Payment Method</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      <div className="p-2.5 rounded-xl border-2 border-[#E04234] bg-red-50/40 text-center text-xs font-bold text-[#141416]">
-                        UPI / QR
-                      </div>
-                      <div className="p-2.5 rounded-xl border border-gray-200 text-center text-xs text-[#71717A]">
-                        Cards
-                      </div>
-                      <div className="p-2.5 rounded-xl border border-gray-200 text-center text-xs text-[#71717A]">
-                        Net Banking
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full mt-4 py-3.5 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white text-xs font-bold shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                  >
-                    <Lock className="w-3.5 h-3.5" />
-                    <span>Pay {selectedPlan?.price} & Confirm Protocol Kit</span>
-                  </button>
-                </form>
-              )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* =========================================================================
           FOOTER DISCLAIMER
