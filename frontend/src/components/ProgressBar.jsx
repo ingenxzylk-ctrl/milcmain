@@ -21,17 +21,17 @@ export default function ProgressBar({
   const resolvedSectionLabel = sectionLabel || `Phase ${currentStep} of 4`;
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-3 select-none mb-4">
+    <div className="w-full max-w-2xl mx-auto px-2 sm:px-3 select-none mb-3 sm:mb-4">
       {/* Step nodes */}
-      <div className="relative flex justify-between items-center mb-4">
+      <div className="relative flex justify-between items-center mb-3 sm:mb-4">
         {/* Background track */}
         <div
-          className="absolute top-1/2 left-[10%] right-[10%] -translate-y-1/2 h-[1.5px] bg-[#E8E3DA] pointer-events-none"
+          className="absolute top-1/2 left-[10%] right-[10%] -translate-y-1/2 h-[1.5px] bg-[#EBE5DC] pointer-events-none"
           aria-hidden
         />
         {/* Active filled line */}
         <motion.div
-          className="absolute top-1/2 left-[10%] -translate-y-1/2 h-[1.5px] bg-[#9E3A26] pointer-events-none origin-left"
+          className="absolute top-1/2 left-[10%] -translate-y-1/2 h-[1.5px] bg-gradient-to-r from-[#CD92EB] to-[#E04234] pointer-events-none origin-left"
           initial={false}
           animate={{
             width: `${Math.max(0, Math.min(100, ((currentStep - 1) / 3) * 80))}%`,
@@ -52,27 +52,27 @@ export default function ProgressBar({
                   scale: isActive ? 1.08 : 1,
                 }}
                 transition={{ type: "spring", stiffness: 350, damping: 22 }}
-                className={`w-9 h-9 rounded-full flex items-center justify-center border transition-all duration-300 shadow-2xs ${
+                className={`w-8 sm:w-9 h-8 sm:h-9 rounded-full flex items-center justify-center border transition-all duration-300 shadow-2xs ${
                   isPast
-                    ? "bg-[#9E3A26] border-[#9E3A26] text-white"
+                    ? "bg-[#E04234] border-[#E04234] text-white"
                     : isActive
-                    ? "bg-white border-[#9E3A26] text-[#9E3A26] ring-4 ring-[#9E3A26]/10"
-                    : "bg-[#FAF8F5] border-[#E8E3DA] text-[#A8A193]"
+                    ? "bg-white border-[#E04234] text-[#E04234] ring-4 ring-[#CD92EB]/35"
+                    : "bg-[#FAF9F6] border-[#EBE5DC] text-[#AFA698]"
                 }`}
               >
                 {isPast ? (
-                  <Check className="w-4 h-4 stroke-[2.5]" />
+                  <Check className="w-3.5 sm:w-4 h-3.5 sm:h-4 stroke-[2.5]" />
                 ) : (
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                 )}
               </motion.div>
               <span
-                className={`text-[10px] tracking-wider uppercase font-mono mt-1.5 transition-colors font-medium ${
+                className={`text-[9px] sm:text-[10px] tracking-wider uppercase font-mono mt-1 sm:mt-1.5 transition-colors font-medium ${
                   isActive
-                    ? "text-[#18181B] font-bold"
+                    ? "text-[#141416] font-bold"
                     : isPast
                     ? "text-[#52525B]"
-                    : "text-[#A8A193]"
+                    : "text-[#AFA698]"
                 }`}
               >
                 {item.label}
@@ -83,17 +83,17 @@ export default function ProgressBar({
       </div>
 
       {/* Sub-bar with question count */}
-      <div className="flex items-center justify-between text-[11px] text-[#71717A] px-1 font-mono">
-        <span className="tracking-wide uppercase text-[10px] font-semibold text-[#52525B]">
+      <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-[#71717A] px-1 font-mono">
+        <span className="tracking-wide uppercase text-[9px] sm:text-[10px] font-semibold text-[#52525B]">
           {resolvedSectionLabel}
         </span>
         <span className="font-medium text-[#71717A]">
-          Question {qNum} <span className="text-[#D5CFC3]">/</span> {qTotal}
+          Question {qNum} <span className="text-[#D8D0C3]">/</span> {qTotal}
         </span>
       </div>
-      <div className="w-full bg-[#E8E3DA] h-1 rounded-full overflow-hidden mt-1.5">
+      <div className="w-full bg-[#EBE5DC] h-1 rounded-full overflow-hidden mt-1 sm:mt-1.5">
         <motion.div
-          className="bg-gradient-to-r from-[#9E3A26] to-[#C46853] h-full rounded-full"
+          className="bg-gradient-to-r from-[#CD92EB] via-[#E04234] to-[#D4FF3F] h-full rounded-full"
           initial={false}
           animate={{ width: `${progressPercentage}%` }}
           transition={{ duration: 0.35, ease: "easeOut" }}

@@ -1,28 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  /* MILC Haute-Cosmetique Editorial Palette */
-  --milc-canvas: #FAF8F5;          /* Warm Alabaster Silk Canvas */
-  --milc-card: #FFFFFF;            /* Pure Luxury Card White */
-  --milc-card-soft: #FCFBF9;       /* Frosted Alabaster Surface */
-  --milc-border: #E8E3DA;          /* Razor-thin Warm Stone Border */
-  --milc-border-hover: #D5CFC3;    /* Hover State Border */
+  /* MILC Brand Tri-Color Palette */
+  --milc-lavender: #CD92EB;           /* Brand Lavender */
+  --milc-lavender-soft: #F8F0FC;      /* Lavender Silk Tint */
+  --milc-lavender-border: #E2BDF5;    /* Active Card Border Glow */
   
-  --milc-ink: #18181B;             /* Noir Charcoal Deep Text */
-  --milc-ink-muted: #52525B;       /* Refined Slate Body Text */
-  --milc-ink-light: #71717A;       /* Subtle Micro-label Text */
+  --milc-chartreuse: #D4FF3F;         /* Brand Chartreuse (Bio-active Neon) */
+  --milc-chartreuse-soft: #F7FDDF;    /* Chartreuse Silk Tint */
+  --milc-chartreuse-glow: rgba(212, 255, 63, 0.45);
+
+  --milc-tomato: #E04234;             /* Brand Tomato Red (Primary Action) */
+  --milc-tomato-hover: #C73024;       /* Deep Tomato Red Hover */
+  --milc-tomato-soft: #FDF0EE;        /* Tomato Red Soft Tint */
+  --milc-tomato-glow: rgba(224, 66, 52, 0.35);
+
+  /* Editorial Neutrals */
+  --milc-canvas: #FAF9F6;             /* Warm Alabaster Silk Canvas */
+  --milc-card: #FFFFFF;               /* Pure Luxury Card White */
+  --milc-card-soft: #FCFBF9;          /* Frosted Alabaster Surface */
+  --milc-border: #EBE5DC;             /* Razor-thin Warm Stone Border */
+  --milc-border-hover: #D8D0C3;       /* Hover State Border */
   
-  --milc-accent: #9E3A26;          /* Signature Terracotta Rosewood */
-  --milc-accent-hover: #832C1B;    /* Deep Terracotta Hover */
-  --milc-accent-soft: #F9F1ED;     /* Terracotta Silk Tint for active states */
-  --milc-accent-border: #E8CEC5;   /* Active State Border */
-  
-  --milc-sage: #2D5A43;            /* Botanical Clinical Sage (Strengths & Healthy) */
-  --milc-sage-soft: #EEF4F0;       /* Sage Silk Surface */
-  --milc-sage-border: #CCE0D4;     /* Sage Border */
-  
-  --milc-gold: #B8860B;            /* Subtle Dermatologist Seal Gold */
-  --milc-gold-soft: #FDF8ED;       /* Gold Silk Tint */
+  --milc-ink: #141416;                /* Noir Charcoal Deep Text */
+  --milc-ink-muted: #52525B;          /* Refined Slate Body Text */
+  --milc-ink-light: #71717A;          /* Subtle Micro-label Text */
 }
 
 body {
@@ -33,6 +35,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  min-height: 100dvh;
 }
 
 .font-serif {
@@ -40,18 +43,18 @@ body {
 }
 
 /* Atmospheric subtle daylight diffusion */
-@keyframes ambientDrift {
+@keyframes ambientLavender {
   0%, 100% {
     transform: translate(0px, 0px) scale(1);
-    opacity: 0.6;
+    opacity: 0.5;
   }
   50% {
-    transform: translate(20px, -20px) scale(1.05);
-    opacity: 0.85;
+    transform: translate(25px, -20px) scale(1.1);
+    opacity: 0.8;
   }
 }
 
-@keyframes laserScan {
+@keyframes laserChartreuse {
   0% {
     top: 2%;
     opacity: 0;
@@ -68,55 +71,94 @@ body {
   }
 }
 
-@keyframes reticlePulse {
+@keyframes pulseChartreuse {
   0%, 100% {
     transform: scale(1);
-    opacity: 0.45;
+    box-shadow: 0 0 0 0 rgba(212, 255, 63, 0.7);
   }
   50% {
-    transform: scale(1.03);
-    opacity: 0.85;
+    transform: scale(1.04);
+    box-shadow: 0 0 0 8px rgba(212, 255, 63, 0);
   }
 }
 
 .animate-ambient {
-  animation: ambientDrift 20s ease-in-out infinite;
+  animation: ambientLavender 22s ease-in-out infinite;
 }
 
 .animate-laser {
-  animation: laserScan 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: laserChartreuse 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.animate-reticle {
-  animation: reticlePulse 3s ease-in-out infinite;
+.animate-chartreuse-pulse {
+  animation: pulseChartreuse 2.2s infinite;
 }
 
-/* Luxury Editorial Glassmorphism */
+/* Atelier Card Architecture */
 .atelier-card {
   background: #FFFFFF;
   border: 1px solid var(--milc-border);
-  box-shadow: 0 10px 30px -10px rgba(24, 24, 27, 0.04), 0 2px 6px -1px rgba(24, 24, 27, 0.02);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px -10px rgba(20, 20, 22, 0.04), 0 2px 6px -1px rgba(20, 20, 22, 0.02);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .atelier-card-hover:hover {
   border-color: var(--milc-border-hover);
-  box-shadow: 0 16px 36px -12px rgba(24, 24, 27, 0.07), 0 4px 10px -2px rgba(24, 24, 27, 0.03);
+  box-shadow: 0 16px 36px -12px rgba(20, 20, 22, 0.08), 0 4px 10px -2px rgba(20, 20, 22, 0.03);
   transform: translateY(-2px);
+}
+
+/* Active Option Card (Lavender aura + fine border) */
+.atelier-card-selected {
+  border-color: var(--milc-lavender) !important;
+  background: #FFFFFF;
+  box-shadow: 0 12px 28px -6px rgba(205, 146, 235, 0.28), 0 0 0 1px var(--milc-lavender);
+}
+
+/* Primary Action Button (Tomato Red with dynamic hover) */
+.btn-primary-tomato {
+  background-color: var(--milc-tomato);
+  color: #FFFFFF;
+  box-shadow: 0 10px 24px -4px var(--milc-tomato-glow);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-primary-tomato:hover {
+  background-color: var(--milc-tomato-hover);
+  box-shadow: 0 14px 28px -4px rgba(224, 66, 52, 0.45);
+  transform: translateY(-1px);
+}
+.btn-primary-tomato:active {
+  transform: scale(0.98);
+}
+
+/* Bio-Active Chartreuse Badge */
+.badge-chartreuse {
+  background-color: var(--milc-chartreuse);
+  color: #141416;
+  font-weight: 700;
+  box-shadow: 0 4px 14px -2px rgba(212, 255, 63, 0.4);
+}
+
+/* Safe Area Insets for Mobile */
+.pb-safe {
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+}
+.pt-safe {
+  padding-top: max(16px, env(safe-area-inset-top, 16px));
 }
 
 /* Custom refined scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #F4EFEA;
+  background: #F5EFE9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D5CFC3;
+  background: #D8D0C3;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #A8A193;
+  background: #AFA698;
 }

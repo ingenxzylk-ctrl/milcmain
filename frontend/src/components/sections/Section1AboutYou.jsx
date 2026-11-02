@@ -253,7 +253,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
 
   const headingInfo = STEP_TITLES[STEPS[step]];
   const inputClass = (err) =>
-    `w-full h-14 px-4 bg-white/90 border rounded-2xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#9E3A26]/20 focus:border-[#9E3A26] transition-all text-sm shadow-xs ${
+    `w-full h-14 px-4 bg-white/90 border rounded-2xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#E04234]/20 focus:border-[#E04234] transition-all text-sm shadow-xs ${
       err ? "border-red-500 ring-1 ring-red-200" : "border-gray-200/90 hover:border-gray-300"
     }`;
 
@@ -277,7 +277,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
             className="flex flex-col gap-2 pt-1"
           >
             <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-[#18181B]" />
+              <User className="w-3.5 h-3.5 text-[#141416]" />
               First name / Preferred Name
             </label>
             <input
@@ -303,7 +303,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
             {/* Phone */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-[#18181B]" />
+                <Phone className="w-3.5 h-3.5 text-[#141416]" />
                 WhatsApp Number
               </label>
               <div className="flex gap-2">
@@ -351,7 +351,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
                   }}
                   placeholder="10-digit number"
                   className={`flex-1 min-w-0 h-14 px-4 bg-white/90 border rounded-2xl text-sm shadow-xs ${
-                    errors.whatsapp ? "border-red-500" : "border-gray-200/90 focus:border-[#9E3A26]"
+                    errors.whatsapp ? "border-red-500" : "border-gray-200/90 focus:border-[#E04234]"
                   }`}
                 />
               </div>
@@ -361,7 +361,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
             {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-[#18181B]" />
+                <Mail className="w-3.5 h-3.5 text-[#141416]" />
                 Email Address
               </label>
               <input
@@ -378,14 +378,14 @@ export default function Section1AboutYou({ onComplete, onBack }) {
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#18181B]" />
+                  <MapPin className="w-3.5 h-3.5 text-[#141416]" />
                   Pincode (Climate & Weather Context)
                 </label>
                 <button
                   type="button"
                   onClick={handleUseLocation}
                   disabled={geoStatus === "locating"}
-                  className="text-xs font-semibold text-[#18181B] hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50"
+                  className="text-xs font-semibold text-[#141416] hover:underline flex items-center gap-1 cursor-pointer disabled:opacity-50"
                 >
                   <Compass className={`w-3 h-3 ${geoStatus === "locating" ? "animate-spin" : ""}`} />
                   <span>{geoStatus === "locating" ? "Detecting…" : "Auto-detect"}</span>
@@ -404,7 +404,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
               />
               {pinLookup === "loading" && <p className="text-xs text-gray-400">Verifying postal location…</p>}
               {pinLookup === "found" && localForm.city && (
-                <p className="text-xs text-[#18181B] font-medium flex items-center gap-1">
+                <p className="text-xs text-[#141416] font-medium flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" />
                   <span>
                     {localForm.city}
@@ -492,7 +492,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
                 onClick={() => handleChange({ gender: g.id })}
                 className={`h-15 border rounded-2xl font-semibold text-sm cursor-pointer transition-all flex items-center justify-between px-5 ${
                   localForm.gender === g.id
-                    ? "border-2 border-[#9E3A26] bg-[#C46853]/15 text-[#18181B] shadow-xs"
+                    ? "border-2 border-[#E04234] bg-[#C46853]/15 text-[#141416] shadow-xs"
                     : "border-gray-200/90 text-gray-700 hover:bg-[#F4F7FA]"
                 }`}
               >
@@ -500,7 +500,7 @@ export default function Section1AboutYou({ onComplete, onBack }) {
                 <div
                   className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                     localForm.gender === g.id
-                      ? "border-[#9E3A26] bg-[#9E3A26] text-white"
+                      ? "border-[#E04234] bg-[#E04234] text-white"
                       : "border-gray-300"
                   }`}
                 >

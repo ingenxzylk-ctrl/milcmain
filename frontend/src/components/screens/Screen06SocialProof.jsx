@@ -45,8 +45,8 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
       className="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto px-3 sm:px-6 pb-12 pt-2"
     >
       <div className="atelier-card rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 md:p-10 text-center relative overflow-hidden bg-white/95 backdrop-blur-sm">
-        <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF8F5] border border-[#E8E3DA] px-3.5 py-1 rounded-full mb-5 shadow-2xs">
-          <HeartHandshake className="w-3.5 h-3.5 text-[#9E3A26]" />
+        <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF9F6] border border-[#EBE5DC] px-3.5 py-1 rounded-full mb-5 shadow-2xs">
+          <HeartHandshake className="w-3.5 h-3.5 text-[#E04234]" />
           COMMUNITY VALIDATION · STEP 07
         </span>
 
@@ -54,10 +54,10 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
         <div
           onPointerLeave={handleMouseLeave}
           onClick={handleMouseLeave}
-          className="relative w-full max-w-[340px] sm:max-w-[480px] md:max-w-[620px] lg:max-w-[680px] aspect-[2000/857] mx-auto mb-3 p-1 rounded-2xl bg-[#FAF8F5] border border-[#E8E3DA] flex items-center justify-center overflow-visible shadow-xs select-none"
+          className="relative w-full max-w-[340px] sm:max-w-[480px] md:max-w-[620px] lg:max-w-[680px] aspect-[2000/857] mx-auto mb-3 p-1 rounded-2xl bg-[#FAF9F6] border border-[#EBE5DC] flex items-center justify-center overflow-visible shadow-xs select-none"
         >
           {/* Subtle grid pattern */}
-          <div className="absolute inset-0 rounded-2xl opacity-15 pointer-events-none bg-[radial-gradient(#18181B_1px,transparent_1px)] [background-size:16px_16px] overflow-hidden" />
+          <div className="absolute inset-0 rounded-2xl opacity-15 pointer-events-none bg-[radial-gradient(#141416_1px,transparent_1px)] [background-size:16px_16px] overflow-hidden" />
 
           {/* Real World Map Vector Image */}
           <img
@@ -73,7 +73,7 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
           >
             <defs>
               <filter id="countryPopShadow" x="-25%" y="-25%" width="150%" height="150%">
-                <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor="#9E3A26" floodOpacity="0.3" />
+                <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor="#E04234" floodOpacity="0.3" />
               </filter>
             </defs>
 
@@ -87,8 +87,8 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
               <path
                 d={INDIA_PATH}
                 className="transition-all duration-200"
-                fill={activeCountry === "india" ? "#9E3A26" : "transparent"}
-                stroke={activeCountry === "india" ? "#832C1B" : "transparent"}
+                fill={activeCountry === "india" ? "#E04234" : "transparent"}
+                stroke={activeCountry === "india" ? "#C73024" : "transparent"}
                 strokeWidth={activeCountry === "india" ? 1.8 : 0}
                 style={{
                   transformOrigin: "1430px 375px",
@@ -98,7 +98,7 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
               />
               <circle cx="1430" cy="375" r="45" fill="transparent" />
               {/* Pulse ring */}
-              <circle cx="1430" cy="375" r="10" fill="#9E3A26" opacity="0.35">
+              <circle cx="1430" cy="375" r="10" fill="#E04234" opacity="0.35">
                 <animate attributeName="r" from="10" to="34" dur="2.4s" repeatCount="indefinite" />
                 <animate attributeName="opacity" from="0.4" to="0" dur="2.4s" repeatCount="indefinite" />
               </circle>
@@ -107,7 +107,7 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
                 cx="1430"
                 cy="375"
                 r={activeCountry === "india" ? "11" : "8.5"}
-                fill={activeCountry === "india" ? "#832C1B" : "#9E3A26"}
+                fill={activeCountry === "india" ? "#C73024" : "#E04234"}
                 stroke="#FFFFFF"
                 strokeWidth={activeCountry === "india" ? "3.5" : "2.5"}
                 className="transition-all duration-200 drop-shadow-md"
@@ -129,9 +129,9 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
                 }}
                 className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full pb-2.5 transition-[left,top] duration-150 ease-out"
               >
-                <div className="relative bg-[#18181B] text-[#FAF8F5] text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-full shadow-2xl border border-[#E8E3DA]/30 whitespace-nowrap flex items-center justify-center select-none tracking-wide">
+                <div className="relative bg-[#141416] text-[#FAF9F6] text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-full shadow-2xl border border-[#EBE5DC]/30 whitespace-nowrap flex items-center justify-center select-none tracking-wide">
                   <span>{activePin.name}</span>
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 rotate-45 bg-[#18181B]" />
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 rotate-45 bg-[#141416]" />
                 </div>
               </motion.div>
             )}
@@ -140,27 +140,27 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
 
         {/* Prompt Hint */}
         <p className="text-[11px] sm:text-xs text-[#71717A] font-mono mb-4 flex items-center justify-center gap-1.5">
-          <MapPin className="w-3.5 h-3.5 text-[#9E3A26]" />
+          <MapPin className="w-3.5 h-3.5 text-[#E04234]" />
           <span>Interactive map · Hover or tap India to inspect local profiles</span>
         </p>
 
-        <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#18181B] leading-tight">
+        <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#141416] leading-tight">
           You are in excellent company
         </h2>
         <p className="text-[#52525B] text-sm sm:text-base mt-2 leading-relaxed max-w-md mx-auto">
           MILC has personalized routines for{" "}
-          <span className="font-bold text-[#9E3A26]">1,001+ skin profiles</span> with similar cellular concerns across{" "}
-          <span className="font-semibold text-[#18181B]">India</span>.
+          <span className="font-bold text-[#E04234]">1,001+ skin profiles</span> with similar cellular concerns across{" "}
+          <span className="font-semibold text-[#141416]">India</span>.
         </p>
 
         {/* Action Controls */}
-        <div className="mt-8 flex items-center justify-between gap-3 max-w-md mx-auto pt-5 border-t border-[#F0EBE1]">
+        <div className="mt-8 flex items-center justify-between gap-3 max-w-md mx-auto pt-5 border-t border-[#EBE5DC]">
           <motion.button
             whileHover={{ x: -2 }}
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={onBack}
-            className="flex-1 h-12 border border-[#E8E3DA] bg-[#FAF8F5] text-[#52525B] rounded-full font-semibold hover:bg-[#F2ECE3] hover:text-[#18181B] text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-1.5 transition-colors"
+            className="flex-1 h-12 border border-[#EBE5DC] bg-[#FAF9F6] text-[#52525B] rounded-full font-semibold hover:bg-[#F2ECE3] hover:text-[#141416] text-xs sm:text-sm cursor-pointer flex items-center justify-center gap-1.5 transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Back</span>
@@ -171,7 +171,7 @@ export default function Screen06SocialProof({ onComplete, onBack }) {
             whileTap={{ scale: 0.98 }}
             type="button"
             onClick={onComplete}
-            className="flex-[1.4] h-12 bg-[#9E3A26] hover:bg-[#832C1B] text-white rounded-full font-bold text-xs sm:text-sm cursor-pointer shadow-[0_8px_20px_-4px_rgba(158,58,38,0.22)] hover:shadow-[0_12px_24px_-4px_rgba(158,58,38,0.3)] flex items-center justify-center gap-2 transition-all"
+            className="flex-[1.4] h-12 bg-[#E04234] hover:bg-[#C73024] text-white rounded-full font-bold text-xs sm:text-sm cursor-pointer shadow-[0_8px_20px_-4px_rgba(224,66,52,0.22)] hover:shadow-[0_12px_24px_-4px_rgba(224,66,52,0.3)] flex items-center justify-center gap-2 transition-all"
           >
             <span>Next</span>
             <ArrowRight className="w-4 h-4 stroke-[2.2]" />

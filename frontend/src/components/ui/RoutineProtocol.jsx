@@ -77,26 +77,26 @@ export default function RoutineProtocol({ skinProfile, onSelectProduct }) {
     <div className="atelier-card rounded-[28px] sm:rounded-[32px] p-5 sm:p-7 bg-white/95 backdrop-blur-sm relative overflow-hidden">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
         <div>
-          <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF8F5] border border-[#E8E3DA] px-2.5 py-1 rounded-full shadow-2xs">
+          <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF9F6] border border-[#EBE5DC] px-2.5 py-1 rounded-full shadow-2xs">
             DAILY REGIMEN
           </span>
-          <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#18181B] mt-2">
+          <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#141416] mt-2">
             Your Prescribed Daily Routine
           </h3>
         </div>
 
         {/* AM / PM switcher */}
-        <div className="flex p-1 bg-[#FAF8F5] rounded-2xl border border-[#E8E3DA]">
+        <div className="flex p-1 bg-[#FAF9F6] rounded-2xl border border-[#EBE5DC]">
           <button
             type="button"
             onClick={() => setActiveTab("am")}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "am"
-                ? "bg-[#18181B] text-white shadow-xs"
-                : "text-[#71717A] hover:text-[#18181B]"
+                ? "bg-[#141416] text-white shadow-xs"
+                : "text-[#71717A] hover:text-[#141416]"
             }`}
           >
-            <Sun className="w-3.5 h-3.5 text-[#B8860B]" />
+            <Sun className="w-3.5 h-3.5 text-[#D4FF3F]" />
             <span>AM</span>
           </button>
           <button
@@ -104,11 +104,11 @@ export default function RoutineProtocol({ skinProfile, onSelectProduct }) {
             onClick={() => setActiveTab("pm")}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "pm"
-                ? "bg-[#18181B] text-white shadow-xs"
-                : "text-[#71717A] hover:text-[#18181B]"
+                ? "bg-[#141416] text-white shadow-xs"
+                : "text-[#71717A] hover:text-[#141416]"
             }`}
           >
-            <Moon className="w-3.5 h-3.5 text-[#9E3A26]" />
+            <Moon className="w-3.5 h-3.5 text-[#CD92EB]" />
             <span>PM</span>
           </button>
         </div>
@@ -128,21 +128,21 @@ export default function RoutineProtocol({ skinProfile, onSelectProduct }) {
             <div
               key={item.step}
               onClick={() => onSelectProduct?.(item.product)}
-              className="p-4 rounded-2xl border border-[#E8E3DA] bg-[#FAF8F5] hover:border-[#9E3A26]/50 hover:bg-white transition-all cursor-pointer group flex flex-col justify-between shadow-2xs"
+              className="p-4 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] hover:border-[#CD92EB] hover:bg-white transition-all cursor-pointer group flex flex-col justify-between shadow-2xs"
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="w-6 h-6 rounded-full bg-white border border-[#E8E3DA] text-[#18181B] font-mono font-bold text-xs flex items-center justify-center">
+                  <span className="w-6 h-6 rounded-full bg-white border border-[#EBE5DC] text-[#141416] font-mono font-bold text-xs flex items-center justify-center">
                     {item.step}
                   </span>
-                  <span className="text-[10px] font-mono font-semibold text-[#A8A193] uppercase tracking-wider">
+                  <span className="text-[10px] font-mono font-semibold text-[#AFA698] uppercase tracking-wider">
                     {item.dose}
                   </span>
                 </div>
-                <h4 className="text-sm font-bold text-[#18181B] leading-tight">
+                <h4 className="text-sm font-bold text-[#141416] leading-tight">
                   {item.name}
                 </h4>
-                <p className="text-xs font-semibold text-[#9E3A26] mt-0.5 truncate">
+                <p className="text-xs font-semibold text-[#E04234] mt-0.5 truncate">
                   {item.product.label}
                 </p>
                 <p className="text-[11px] text-[#52525B] mt-1.5 leading-snug">
@@ -150,9 +150,9 @@ export default function RoutineProtocol({ skinProfile, onSelectProduct }) {
                 </p>
               </div>
 
-              <div className="mt-4 pt-2.5 border-t border-[#E8E3DA] flex items-center justify-between text-xs">
-                <span className="font-bold text-[#18181B] font-mono">₹{item.product.price}</span>
-                <span className="text-[10px] font-mono font-bold text-[#9E3A26] uppercase tracking-wider group-hover:underline flex items-center gap-0.5">
+              <div className="mt-4 pt-2.5 border-t border-[#EBE5DC] flex items-center justify-between text-xs">
+                <span className="font-bold text-[#141416] font-mono">₹{item.product.price}</span>
+                <span className="text-[10px] font-mono font-bold text-[#E04234] uppercase tracking-wider group-hover:underline flex items-center gap-0.5">
                   Inspect <ChevronRight className="w-3 h-3" />
                 </span>
               </div>
