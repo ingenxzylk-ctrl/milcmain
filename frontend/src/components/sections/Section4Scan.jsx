@@ -40,6 +40,8 @@ export default function Section4Scan({ onComplete, onBack }) {
   const { state, setFaceImages, setSkinAnalysis, setLoading } = useQuiz();
   const [photo, setPhoto] = useState(() => savedFaceUrl(state?.faceImages));
   const [error, setError] = useState(null);
+  const [serverError, setServerError] = useState(false);
+  const [retryMessage, setRetryMessage] = useState("");
   const [failedKeys, setFailedKeys] = useState([]);
   const [useCamera, setUseCamera] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -104,6 +106,7 @@ export default function Section4Scan({ onComplete, onBack }) {
   const acceptPhoto = useCallback(async (dataUrl) => {
     if (!dataUrl) return;
     setError(null);
+    setServerError(false);
     const check = await precheckPhotoQuality(dataUrl);
     if (!check.ok) {
       setFailedKeys(["insufficientLight"]);
@@ -148,6 +151,7 @@ export default function Section4Scan({ onComplete, onBack }) {
     setPhoto(null);
     persistPhoto(null);
     setError(null);
+    setServerError(false);
     setFailedKeys([]);
   };
 
@@ -157,12 +161,15 @@ export default function Section4Scan({ onComplete, onBack }) {
       return;
     }
     setIsAnalyzing(true);
+    setServerError(false);
+    setRetryMessage("");
     setLoading?.(true);
 
     const timeoutId = setTimeout(() => {
       setError("Analysis is taking longer than expected. Please try again.");
       setIsAnalyzing(false);
       setLoading?.(false);
+      setServerError(true);
     }, 180000);
 
     try {
@@ -172,6 +179,9 @@ export default function Section4Scan({ onComplete, onBack }) {
         skinProfile: state.skinProfile,
         lifestyle: state.lifestyle,
         images: [{ type: "front", label: "Face", dataUrl }],
+        onRetryProgress: (info) => {
+          setRetryMessage(info.message);
+        },
       });
       setProgressPercent(100);
       clearTimeout(timeoutId);
@@ -188,12 +198,57 @@ export default function Section4Scan({ onComplete, onBack }) {
       setLoading?.(false);
       if (err.imageRejected) {
         setFailedKeys(["insufficientLight", "filtersApplied"]);
-        setError(err.message);
+        setError(err.message || "Please provide a clearer, unfiltered photo.");
       } else {
-        setError(err.message || "AI analysis failed. Please try again.");
+        // 503, network error, or schema validation failure
+        setServerError(true);
+        setError(err.message);
       }
     }
   };
+
+  // Dedicated Error Screen when analysis fails (Phase 1.2)
+  if (serverError && !isAnalyzing) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md md:max-w-xl mx-auto mt-6 px-3 sm:px-4"
+      >
+        <div className="atelier-card rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 text-center relative overflow-hidden bg-white/95 backdrop-blur-sm">
+          <div className="w-14 h-14 rounded-full bg-[#FDF0EE] text-[#E04234] flex items-center justify-center mx-auto mb-4 border border-[#F8D2CE]">
+            <AlertCircle className="w-7 h-7 stroke-[2]" />
+          </div>
+
+          <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#141416] tracking-tight">
+            We couldn't complete your analysis
+          </h3>
+
+          <p className="text-xs sm:text-sm text-[#52525B] mt-2 mb-6 max-w-md mx-auto leading-relaxed">
+            Your answers and photo are safely saved. The neural analysis service is temporarily busy or encountered a network interruption.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <button
+              type="button"
+              onClick={onBack}
+              className="w-full sm:w-auto h-12 px-6 rounded-full border border-[#EBE5DC] bg-[#FAF9F6] text-[#52525B] font-semibold text-xs sm:text-sm hover:border-[#CD92EB] hover:text-[#141416] transition-all cursor-pointer"
+            >
+              Back to Quiz
+            </button>
+            <button
+              type="button"
+              onClick={runAnalysis}
+              className="w-full sm:w-auto h-12 px-8 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Retry Analysis</span>
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   if (isAnalyzing) {
     return (
@@ -227,7 +282,7 @@ export default function Section4Scan({ onComplete, onBack }) {
           </h3>
 
           <p className="text-[10px] sm:text-[11px] font-mono font-bold text-[#E04234] mt-2 uppercase tracking-wider">
-            Biometric Scan in Progress
+            {retryMessage || "Biometric Scan in Progress"}
           </p>
 
           {/* Progress gauge bar */}
@@ -250,7 +305,7 @@ export default function Section4Scan({ onComplete, onBack }) {
                 exit={{ opacity: 0, y: -6 }}
                 className="text-xs sm:text-sm text-[#52525B] font-medium px-2"
               >
-                {SCAN_STAGES[stageIndex]}
+                {retryMessage || SCAN_STAGES[stageIndex]}
               </motion.p>
             </AnimatePresence>
           </div>
@@ -318,7 +373,7 @@ export default function Section4Scan({ onComplete, onBack }) {
           })}
         </div>
 
-        {error && (
+        {error && !serverError && (
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}

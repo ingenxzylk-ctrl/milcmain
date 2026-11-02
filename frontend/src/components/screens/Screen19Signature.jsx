@@ -5,10 +5,13 @@ import { useQuiz } from "../../context/QuizContext";
 
 export default function Screen19Signature({ onComplete, onBack }) {
   const { state, setSignature } = useQuiz();
-  const [signedName, setSignedName] = useState(state?.signature || state?.aboutMe?.fullName || "Sarah");
+  const initialName = state?.signature || state?.aboutMe?.fullName || "";
+  const [signedName, setSignedName] = useState(initialName);
 
   const handleCommit = () => {
-    setSignature(signedName);
+    if (signedName.trim()) {
+      setSignature(signedName.trim());
+    }
     onComplete();
   };
 
@@ -62,7 +65,15 @@ export default function Screen19Signature({ onComplete, onBack }) {
 
         {/* Pledge Text */}
         <p className="text-xs sm:text-sm text-[#52525B] leading-relaxed mb-4 max-w-lg mx-auto">
-          I, <span className="font-bold text-[#141416]">{signedName}</span>, pledge to follow my personalized 2-step treatment protocol for the next 7 days for visibly healthier skin.
+          {signedName.trim() ? (
+            <>
+              I, <span className="font-bold text-[#141416]">{signedName}</span>, commit to follow my personalized topical treatment protocol consistently for the next 7 days for visibly healthier skin.
+            </>
+          ) : (
+            <>
+              I commit to follow my personalized topical treatment protocol consistently for the next 7 days for visibly healthier skin.
+            </>
+          )}
         </p>
 
         {/* Digital Signature Canvas Box */}
@@ -75,7 +86,7 @@ export default function Screen19Signature({ onComplete, onBack }) {
             className="w-full text-center text-2xl sm:text-3xl font-serif italic text-[#141416] outline-none bg-transparent"
           />
           <p className="text-[10px] font-mono text-[#71717A] mt-1 uppercase tracking-wider">
-            Digital Signature Confirmed
+            {signedName.trim() ? "Digital Signature Confirmed" : "Optional Signature"}
           </p>
         </div>
 
@@ -88,7 +99,7 @@ export default function Screen19Signature({ onComplete, onBack }) {
             onClick={handleCommit}
             className="w-full h-13 bg-[#E04234] hover:bg-[#C73024] text-white rounded-full font-bold text-xs sm:text-sm cursor-pointer shadow-[0_8px_20px_-4px_rgba(224,66,52,0.22)] hover:shadow-[0_12px_24px_-4px_rgba(224,66,52,0.3)] flex items-center justify-center gap-2 transition-all"
           >
-            <span>Confirm Pledge & Unlock Full Skin Passport</span>
+            <span>Confirm Pledge & Unlock Full Skin Report</span>
             <ArrowRight className="w-4 h-4 stroke-[2.2]" />
           </motion.button>
         </div>

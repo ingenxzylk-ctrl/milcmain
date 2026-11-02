@@ -12,18 +12,26 @@ export default function SkinPassport({
 }) {
   const [copied, setCopied] = useState(false);
 
-  const displayName = clientName?.trim() && clientName.trim() !== "Client"
-    ? clientName.trim()
-    : "Your Skin Profile";
+  const hasRealName = Boolean(clientName?.trim() && clientName.trim().toLowerCase() !== "client" && clientName.trim() !== "your skin profile");
+  const displayName = hasRealName ? clientName.trim() : null;
 
   const handleShare = async () => {
-    const url = window.location.href;
+    const url = new URL(window.location.href);
+    if (reportId) {
+      url.searchParams.set("report", reportId);
+    }
+    const shareUrl = url.toString();
     if (navigator.clipboard) {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2400);
     }
   };
+
+  const whatsappHref = expertHref || (reportId
+    ? `https://wa.me/919999999999?text=${encodeURIComponent(`Hi MILC Skin Lab! I'm reviewing my skin assessment (Report ID: ${reportId}, Score: ${vitalityScore}/100). I'd like expert advice on my personalized routine.`)}`
+    : `https://wa.me/919999999999?text=${encodeURIComponent(`Hi MILC Skin Lab! I'm reviewing my skin assessment (Score: ${vitalityScore}/100). I'd like expert advice on my personalized routine.`)}`
+  );
 
   return (
     <div className="bg-gradient-to-br from-[#141416] via-[#1F1924] to-[#141416] text-[#FAF9F6] rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 shadow-xl relative overflow-hidden border border-[#CD92EB]/30">
@@ -42,25 +50,27 @@ export default function SkinPassport({
                 MILC ATELIER
               </span>
               <span className="block text-[9px] uppercase tracking-[0.25em] font-mono text-[#AFA698]">
-                Dermatological Passport
+                Skin Profile Summary
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[10px] font-mono">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#E2F79A]" />
-            <span className="font-medium text-white/90">Clinical Verification</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-[#D4FF3F]" />
+            <span className="font-medium text-white/90">Skin Profile Match</span>
           </div>
         </div>
 
         {/* Passport Content Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+        <div className={`grid ${displayName ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-1 sm:grid-cols-3"} gap-3 sm:gap-4 mb-6`}>
+          {displayName && (
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+              <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Dossier Name</p>
+              <p className="text-sm sm:text-base font-bold text-white mt-1 truncate">{displayName}</p>
+            </div>
+          )}
           <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
-            <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Dossier Name</p>
-            <p className="text-sm sm:text-base font-bold text-white mt-1 truncate">{displayName}</p>
-          </div>
-          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
-            <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Lipid Profile</p>
+            <p className="text-[9px] font-mono uppercase tracking-wider text-white/50">Skin Baseline Type</p>
             <p className="text-sm sm:text-base font-bold text-white mt-1 capitalize">{skinType || "Normal"}</p>
           </div>
           <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
@@ -76,7 +86,7 @@ export default function SkinPassport({
         {/* Footer Actions */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-white/10">
           <span className="text-[10px] font-mono text-white/50">
-            Report Token: <span className="text-white/80 font-bold">{reportId || "MILC-LIVE-2026"}</span>
+            Report Token: <span className="text-white/80 font-bold">{reportId || "Generating..."}</span>
           </span>
 
           <div className="flex items-center gap-2">
@@ -85,20 +95,18 @@ export default function SkinPassport({
               onClick={handleShare}
               className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer border border-white/15"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-[#E2F79A]" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-[#D4FF3F]" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? "Link Copied" : "Share Dossier"}</span>
             </button>
-            {expertHref && (
-              <a
-                href={expertHref}
-                target="_blank"
-                rel="noreferrer"
-                className="px-4 py-2 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
-              >
-                <MessageCircle className="w-3.5 h-3.5" />
-                <span>Consult Specialist</span>
-              </a>
-            )}
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noreferrer"
+              className="px-4 py-2 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white text-xs font-mono font-medium transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              <span>Consult Specialist</span>
+            </a>
           </div>
         </div>
       </div>

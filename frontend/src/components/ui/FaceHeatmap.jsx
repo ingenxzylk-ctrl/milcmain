@@ -11,6 +11,7 @@ export const REGIONS = [
     badge: "Pores & Congestion",
     insight: "Central area with high oil gland density. Monitored for trapped sebum, blackheads, and pore size.",
     applicationTip: "Gently pat your clarifying BHA or Niacinamide formula along the nose bridge and chin.",
+    coordinates: { top: "22%", left: "32%", width: "36%", height: "55%", borderRadius: "18px" },
   },
   {
     id: "cheeks",
@@ -19,6 +20,7 @@ export const REGIONS = [
     badge: "Tone & Moisture Barrier",
     insight: "Primary moisture barrier zone. Monitored for facial flushing, sun spots, and past blemish marks.",
     applicationTip: "Layer soothing Centella and barrier cream evenly to lock in hydration and reduce redness.",
+    coordinates: { top: "42%", left: "12%", width: "76%", height: "30%", borderRadius: "20px" },
   },
   {
     id: "forehead",
@@ -27,6 +29,7 @@ export const REGIONS = [
     badge: "Expression Lines & Texture",
     insight: "Upper facial area. Monitored for dynamic expression lines, sun exposure, and upper pore smoothness.",
     applicationTip: "Smooth serums upward toward the hairline to support skin elasticity.",
+    coordinates: { top: "10%", left: "16%", width: "68%", height: "24%", borderRadius: "16px" },
   },
   {
     id: "undereye",
@@ -35,6 +38,7 @@ export const REGIONS = [
     badge: "Delicate Eye Area",
     insight: "Thin, delicate skin zone. Monitored for fine dehydration lines, darkness, and fatigue shadows.",
     applicationTip: "Gently tap eye cream with your ring finger along the orbital bone—never pull or rub.",
+    coordinates: { top: "34%", left: "18%", width: "64%", height: "18%", borderRadius: "14px" },
   },
   {
     id: "jawline",
@@ -43,6 +47,7 @@ export const REGIONS = [
     badge: "Breakouts & Recovery",
     insight: "Lower facial area often influenced by hormonal shifts, friction, and residual marks.",
     applicationTip: "Carry your evening moisturizer all the way down across the jawline and neck.",
+    coordinates: { top: "66%", left: "20%", width: "60%", height: "26%", borderRadius: "22px" },
   },
 ];
 
@@ -52,7 +57,6 @@ export default function FaceHeatmap({
   onSelectRegion,
   userPhoto = null,
 }) {
-  // Default to T-Zone so the inspection box is NEVER empty!
   const [internalActive, setInternalActive] = useState("tzone");
   const currentRegionId = propActiveRegion || internalActive;
 
@@ -61,11 +65,14 @@ export default function FaceHeatmap({
     onSelectRegion?.(id);
   };
 
-  // Determine health status for a given region
   const getRegionStatus = (attrIds) => {
     const relevant = attributes.filter((a) => attrIds.includes(a.id));
-    if (relevant.some((a) => a.category === "Needs a boost")) return "needs_boost";
-    if (relevant.some((a) => a.category === "Fine for now")) return "fine";
+    if (relevant.some((a) => a.category === "Needs a boost" || (typeof a.userScore === "number" && a.userScore < 70))) {
+      return "needs_boost";
+    }
+    if (relevant.some((a) => a.category === "Fine for now" || (typeof a.userScore === "number" && a.userScore < 85))) {
+      return "fine";
+    }
     return "good";
   };
 
@@ -86,7 +93,7 @@ export default function FaceHeatmap({
           <p className="text-xs text-gray-500">
             {userPhoto
               ? "Your face photo mapped across 5 primary facial zones. Tap any zone to see localized skin findings."
-              : "Explore the 5 facial zones to see how products target different areas of your face."}
+              : "Explore the 5 facial zones to see how targeted products focus on specific areas."}
           </p>
         </div>
 
@@ -102,9 +109,9 @@ export default function FaceHeatmap({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        {/* Left: Clean Biometric Photo Lens (NO awkward dots on glasses/hair!) */}
+        {/* Left: Clean Biometric Photo Lens with smooth zone highlight overlay (NO fake scanning reticles) */}
         <div className="lg:col-span-5 flex flex-col items-center">
-          <div className="relative w-56 sm:w-64 aspect-[1/1.2] rounded-3xl overflow-hidden border-2 border-[#EBE5DC] bg-[#FAF9F6] shadow-sm group">
+          <div className="relative w-56 sm:w-64 aspect-[1/1.2] rounded-3xl overflow-hidden border-2 border-[#EBE5DC] bg-[#FAF9F6] shadow-sm">
             {userPhoto ? (
               <>
                 <img
@@ -112,32 +119,57 @@ export default function FaceHeatmap({
                   alt="Your Face Scan"
                   className="w-full h-full object-cover"
                 />
-                {/* Subtle biometric scan line & vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/15 pointer-events-none" />
-                <div className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-[#FAF9F6] to-transparent opacity-50 animate-pulse pointer-events-none top-1/2" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none" />
+
+                {/* Smooth Animated Zone Highlight Overlay */}
+                <motion.div
+                  key={activeMeta.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  style={{
+                    position: "absolute",
+                    top: activeMeta.coordinates.top,
+                    left: activeMeta.coordinates.left,
+                    width: activeMeta.coordinates.width,
+                    height: activeMeta.coordinates.height,
+                    borderRadius: activeMeta.coordinates.borderRadius,
+                  }}
+                  className="border-2 border-[#CD92EB] bg-[#CD92EB]/15 backdrop-blur-[0.5px] shadow-[0_0_16px_rgba(205,146,235,0.4)] pointer-events-none"
+                />
               </>
             ) : (
-              /* Sleek clinical silhouette fallback */
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-[#FAF9F6] to-[#FAF9F6]/30 select-none">
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-[#FAF9F6] to-[#FAF9F6]/30 select-none relative">
                 <svg viewBox="0 0 200 240" className="w-44 h-52">
                   <ellipse cx="100" cy="115" rx="60" ry="78" fill="#FFFFFF" stroke="#EBE5DC" strokeWidth="2" />
-                  <circle cx="80" cy="98" r="3" fill="#C46853" />
-                  <circle cx="120" cy="98" r="3" fill="#C46853" />
+                  <circle cx="80" cy="98" r="3" fill="#CD92EB" />
+                  <circle cx="120" cy="98" r="3" fill="#CD92EB" />
                   <path d="M 92 148 Q 100 154 108 148" stroke="#E04234" strokeWidth="2" fill="none" strokeLinecap="round" />
-                  <path d="M 98 106 L 98 126 L 104 126" stroke="#C46853" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                  <path d="M 98 106 L 98 126 L 104 126" stroke="#141416" strokeWidth="1.5" fill="none" strokeLinecap="round" />
                 </svg>
+
+                {/* Animated Zone highlight on svg silhouette */}
+                <motion.div
+                  key={activeMeta.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    position: "absolute",
+                    top: activeMeta.coordinates.top,
+                    left: activeMeta.coordinates.left,
+                    width: activeMeta.coordinates.width,
+                    height: activeMeta.coordinates.height,
+                    borderRadius: activeMeta.coordinates.borderRadius,
+                  }}
+                  className="border-2 border-[#CD92EB] bg-[#CD92EB]/20 pointer-events-none"
+                />
               </div>
             )}
 
-            {/* Corner Reticles */}
-            <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-[#D4FF3F] shadow-[0_0_6px_#D4FF3F] pointer-events-none z-20" />
-            <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-[#D4FF3F] shadow-[0_0_6px_#D4FF3F] pointer-events-none z-20" />
-            <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-[#D4FF3F] shadow-[0_0_6px_#D4FF3F] pointer-events-none z-20" />
-            <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-[#D4FF3F] shadow-[0_0_6px_#D4FF3F] pointer-events-none z-20" />
-
             {/* Bottom active zone label pill */}
             <div className="absolute bottom-3 inset-x-3 z-20 text-center">
-              <span className="bg-black/60 backdrop-blur-md text-[#FAF9F6] text-[11px] font-bold px-3 py-1 rounded-full shadow-xs border border-white/20 inline-block">
+              <span className="bg-black/70 backdrop-blur-md text-[#FAF9F6] text-[11px] font-bold px-3 py-1 rounded-full shadow-xs border border-white/20 inline-block">
                 Active Zone: {activeMeta.name}
               </span>
             </div>
@@ -167,7 +199,7 @@ export default function FaceHeatmap({
                   className={`px-3.5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
                     isSelected
                       ? "bg-[#E04234] text-white border-[#E04234] shadow-xs scale-102"
-                      : "bg-[#FAF9F6] text-gray-700 border-[#EBE5DC] hover:bg-white hover:border-[#C46853]"
+                      : "bg-[#FAF9F6] text-gray-700 border-[#EBE5DC] hover:bg-white hover:border-[#CD92EB]"
                   }`}
                 >
                   <span className={`w-2 h-2 rounded-full ${dotColor}`} />
@@ -177,7 +209,7 @@ export default function FaceHeatmap({
             })}
           </div>
 
-          {/* Contextual Zone Diagnostic Breakdown Card (Never Empty!) */}
+          {/* Contextual Zone Diagnostic Breakdown Card */}
           <div className="p-5 rounded-2xl bg-gradient-to-br from-[#FAF9F6] to-[#FAF9F6]/40 border border-[#EBE5DC] shadow-2xs space-y-3">
             <div className="flex items-center justify-between border-b border-[#EBE5DC]/80 pb-2.5">
               <div>
@@ -206,9 +238,9 @@ export default function FaceHeatmap({
                     <span
                       key={attr.id}
                       className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${
-                        attr.category === "Needs a boost"
+                        attr.category === "Needs a boost" || (typeof attr.userScore === "number" && attr.userScore < 70)
                           ? "bg-[#FAF9F6] text-[#141416] border-[#EBE5DC]"
-                          : attr.category === "Fine for now"
+                          : attr.category === "Fine for now" || (typeof attr.userScore === "number" && attr.userScore < 85)
                           ? "bg-amber-50 text-amber-800 border-amber-200"
                           : "bg-emerald-50 text-emerald-800 border-emerald-200"
                       }`}

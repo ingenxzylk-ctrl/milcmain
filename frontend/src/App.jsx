@@ -37,29 +37,31 @@ function QuizFlow() {
     return id ? { status: "loading", reportId: id } : { status: "idle" };
   });
 
+  const loadReport = async (reportId) => {
+    setReportBoot({ status: "loading", reportId });
+    try {
+      const data = await fetchAssessmentReport(reportId);
+      hydrateFromReport?.(data);
+      setReportBoot({ status: "ready", reportId: data.reportId });
+    } catch (err) {
+      const is404 = err?.status === 404;
+      const msg = is404
+        ? "We couldn't find an analysis report with this ID. It may have expired or the link is incorrect."
+        : "The assessment server is temporarily unavailable or experiencing network interruptions.";
+      setReportBoot({
+        status: "error",
+        reportId,
+        is404,
+        message: msg,
+      });
+    }
+  };
+
   useEffect(() => {
-    if (reportBoot.status !== "loading" || !reportBoot.reportId) return undefined;
-    let cancelled = false;
-    (async () => {
-      try {
-        const data = await fetchAssessmentReport(reportBoot.reportId);
-        if (cancelled) return;
-        hydrateFromReport?.(data);
-        setReportBoot({ status: "ready", reportId: data.reportId });
-      } catch (err) {
-        if (cancelled) return;
-        setError(err?.message || "Could not open this report.");
-        setReportBoot({
-          status: "error",
-          reportId: reportBoot.reportId,
-          message: err?.message || "Report not found.",
-        });
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [reportBoot.status, reportBoot.reportId]);
+    if (reportBoot.status === "loading" && reportBoot.reportId) {
+      loadReport(reportBoot.reportId);
+    }
+  }, []);
 
   let content;
   if (reportBoot.status === "loading") {
@@ -74,22 +76,37 @@ function QuizFlow() {
     content = (
       <div className="flex flex-col items-center justify-center p-8 sm:p-10 bg-white/95 backdrop-blur-md rounded-[28px] border border-[#EBE5DC] max-w-md mx-auto my-12 text-center shadow-xs">
         <AlertCircle className="w-10 h-10 text-[#E04234] mb-3" />
-        <h3 className="text-lg font-bold text-[#141416] font-serif">Report Unavailable</h3>
-        <p className="text-xs text-[#71717A] mt-2">{reportBoot.message}</p>
-        <button
-          type="button"
-          className="mt-6 px-6 py-2.5 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white text-xs font-bold cursor-pointer transition-colors shadow-xs"
-          onClick={() => {
-            const url = new URL(window.location.href);
-            url.searchParams.delete("report");
-            window.history.replaceState({}, "", url);
-            setReportBoot({ status: "idle" });
-            resetQuiz();
-            setShowSplash(true);
-          }}
-        >
-          Start a new assessment
-        </button>
+        <h3 className="text-lg font-bold text-[#141416] font-serif">
+          {reportBoot.is404 ? "Report Not Found" : "Server Unavailable"}
+        </h3>
+        <p className="text-xs text-[#71717A] mt-2 max-w-xs leading-relaxed">{reportBoot.message}</p>
+        
+        <div className="mt-6 flex flex-col sm:flex-row gap-2.5 w-full justify-center">
+          {!reportBoot.is404 && (
+            <button
+              type="button"
+              className="px-5 py-2.5 rounded-full bg-[#E04234] hover:bg-[#C73024] text-white text-xs font-bold cursor-pointer transition-colors shadow-xs flex items-center justify-center gap-1.5"
+              onClick={() => loadReport(reportBoot.reportId)}
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Retry Connection</span>
+            </button>
+          )}
+          <button
+            type="button"
+            className="px-5 py-2.5 rounded-full bg-[#FAF9F6] border border-[#EBE5DC] hover:border-[#CD92EB] text-[#141416] text-xs font-bold cursor-pointer transition-colors"
+            onClick={() => {
+              const url = new URL(window.location.href);
+              url.searchParams.delete("report");
+              window.history.replaceState({}, "", url);
+              setReportBoot({ status: "idle" });
+              resetQuiz();
+              setShowSplash(true);
+            }}
+          >
+            Start a new assessment
+          </button>
+        </div>
       </div>
     );
   } else if (reportBoot.status === "ready") {

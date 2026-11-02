@@ -1,11 +1,15 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronLeft, Sparkles, CheckCircle2, TrendingUp } from "lucide-react";
 import { useQuiz } from "../../context/QuizContext";
+import { computeResultsData } from "../../utils/scoringEngine";
 
 export default function Screen15Milestone93({ onComplete, onBack }) {
   const { state } = useQuiz();
   const name = state?.aboutMe?.fullName || "Client";
   const userPhoto = (state?.faceImages || []).find((img) => img?.dataUrl)?.dataUrl;
+
+  const results = useMemo(() => computeResultsData(state), [state]);
 
   return (
     <motion.div
@@ -48,14 +52,14 @@ export default function Screen15Milestone93({ onComplete, onBack }) {
             <div>
               <span className="text-xs sm:text-sm font-bold text-[#141416] flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#CD92EB] shrink-0" />
-                Cellular Baseline Health
+                Skin Baseline Health
               </span>
               <p className="text-[11px] text-[#52525B] mt-1 leading-snug">
-                Epidermal baseline is stable. Precision lipid replenishment will amplify cellular regeneration and barrier resilience.
+                Epidermal baseline is stable. Precision lipid replenishment will amplify skin hydration and barrier resilience.
               </p>
             </div>
             <div className="shrink-0 w-13 h-13 rounded-full bg-white border border-[#E2BDF5] flex items-center justify-center font-serif text-base sm:text-lg font-bold text-[#141416] shadow-2xs">
-              75<span className="text-[10px] text-[#71717A] font-sans">/100</span>
+              {results.overallScore}<span className="text-[10px] text-[#71717A] font-sans">/100</span>
             </div>
           </div>
 
@@ -67,7 +71,7 @@ export default function Screen15Milestone93({ onComplete, onBack }) {
                 Treatment Match Index
               </span>
               <span className="badge-chartreuse px-2.5 py-0.5 rounded-full text-xs font-mono font-bold tracking-wider">
-                93% FIT
+                {results.derivedFitIndex}% FIT
               </span>
             </div>
 
@@ -88,7 +92,7 @@ export default function Screen15Milestone93({ onComplete, onBack }) {
         </div>
 
         <p className="text-[#52525B] text-xs sm:text-sm mb-6 leading-relaxed max-w-lg mx-auto">
-          Your facial scan and environmental parameters yield a <span className="font-bold text-[#E04234]">93% clinical match</span>. Review your 28-day cellular renewal projection below.
+          Your facial scan and environmental parameters yield a <span className="font-bold text-[#E04234]">{results.derivedFitIndex}% profile match</span>. Review your 28-day skin renewal projection below.
         </p>
 
         {/* Action Controls */}
