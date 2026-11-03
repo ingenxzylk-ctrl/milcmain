@@ -174,8 +174,6 @@ export default function Result() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const selectedPlan = PRICING_PLANS.find((p) => p.id === selectedPlanId) || PRICING_PLANS[1];
-
   const advisorHref = useMemo(() => {
     const repParam = reportMeta?.reportId ? ` (Report: ${reportMeta.reportId})` : "";
     const concernText = isWellBalanced
