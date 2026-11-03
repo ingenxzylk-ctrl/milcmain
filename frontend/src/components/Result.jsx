@@ -113,9 +113,6 @@ export default function Result() {
   const [activePillar, setActivePillar] = useState("all");
   const [activeRegion, setActiveRegion] = useState(null);
 
-  // Active section for top nav
-  const [activeSection, setActiveSection] = useState("score");
-
   // User name check
   const rawName = aboutMe?.fullName?.trim() || "";
   const isRealName = Boolean(rawName && rawName.toLowerCase() !== "client" && rawName.toLowerCase() !== "your skin profile");
@@ -154,26 +151,6 @@ export default function Result() {
     })();
   }, [archivedReportId, reportMeta?.reportId, aboutMe, skinProfile, lifestyle, attributes, isRealName, rawName, vitalityScore]);
 
-  // Observer for active section
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["score", "priorities", "routine", "deep-diagnostic"];
-      for (const id of sections) {
-        const el = document.getElementById(`${id}-section`);
-        if (el) {
-          const r = el.getBoundingClientRect();
-          if (r.top <= 160 && r.bottom >= 160) {
-            setActiveSection(id);
-            break;
-          }
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const advisorHref = useMemo(() => {
     const repParam = reportMeta?.reportId ? ` (Report: ${reportMeta.reportId})` : "";
     const concernText = isWellBalanced
@@ -208,57 +185,6 @@ export default function Result() {
 
   return (
     <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 space-y-6 md:space-y-8 animate-fadeIn pb-24">
-
-      {/* =========================================================================
-          TOP SMOOTH ANCHOR NAV (Active highlight on scroll)
-         ========================================================================= */}
-      <nav className="sticky top-2 z-30 bg-white/95 backdrop-blur-md rounded-2xl p-1.5 border border-[#EBE5DC] shadow-xs flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
-        <a
-          href="#score-section"
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-            activeSection === "score"
-              ? "bg-[#141416] text-white shadow-2xs"
-              : "text-[#52525B] hover:text-[#141416] hover:bg-[#FAF9F6]"
-          }`}
-        >
-          <Activity className="w-3.5 h-3.5 text-[#D4FF3F]" />
-          <span>Score</span>
-        </a>
-        <a
-          href="#priorities-section"
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-            activeSection === "priorities"
-              ? "bg-[#141416] text-white shadow-2xs"
-              : "text-[#52525B] hover:text-[#141416] hover:bg-[#FAF9F6]"
-          }`}
-        >
-          <Target className="w-3.5 h-3.5 text-[#E04234]" />
-          <span>Priorities</span>
-        </a>
-        <a
-          href="#routine-section"
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-            activeSection === "routine"
-              ? "bg-[#141416] text-white shadow-2xs"
-              : "text-[#52525B] hover:text-[#141416] hover:bg-[#FAF9F6]"
-          }`}
-        >
-          <ShoppingBag className="w-3.5 h-3.5 text-[#CD92EB]" />
-          <span>Your Routine</span>
-        </a>
-        <a
-          href="#deep-diagnostic-section"
-          onClick={() => setShowDeepDetails(true)}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-            activeSection === "deep-diagnostic"
-              ? "bg-[#141416] text-white shadow-2xs"
-              : "text-[#52525B] hover:text-[#141416] hover:bg-[#FAF9F6]"
-          }`}
-        >
-          <Layers className="w-3.5 h-3.5 text-[#71717A]" />
-          <span>Deep Audit (11 Markers)</span>
-        </a>
-      </nav>
 
       {/* =========================================================================
           SECTION 1: SCORECARD & HONEST SUMMARY
@@ -443,48 +369,33 @@ export default function Result() {
                 return (
                   <div
                     key={attr.id}
-                    className="p-5 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] shadow-2xs flex flex-col justify-between"
+                    className="p-5 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] shadow-2xs"
                   >
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="text-[11px] font-mono font-bold text-[#71717A]">
-                          #{attr.indexNumber}
-                        </span>
-                        <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
-                          {styleMeta.badgeText}
-                        </span>
-                      </div>
-
-                      <h4 className="font-serif text-base font-bold text-[#141416]">
-                        {attr.label}
-                      </h4>
-
-                      <p className="text-xs text-[#52525B] leading-relaxed mt-2">
-                        {attr.shortTakeaway}
-                      </p>
-
-                      {/* Score bar */}
-                      <div className="mt-4 pt-3 border-t border-[#EBE5DC] space-y-1.5">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="font-bold text-[#141416]">Condition Score:</span>
-                          <span className="font-mono font-bold text-[#141416]">{attr.userScore}%</span>
-                        </div>
-                        <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
-                          <div
-                            className={`h-full rounded-full ${styleMeta.bar}`}
-                            style={{ width: `${attr.userScore}%` }}
-                          />
-                        </div>
-                      </div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[11px] font-mono font-bold text-[#71717A]">
+                        #{attr.indexNumber}
+                      </span>
+                      <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
+                        {styleMeta.badgeText}
+                      </span>
                     </div>
 
-                    {/* Condition specific recommendation */}
-                    <div className="mt-4 pt-3 border-t border-[#EBE5DC]">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#E04234] block mb-0.5">
-                        Targeted Active Formula
-                      </span>
-                      <p className="text-xs font-bold text-[#141416]">{attr.keyActive}</p>
-                      <p className="text-[11px] text-[#52525B] mt-0.5 leading-snug">{attr.actionBenefit}</p>
+                    <h4 className="font-serif text-base font-bold text-[#141416]">
+                      {attr.label}
+                    </h4>
+
+                    {/* Score bar */}
+                    <div className="mt-4 pt-3 border-t border-[#EBE5DC] space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-bold text-[#141416]">Condition Score:</span>
+                        <span className="font-mono font-bold text-[#141416]">{attr.userScore}%</span>
+                      </div>
+                      <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
+                        <div
+                          className={`h-full rounded-full ${styleMeta.bar}`}
+                          style={{ width: `${attr.userScore}%` }}
+                        />
+                      </div>
                     </div>
                   </div>
                 );
@@ -593,46 +504,32 @@ export default function Result() {
                     return (
                       <div
                         key={attr.id}
-                        className="p-5 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] flex flex-col justify-between shadow-2xs"
+                        className="p-5 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] shadow-2xs"
                       >
-                        <div>
-                          <div className="flex items-center justify-between gap-2 mb-2">
-                            <span className="text-[11px] font-mono font-bold text-[#71717A]">
-                              #{attr.indexNumber}
-                            </span>
-                            <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
-                              {styleMeta.badgeText}
-                            </span>
-                          </div>
-
-                          <h4 className="font-serif text-base font-bold text-[#141416]">
-                            {attr.label}
-                          </h4>
-
-                          <p className="text-xs text-[#52525B] leading-relaxed mt-2 min-h-[38px]">
-                            {attr.shortTakeaway}
-                          </p>
-
-                          <div className="mt-4 pt-3 border-t border-[#EBE5DC] space-y-1.5">
-                            <div className="flex items-center justify-between text-xs">
-                              <span className="font-bold text-[#141416]">Score:</span>
-                              <span className="font-mono font-bold text-[#141416]">{attr.userScore}%</span>
-                            </div>
-                            <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
-                              <div
-                                className={`h-full rounded-full ${styleMeta.bar}`}
-                                style={{ width: `${attr.userScore}%` }}
-                              />
-                            </div>
-                          </div>
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <span className="text-[11px] font-mono font-bold text-[#71717A]">
+                            #{attr.indexNumber}
+                          </span>
+                          <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
+                            {styleMeta.badgeText}
+                          </span>
                         </div>
 
-                        <div className="mt-4 pt-3 border-t border-[#EBE5DC]">
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#E04234] block mb-0.5">
-                            Action
-                          </span>
-                          <p className="text-xs font-bold text-[#141416]">{attr.keyActive}</p>
-                          <p className="text-[11px] text-[#52525B] mt-0.5 leading-snug">{attr.actionBenefit}</p>
+                        <h4 className="font-serif text-base font-bold text-[#141416]">
+                          {attr.label}
+                        </h4>
+
+                        <div className="mt-4 pt-3 border-t border-[#EBE5DC] space-y-1.5">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-bold text-[#141416]">Condition Score:</span>
+                            <span className="font-mono font-bold text-[#141416]">{attr.userScore}%</span>
+                          </div>
+                          <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
+                            <div
+                              className={`h-full rounded-full ${styleMeta.bar}`}
+                              style={{ width: `${attr.userScore}%` }}
+                            />
+                          </div>
                         </div>
                       </div>
                     );
@@ -644,7 +541,7 @@ export default function Result() {
                   <div className="grid grid-cols-12 text-xs font-mono font-bold uppercase tracking-wider text-[#71717A] px-3 pb-2 border-b border-[#EBE5DC]">
                     <span className="col-span-5 sm:col-span-4">Biomarker</span>
                     <span className="col-span-4 sm:col-span-5">Score & Band</span>
-                    <span className="col-span-3 text-right">Target Active</span>
+                    <span className="col-span-3 text-right">Status</span>
                   </div>
 
                   {filteredAttributes.map((attr) => {
@@ -667,8 +564,10 @@ export default function Result() {
                             {styleMeta.badgeText}
                           </span>
                         </div>
-                        <div className="col-span-3 text-right truncate text-[11px] text-[#52525B]">
-                          {attr.keyActive}
+                        <div className="col-span-3 text-right">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
+                            {styleMeta.badgeText}
+                          </span>
                         </div>
                       </div>
                     );
