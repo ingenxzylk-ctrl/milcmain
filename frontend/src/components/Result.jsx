@@ -280,7 +280,7 @@ export default function Result() {
       </div>
 
       {/* =========================================================================
-          SECTION 2: TOP PRIORITIES & QUICK TAKEAWAY
+          SECTION 2: PRIMARY FOCUS AREAS
          ========================================================================= */}
       <div id="priorities-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EBE5DC] shadow-xs space-y-6">
         <div>
@@ -288,69 +288,12 @@ export default function Result() {
             TARGET FINDINGS
           </span>
           <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#141416] mt-2">
-            Primary Focus & Strengths
+            Primary Focus Areas (Score &lt; 85)
           </h2>
-        </div>
-
-        {/* 3-Line Quick Takeaway */}
-        <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-[#FAF9F6] to-white border border-[#CD92EB]/40 shadow-2xs space-y-3">
-          <div className="flex items-center gap-2 border-b border-[#EBE5DC] pb-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#E04234] animate-pulse" />
-            <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#141416]">
-              Quick Takeaway Summary
-            </h3>
-          </div>
-
-          <div className="space-y-2.5">
-            {/* Line 1: Priority */}
-            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#EBE5DC]">
-              <div className="w-8 h-8 rounded-xl bg-red-50 text-[#E04234] flex items-center justify-center shrink-0 mt-0.5">
-                <Target className="w-4 h-4" />
-              </div>
-              <div className="text-xs sm:text-sm">
-                <span className="font-bold text-[#141416]">Your Primary Focus: </span>
-                {isWellBalanced ? (
-                  <span className="text-[#52525B]">Your skin is well balanced across all tested markers. Maintain this healthy equilibrium with consistent daily care.</span>
-                ) : (
-                  <>
-                    <span className="font-bold text-[#E04234]">{priorityCondition?.label} ({priorityCondition?.userScore}%)</span>
-                    <span className="text-[#52525B]"> — {priorityCondition?.actionBenefit}</span>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Line 2: Greatest Strength */}
-            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-emerald-200">
-              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-                <Sparkles className="w-4 h-4 text-emerald-600" />
-              </div>
-              <div className="text-xs sm:text-sm">
-                <span className="font-bold text-[#141416]">Your Greatest Strength: </span>
-                <span className="font-bold text-emerald-700">{strengthCondition?.label} ({strengthCondition?.userScore}%)</span>
-                <span className="text-[#52525B]"> — {strengthCondition?.shortTakeaway}</span>
-              </div>
-            </div>
-
-            {/* Line 3: The 2-Step Routine Agreement */}
-            <div className="flex items-start gap-3 p-3 rounded-2xl bg-white border border-[#EBE5DC]">
-              <div className="w-8 h-8 rounded-xl bg-[#FAF9F6] text-[#141416] flex items-center justify-center shrink-0 mt-0.5 border border-[#EBE5DC]">
-                <CheckCircle2 className="w-4 h-4 text-[#CD92EB]" />
-              </div>
-              <div className="text-xs sm:text-sm">
-                <span className="font-bold text-[#141416]">Your Core 2-Step Protocol: </span>
-                <span className="font-bold text-[#141416]">{quickTakeawayRoutine.step1} + {quickTakeawayRoutine.step2}</span>
-                <span className="text-[#52525B]"> — {quickTakeawayRoutine.description}</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Primary Focus Cards - STRICTLY < 85, Never Padded */}
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[#71717A] mb-3">
-            Primary Focus Areas (Score &lt; 85)
-          </h3>
 
           {focusAreas.length === 0 ? (
             <div className="p-5 rounded-2xl bg-emerald-50/50 border border-emerald-200 text-left">
