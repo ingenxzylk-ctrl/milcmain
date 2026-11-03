@@ -77,7 +77,7 @@ export default function Screen16Analyzing({ onComplete, onBack }) {
             </div>
             <span className="text-xl font-serif font-bold text-[#141416] tracking-tight">MILC</span>
             <span className="text-[9px] tracking-[0.2em] font-mono text-[#71717A] uppercase font-semibold">
-              ATELIER
+              AI
             </span>
           </div>
 

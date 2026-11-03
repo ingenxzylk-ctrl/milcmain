@@ -47,7 +47,7 @@ export default function SkinPassport({
             </div>
             <div>
               <span className="font-serif tracking-widest text-sm font-bold text-[#FAF9F6] uppercase">
-                MILC ATELIER
+                MILC AI
               </span>
               <span className="block text-[9px] uppercase tracking-[0.25em] font-mono text-[#AFA698]">
                 Skin Profile Summary

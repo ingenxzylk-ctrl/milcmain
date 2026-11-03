@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Shield, AlertCircle, RefreshCw } from "lucide-react";
+import { Sparkles, AlertCircle, RefreshCw } from "lucide-react";
 import { QuizProvider, useQuiz } from "./context/QuizContext";
 
 import Screen01Welcome from "./components/screens/Screen01Welcome";
@@ -225,23 +225,18 @@ function QuizFlow() {
           <div>
             <span className="text-lg sm:text-xl font-bold tracking-tight text-[#141416] font-serif">MILC</span>
             <span className="text-[9px] tracking-[0.22em] uppercase text-[#71717A] font-mono ml-2 font-semibold hidden sm:inline">
-              ATELIER
+              AI
             </span>
           </div>
         </div>
 
-        {/* Step Indicator & Security Badge */}
+        {/* Step Indicator */}
         <div className="flex items-center gap-2">
           {step > 1 && step < 19 && (
             <span className="text-[10px] sm:text-[11px] font-mono font-semibold tracking-wider text-[#52525B] bg-white border border-[#EBE5DC] px-2.5 py-1 rounded-full shadow-2xs">
               STEP <span className="text-[#E04234]">{String(step).padStart(2, "0")}</span> <span className="text-[#AFA698]">/</span> 19
             </span>
           )}
-          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[#52525B] bg-white px-2.5 py-1 rounded-full border border-[#EBE5DC] shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D4FF3F] shadow-[0_0_6px_#D4FF3F]" />
-            <Shield className="w-3 h-3 text-[#141416]" />
-            <span className="font-medium hidden sm:inline">Encrypted</span>
-          </div>
         </div>
       </header>
 
