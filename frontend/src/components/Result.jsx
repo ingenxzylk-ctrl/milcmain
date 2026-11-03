@@ -280,71 +280,87 @@ export default function Result() {
       </div>
 
       {/* =========================================================================
-          SECTION 2: PRIMARY FOCUS AREAS
+          SECTION 2: ALL 11 EVALUATED BIOMARKERS
          ========================================================================= */}
-      <div id="priorities-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EBE5DC] shadow-xs space-y-6">
-        <div>
-          <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF9F6] border border-[#EBE5DC] px-2.5 py-1 rounded-full shadow-2xs">
-            TARGET FINDINGS
-          </span>
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#141416] mt-2">
-            Primary Focus Areas (Score &lt; 85)
-          </h2>
+      <div id="biomarkers-section" className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EBE5DC] shadow-xs space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#EBE5DC]">
+          <div>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF9F6] border border-[#EBE5DC] px-2.5 py-1 rounded-full shadow-2xs">
+              EVALUATED BIOMARKERS
+            </span>
+            <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#141416] mt-2">
+              All 11 Evaluated Biomarkers
+            </h2>
+          </div>
+
+          {/* Quick pillar filter */}
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => setActivePillar("all")}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+                activePillar === "all"
+                  ? "bg-[#141416] text-white border-[#141416]"
+                  : "bg-[#FAF9F6] text-[#52525B] border-[#EBE5DC] hover:bg-white"
+              }`}
+            >
+              All (11)
+            </button>
+            {SKIN_PILLARS.map((pillar) => (
+              <button
+                key={pillar.id}
+                type="button"
+                onClick={() => setActivePillar(pillar.id)}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+                  activePillar === pillar.id
+                    ? "bg-[#141416] text-white border-[#141416]"
+                    : "bg-[#FAF9F6] text-[#52525B] border-[#EBE5DC] hover:bg-white"
+                }`}
+              >
+                {pillar.title}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Primary Focus Cards - STRICTLY < 85, Never Padded */}
-        <div>
+        {/* All 11 Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredAttributes.map((attr) => {
+            const styleMeta = getScoreStyleMeta(attr.category, attr.userScore);
+            return (
+              <div
+                key={attr.id}
+                className="p-5 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] shadow-2xs"
+              >
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-[11px] font-mono font-bold text-[#71717A]">
+                    #{attr.indexNumber}
+                  </span>
+                  <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
+                    {styleMeta.badgeText}
+                  </span>
+                </div>
 
-          {focusAreas.length === 0 ? (
-            <div className="p-5 rounded-2xl bg-emerald-50/50 border border-emerald-200 text-left">
-              <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm">
-                <ShieldCheck className="w-5 h-5 text-emerald-600" />
-                <span>No major concerns found — All biomarkers are within optimal balance</span>
-              </div>
-              <p className="text-xs text-emerald-700 mt-1.5 leading-relaxed">
-                Your skin demonstrated resilient barrier health with zero conditions scoring below 85. We recommend our daily maintenance protocol to preserve this excellent baseline resilience against UV and seasonal stress.
-              </p>
-            </div>
-          ) : (
-            <div className={`grid grid-cols-1 ${focusAreas.length === 1 ? "md:grid-cols-1" : focusAreas.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3"} gap-4`}>
-              {focusAreas.map((attr) => {
-                const styleMeta = getScoreStyleMeta(attr.category, attr.userScore);
-                return (
-                  <div
-                    key={attr.id}
-                    className="p-5 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] shadow-2xs"
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-[11px] font-mono font-bold text-[#71717A]">
-                        #{attr.indexNumber}
-                      </span>
-                      <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
-                        {styleMeta.badgeText}
-                      </span>
-                    </div>
+                <h4 className="font-serif text-base font-bold text-[#141416]">
+                  {attr.label}
+                </h4>
 
-                    <h4 className="font-serif text-base font-bold text-[#141416]">
-                      {attr.label}
-                    </h4>
-
-                    {/* Score bar */}
-                    <div className="mt-4 pt-3 border-t border-[#EBE5DC] space-y-1.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-[#141416]">Condition Score:</span>
-                        <span className="font-mono font-bold text-[#141416]">{attr.userScore}%</span>
-                      </div>
-                      <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
-                        <div
-                          className={`h-full rounded-full ${styleMeta.bar}`}
-                          style={{ width: `${attr.userScore}%` }}
-                        />
-                      </div>
-                    </div>
+                {/* Score bar */}
+                <div className="mt-4 pt-3 border-t border-[#EBE5DC] space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-[#141416]">Condition Score:</span>
+                    <span className="font-mono font-bold text-[#141416]">{attr.userScore}%</span>
                   </div>
-                );
-              })}
-            </div>
-          )}
+                  <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
+                    <div
+                      className={`h-full rounded-full ${styleMeta.bar}`}
+                      style={{ width: `${attr.userScore}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -356,7 +372,7 @@ export default function Result() {
       </div>
 
       {/* =========================================================================
-          SECTION 4: COLLAPSIBLE DEEPER DETAILS (11 Conditions, Facial Zone, Passport)
+          SECTION 4: COLLAPSIBLE DEEPER DETAILS (Facial Zone Explorer, Progression, Passport)
          ========================================================================= */}
       <div id="deep-diagnostic-section" className="space-y-6">
         <div className="text-center pt-2">
@@ -365,7 +381,7 @@ export default function Result() {
             onClick={() => setShowDeepDetails(!showDeepDetails)}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-[#EBE5DC] hover:border-[#CD92EB] text-xs font-bold text-[#141416] shadow-2xs transition-all cursor-pointer"
           >
-            <span>{showDeepDetails ? "Hide Deep Diagnostic Audit" : "Explore Full 11-Condition Deep Diagnostic & Facial Map"}</span>
+            <span>{showDeepDetails ? "Hide Facial Map & Progression" : "Explore Facial Zone Map, 4-Week Timeline & Passport"}</span>
             {showDeepDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
         </div>
@@ -377,148 +393,6 @@ export default function Result() {
             exit={{ opacity: 0, height: 0 }}
             className="space-y-6"
           >
-            {/* 11 Conditions Audit Container */}
-            <div className="bg-white/95 backdrop-blur-md rounded-[32px] p-5 sm:p-8 border border-[#EBE5DC] shadow-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-[#EBE5DC]">
-                <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-[#71717A] bg-[#FAF9F6] border border-[#EBE5DC] px-2.5 py-1 rounded-full shadow-2xs">
-                    FULL BIOMETRIC AUDIT
-                  </span>
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#141416] mt-2">
-                    All 11 Evaluated Biomarkers
-                  </h3>
-                </div>
-
-                <div className="flex items-center gap-1.5 p-1 bg-[#FAF9F6] rounded-2xl border border-[#EBE5DC]">
-                  <button
-                    type="button"
-                    onClick={() => setConditionView("cards")}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      conditionView === "cards" ? "bg-[#141416] text-white" : "text-[#71717A]"
-                    }`}
-                  >
-                    Card Grid
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setConditionView("chart")}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      conditionView === "chart" ? "bg-[#141416] text-white" : "text-[#71717A]"
-                    }`}
-                  >
-                    Comparison Table
-                  </button>
-                </div>
-              </div>
-
-              {/* Pillar Category Filter Tabs */}
-              <div className="flex flex-wrap gap-1.5 mb-5">
-                <button
-                  type="button"
-                  onClick={() => setActivePillar("all")}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
-                    activePillar === "all"
-                      ? "bg-[#141416] text-white border-[#141416]"
-                      : "bg-[#FAF9F6] text-[#52525B] border-[#EBE5DC] hover:bg-white"
-                  }`}
-                >
-                  All 11 Markers
-                </button>
-                {SKIN_PILLARS.map((pillar) => (
-                  <button
-                    key={pillar.id}
-                    type="button"
-                    onClick={() => setActivePillar(pillar.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
-                      activePillar === pillar.id
-                        ? "bg-[#141416] text-white border-[#141416]"
-                        : "bg-[#FAF9F6] text-[#52525B] border-[#EBE5DC] hover:bg-white"
-                    }`}
-                  >
-                    {pillar.title}
-                  </button>
-                ))}
-              </div>
-
-              {conditionView === "cards" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredAttributes.map((attr) => {
-                    const styleMeta = getScoreStyleMeta(attr.category, attr.userScore);
-                    return (
-                      <div
-                        key={attr.id}
-                        className="p-5 rounded-2xl border border-[#EBE5DC] bg-[#FAF9F6] shadow-2xs"
-                      >
-                        <div className="flex items-center justify-between gap-2 mb-2">
-                          <span className="text-[11px] font-mono font-bold text-[#71717A]">
-                            #{attr.indexNumber}
-                          </span>
-                          <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
-                            {styleMeta.badgeText}
-                          </span>
-                        </div>
-
-                        <h4 className="font-serif text-base font-bold text-[#141416]">
-                          {attr.label}
-                        </h4>
-
-                        <div className="mt-4 pt-3 border-t border-[#EBE5DC] space-y-1.5">
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="font-bold text-[#141416]">Condition Score:</span>
-                            <span className="font-mono font-bold text-[#141416]">{attr.userScore}%</span>
-                          </div>
-                          <div className="w-full h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
-                            <div
-                              className={`h-full rounded-full ${styleMeta.bar}`}
-                              style={{ width: `${attr.userScore}%` }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                /* Table View */
-                <div className="space-y-2">
-                  <div className="grid grid-cols-12 text-xs font-mono font-bold uppercase tracking-wider text-[#71717A] px-3 pb-2 border-b border-[#EBE5DC]">
-                    <span className="col-span-5 sm:col-span-4">Biomarker</span>
-                    <span className="col-span-4 sm:col-span-5">Score & Band</span>
-                    <span className="col-span-3 text-right">Status</span>
-                  </div>
-
-                  {filteredAttributes.map((attr) => {
-                    const styleMeta = getScoreStyleMeta(attr.category, attr.userScore);
-                    return (
-                      <div
-                        key={attr.id}
-                        className="p-3 rounded-xl border border-[#EBE5DC] bg-[#FAF9F6] grid grid-cols-12 items-center gap-2 text-xs"
-                      >
-                        <div className="col-span-5 sm:col-span-4">
-                          <span className="font-mono text-[#71717A]">#{attr.indexNumber} </span>
-                          <strong className="text-[#141416]">{attr.label}</strong>
-                        </div>
-                        <div className="col-span-4 sm:col-span-5 flex items-center gap-2">
-                          <span className="font-mono font-bold text-[#141416] w-8 text-right">{attr.userScore}%</span>
-                          <div className="flex-1 h-2 bg-white rounded-full overflow-hidden border border-[#EBE5DC]">
-                            <div className={`h-full ${styleMeta.bar}`} style={{ width: `${attr.userScore}%` }} />
-                          </div>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${styleMeta.badgeBg} hidden sm:inline-block`}>
-                            {styleMeta.badgeText}
-                          </span>
-                        </div>
-                        <div className="col-span-3 text-right">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${styleMeta.badgeBg}`}>
-                            {styleMeta.badgeText}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
             {/* Facial Zone Explorer */}
             <FaceHeatmap
               attributes={attributes}
